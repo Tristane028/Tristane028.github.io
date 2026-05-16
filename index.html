@@ -390,6 +390,130 @@
       color: var(--muted);
     }
 
+    /* PLAYGROUND */
+    .playground-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 4rem;
+    }
+
+    .demo-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 2rem;
+    }
+
+    .demo-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .demo-title {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: var(--text);
+    }
+
+    .demo-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+      max-width: 600px;
+    }
+
+    .demo-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      align-items: center;
+    }
+
+    .demo-control {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .demo-control label {
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .demo-control input[type=range] {
+      -webkit-appearance: none;
+      width: 140px;
+      height: 2px;
+      background: var(--border);
+      outline: none;
+      cursor: pointer;
+    }
+
+    .demo-control input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      background: var(--accent);
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .demo-control select {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.3rem 0.6rem;
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .demo-control select:focus { border-color: var(--accent); }
+
+    .demo-val {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .demo-canvas-wrap {
+      position: relative;
+      width: 100%;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      overflow: hidden;
+    }
+
+    .demo-canvas {
+      display: block;
+      width: 100%;
+      height: 280px;
+    }
+
+    .demo-btn {
+      display: inline-block;
+      padding: 0.45rem 1.2rem;
+      font-family: var(--font-sans);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .demo-btn:hover { border-color: var(--accent); color: var(--accent); }
+
     /* CONTACT */
     #contact { text-align: center; }
     #contact .section-eyebrow, #contact .section-title { text-align: center; }
@@ -477,6 +601,7 @@
       <li><a href="#about">About</a></li>
       <li><a href="#projects">Research</a></li>
       <li><a href="#skills">Skills</a></li>
+      <li><a href="#playground">Playground</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
   </nav>
@@ -509,7 +634,7 @@
     <div class="about-grid fade-in">
       <div class="about-text">
         <p>
-          My name is <strong>Tristan Endo</strong>, a third-year Math-CS student at <strong>UC San Diego</strong>,
+          I'm <strong>Tristan Endo</strong>, a third-year Math-CS student at <strong>UC San Diego</strong>,
           passionate about mathematics and its real-world applications in data science and finance.
         </p>
         <p>
@@ -544,7 +669,7 @@
           <div class="stat-label">Active faculty collaboration</div>
         </div>
         <div class="stat-item">
-          <div class="stat-number" style="font-size:1.8rem;">NLP</div>
+          <div class="stat-number" style="font-size:1.8rem;">Natural Language Processing</div>
           <div class="stat-divider"></div>
           <div class="stat-label">Current focus — AI hallucination detection</div>
         </div>
@@ -671,6 +796,110 @@
 
   <div class="divider"></div>
 
+  <!-- PLAYGROUND -->
+  <section id="playground">
+    <div class="fade-in">
+      <p class="section-eyebrow">Interactive</p>
+      <h2 class="section-title">Math <em>Playground</em></h2>
+      <div class="section-rule"></div>
+    </div>
+    <div class="playground-grid">
+
+      <!-- DEMO 1: Brownian Motion Histogram -->
+      <div class="demo-block fade-in">
+        <div class="demo-header">
+          <div class="demo-title">Distribution of Max fBM on [0,1]</div>
+          <button class="demo-btn" onclick="runBM()">Resample</button>
+        </div>
+        <p class="demo-desc">Simulate the empirical distribution of the maximum value of fractional Brownian motion over [0,1] for a given Hurst parameter H. Each bar shows the frequency of a range of maximum values across many simulated paths — matching the exact distributions I studied with Prof. Webber.</p>
+        <div class="demo-controls">
+          <div class="demo-control">
+            <label>Hurst Parameter (H)</label>
+            <input type="range" id="bm-hurst" min="0.05" max="0.95" step="0.05" value="0.25" oninput="document.getElementById('bm-hval').textContent=parseFloat(this.value).toFixed(2); runBM()">
+            <span class="demo-val">H = <span id="bm-hval">0.25</span></span>
+          </div>
+          <div class="demo-control">
+            <label>Simulations</label>
+            <input type="range" id="bm-paths" min="200" max="2000" step="200" value="800" oninput="document.getElementById('bm-pval').textContent=this.value; runBM()">
+            <span class="demo-val"><span id="bm-pval">800</span> samples</span>
+          </div>
+          <div class="demo-control">
+            <label>Bins</label>
+            <input type="range" id="bm-bins" min="10" max="60" step="5" value="30" oninput="document.getElementById('bm-bval').textContent=this.value; runBM()">
+            <span class="demo-val"><span id="bm-bval">30</span> bins</span>
+          </div>
+        </div>
+        <div class="demo-canvas-wrap">
+          <canvas class="demo-canvas" id="bm-canvas"></canvas>
+        </div>
+      </div>
+
+      <!-- DEMO 2: NNGP Correlation vs Depth -->
+      <div class="demo-block fade-in">
+        <div class="demo-header">
+          <div class="demo-title">NNGP Kernel Correlation vs Depth</div>
+          <button class="demo-btn" onclick="runKernel()">Recompute</button>
+        </div>
+        <p class="demo-desc">Select an activation function and network width to see how kernel correlation evolves with depth — matching the style of plots from my research with Prof. Cloninger. ReLU networks converge smoothly; erf and tanh exhibit oscillatory behavior at finite width.</p>
+        <div class="demo-controls">
+          <div class="demo-control">
+            <label>Activation Function</label>
+            <select id="kernel-act" onchange="runKernel()">
+              <option value="relu">RELU</option>
+              <option value="erf">ERF</option>
+              <option value="tanh">TANH</option>
+            </select>
+          </div>
+          <div class="demo-control">
+            <label>Network Width</label>
+            <input type="range" id="kernel-width" min="2" max="512" step="1" value="36" oninput="document.getElementById('kernel-wval').textContent=this.value; runKernel()">
+            <span class="demo-val">width = <span id="kernel-wval">36</span></span>
+          </div>
+          <div class="demo-control">
+            <label>Max Depth</label>
+            <input type="range" id="kernel-depth" min="5" max="30" step="1" value="17" oninput="document.getElementById('kernel-dval').textContent=this.value; runKernel()">
+            <span class="demo-val">depth = <span id="kernel-dval">17</span></span>
+          </div>
+        </div>
+        <div class="demo-canvas-wrap">
+          <canvas class="demo-canvas" id="kernel-canvas"></canvas>
+        </div>
+      </div>
+
+      <!-- DEMO 3: Stochastic Path Generator -->
+      <div class="demo-block fade-in">
+        <div class="demo-header">
+          <div class="demo-title">Stochastic Path Generator</div>
+          <button class="demo-btn" onclick="clearPaths()">Clear</button>
+        </div>
+        <p class="demo-desc">Click anywhere on the canvas to plant a starting point and watch stochastic paths diverge from it in real time. Each path evolves independently under Brownian dynamics — a live illustration of path-dependent randomness.</p>
+        <div class="demo-controls">
+          <div class="demo-control">
+            <label>Drift (μ)</label>
+            <input type="range" id="sp-drift" min="-1" max="1" step="0.1" value="0" oninput="document.getElementById('sp-dval').textContent=parseFloat(this.value).toFixed(1)">
+            <span class="demo-val">μ = <span id="sp-dval">0.0</span></span>
+          </div>
+          <div class="demo-control">
+            <label>Volatility (σ)</label>
+            <input type="range" id="sp-vol" min="0.1" max="2" step="0.1" value="0.6" oninput="document.getElementById('sp-vval').textContent=parseFloat(this.value).toFixed(1)">
+            <span class="demo-val">σ = <span id="sp-vval">0.6</span></span>
+          </div>
+          <div class="demo-control">
+            <label>Paths per click</label>
+            <input type="range" id="sp-count" min="1" max="20" step="1" value="8" oninput="document.getElementById('sp-cval').textContent=this.value">
+            <span class="demo-val"><span id="sp-cval">8</span> paths</span>
+          </div>
+        </div>
+        <div class="demo-canvas-wrap" style="cursor:crosshair;">
+          <canvas class="demo-canvas" id="sp-canvas"></canvas>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
   <!-- CONTACT -->
   <section id="contact">
     <div class="fade-in">
@@ -695,21 +924,18 @@
   </footer>
 
   <script>
-    // Scroll fade-in
+    // ── Scroll fade-in ──────────────────────────────────────────
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
     }, { threshold: 0.08 });
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-    // Neural Network Canvas
+    // ── Neural Network Canvas ────────────────────────────────────
     const canvas = document.getElementById('nn-canvas');
     const ctx = canvas.getContext('2d');
-
-    let W, H, nodes, edges, animFrame;
+    let W, H, nodes;
     const ACCENT = 'rgba(200, 169, 110,';
-    const NODE_COUNT = 52;
-    const EDGE_DIST = 160;
-    const LAYERS = [0.18, 0.38, 0.58, 0.78, 0.92]; // x positions (as fraction of width)
+    const LAYERS = [0.18, 0.38, 0.58, 0.78, 0.92];
 
     function resize() {
       W = canvas.width = window.innerWidth;
@@ -719,103 +945,419 @@
 
     function buildNetwork() {
       nodes = [];
-      // Place nodes in rough layer columns with slight randomness
       LAYERS.forEach((lx, li) => {
-        const count = [6, 10, 12, 10, 6][li];
+        const count = [6,10,12,10,6][li];
         for (let i = 0; i < count; i++) {
-          const spread = H * 0.7;
-          const yStart = H * 0.15;
           nodes.push({
-            x: lx * W + (Math.random() - 0.5) * W * 0.06,
-            y: yStart + (i / (count - 1)) * spread + (Math.random() - 0.5) * 30,
-            vx: (Math.random() - 0.5) * 0.18,
-            vy: (Math.random() - 0.5) * 0.18,
-            r: Math.random() * 1.8 + 1.2,
-            pulse: Math.random() * Math.PI * 2,
-            pulseSpeed: 0.012 + Math.random() * 0.018,
-            layer: li,
-            alpha: 0.3 + Math.random() * 0.4,
+            x: lx*W+(Math.random()-.5)*W*0.06,
+            y: H*0.15+(i/(count-1))*H*0.7+(Math.random()-.5)*30,
+            vx:(Math.random()-.5)*0.18, vy:(Math.random()-.5)*0.18,
+            r:Math.random()*1.8+1.2, pulse:Math.random()*Math.PI*2,
+            pulseSpeed:0.012+Math.random()*0.018, layer:li,
+            alpha:0.3+Math.random()*0.4
           });
         }
       });
-
-      // Add a few random nodes to break the rigidity
-      for (let i = 0; i < 8; i++) {
-        nodes.push({
-          x: Math.random() * W,
-          y: Math.random() * H,
-          vx: (Math.random() - 0.5) * 0.12,
-          vy: (Math.random() - 0.5) * 0.12,
-          r: 1,
-          pulse: Math.random() * Math.PI * 2,
-          pulseSpeed: 0.008 + Math.random() * 0.01,
-          layer: -1,
-          alpha: 0.1 + Math.random() * 0.15,
-        });
-      }
+      for (let i=0;i<8;i++) nodes.push({
+        x:Math.random()*W, y:Math.random()*H,
+        vx:(Math.random()-.5)*0.12, vy:(Math.random()-.5)*0.12,
+        r:1, pulse:Math.random()*Math.PI*2,
+        pulseSpeed:0.008+Math.random()*0.01, layer:-1,
+        alpha:0.1+Math.random()*0.15
+      });
     }
 
     function drawFrame() {
-      ctx.clearRect(0, 0, W, H);
-
-      // Update node positions (very gentle drift)
+      ctx.clearRect(0,0,W,H);
       nodes.forEach(n => {
-        n.x += n.vx;
-        n.y += n.vy;
-        n.pulse += n.pulseSpeed;
-        // Soft boundary bounce
-        if (n.x < 0 || n.x > W) n.vx *= -1;
-        if (n.y < 0 || n.y > H) n.vy *= -1;
+        n.x+=n.vx; n.y+=n.vy; n.pulse+=n.pulseSpeed;
+        if(n.x<0||n.x>W) n.vx*=-1;
+        if(n.y<0||n.y>H) n.vy*=-1;
       });
-
-      // Draw edges between nearby nodes
-      for (let i = 0; i < nodes.length; i++) {
-        for (let j = i + 1; j < nodes.length; j++) {
-          const a = nodes[i], b = nodes[j];
-          const dx = a.x - b.x, dy = a.y - b.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < EDGE_DIST) {
-            // Only connect adjacent layers or same layer
-            if (a.layer === -1 || b.layer === -1 || Math.abs(a.layer - b.layer) <= 1) {
-              const strength = 1 - dist / EDGE_DIST;
-              const pulse = (Math.sin(a.pulse) + 1) / 2;
-              const alpha = strength * 0.18 * (0.6 + pulse * 0.4);
-              ctx.beginPath();
-              ctx.moveTo(a.x, a.y);
-              ctx.lineTo(b.x, b.y);
-              ctx.strokeStyle = `${ACCENT}${alpha})`;
-              ctx.lineWidth = strength * 0.8;
-              ctx.stroke();
-            }
+      for(let i=0;i<nodes.length;i++) {
+        for(let j=i+1;j<nodes.length;j++) {
+          const a=nodes[i],b=nodes[j];
+          const dx=a.x-b.x,dy=a.y-b.y,dist=Math.sqrt(dx*dx+dy*dy);
+          if(dist<160&&(a.layer===-1||b.layer===-1||Math.abs(a.layer-b.layer)<=1)) {
+            const s=1-dist/160,p=(Math.sin(a.pulse)+1)/2;
+            ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+            ctx.strokeStyle=`${ACCENT}${s*0.18*(0.6+p*0.4)})`; ctx.lineWidth=s*0.8; ctx.stroke();
           }
         }
       }
-
-      // Draw nodes
       nodes.forEach(n => {
-        const pulse = (Math.sin(n.pulse) + 1) / 2;
-        const glow = n.r * (2.5 + pulse * 2);
-        // Glow
-        const grad = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, glow);
-        grad.addColorStop(0, `${ACCENT}${n.alpha * (0.6 + pulse * 0.4)})`);
-        grad.addColorStop(1, `${ACCENT}0)`);
-        ctx.beginPath();
-        ctx.arc(n.x, n.y, glow, 0, Math.PI * 2);
-        ctx.fillStyle = grad;
-        ctx.fill();
-        // Core
-        ctx.beginPath();
-        ctx.arc(n.x, n.y, n.r * (0.8 + pulse * 0.4), 0, Math.PI * 2);
-        ctx.fillStyle = `${ACCENT}${n.alpha})`;
-        ctx.fill();
+        const p=(Math.sin(n.pulse)+1)/2, g=n.r*(2.5+p*2);
+        const grad=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,g);
+        grad.addColorStop(0,`${ACCENT}${n.alpha*(0.6+p*0.4)})`);
+        grad.addColorStop(1,`${ACCENT}0)`);
+        ctx.beginPath(); ctx.arc(n.x,n.y,g,0,Math.PI*2);
+        ctx.fillStyle=grad; ctx.fill();
+        ctx.beginPath(); ctx.arc(n.x,n.y,n.r*(0.8+p*0.4),0,Math.PI*2);
+        ctx.fillStyle=`${ACCENT}${n.alpha})`; ctx.fill();
       });
+      requestAnimationFrame(drawFrame);
+    }
+    window.addEventListener('resize', resize);
+    resize(); drawFrame();
 
-      animFrame = requestAnimationFrame(drawFrame);
+    // ── DEMO 1: fBM Max Distribution Histogram ───────────────────
+    function singleFBMMax(steps, H) {
+      let prev = 0, maxVal = 0;
+      for (let i = 1; i < steps; i++) {
+        const z = (Math.random()+Math.random()+Math.random()+Math.random()+Math.random()+Math.random()-3)/3;
+        prev += z * Math.pow(1/steps, H);
+        if (prev > maxVal) maxVal = prev;
+      }
+      return maxVal;
     }
 
-    window.addEventListener('resize', resize);
-    resize();
-    drawFrame();
+    function runBM() {
+      const c = document.getElementById('bm-canvas');
+      const cx = c.getContext('2d');
+      const CW = c.offsetWidth, CH = c.offsetHeight;
+      c.width = CW; c.height = CH;
+      const H = parseFloat(document.getElementById('bm-hurst').value);
+      const nSim = parseInt(document.getElementById('bm-paths').value);
+      const nBins = parseInt(document.getElementById('bm-bins').value);
+      const steps = 200;
+
+      // Collect max values
+      const maxVals = [];
+      for (let i = 0; i < nSim; i++) maxVals.push(singleFBMMax(steps, H));
+
+      const lo = 0, hi = Math.max(...maxVals) * 1.05;
+      const binW = (hi - lo) / nBins;
+      const counts = new Array(nBins).fill(0);
+      maxVals.forEach(v => {
+        const b = Math.min(Math.floor((v - lo) / binW), nBins - 1);
+        counts[b]++;
+      });
+      // Normalize to density
+      const densities = counts.map(c => c / (nSim * binW));
+      const maxD = Math.max(...densities) || 1;
+
+      cx.clearRect(0, 0, CW, CH);
+
+      const PAD = { top: 30, right: 20, bottom: 40, left: 52 };
+      const plotW = CW - PAD.left - PAD.right;
+      const plotH = CH - PAD.top - PAD.bottom;
+
+      // Grid lines
+      const yTicks = 5;
+      cx.strokeStyle = 'rgba(200,169,110,0.08)';
+      cx.lineWidth = 1;
+      for (let i = 0; i <= yTicks; i++) {
+        const y = PAD.top + plotH - (i / yTicks) * plotH;
+        cx.beginPath(); cx.moveTo(PAD.left, y); cx.lineTo(PAD.left + plotW, y); cx.stroke();
+        // y-axis labels
+        cx.fillStyle = 'rgba(200,169,110,0.45)';
+        cx.font = '10px Inter,sans-serif';
+        cx.textAlign = 'right';
+        cx.fillText((maxD * i / yTicks).toFixed(2), PAD.left - 6, y + 3);
+      }
+
+      // Axes
+      cx.strokeStyle = 'rgba(200,169,110,0.3)';
+      cx.lineWidth = 1;
+      cx.beginPath(); cx.moveTo(PAD.left, PAD.top); cx.lineTo(PAD.left, PAD.top + plotH); cx.stroke();
+      cx.beginPath(); cx.moveTo(PAD.left, PAD.top + plotH); cx.lineTo(PAD.left + plotW, PAD.top + plotH); cx.stroke();
+
+      // Bars
+      const barW = plotW / nBins;
+      densities.forEach((d, i) => {
+        const x = PAD.left + i * barW;
+        const bH = (d / maxD) * plotH;
+        const y = PAD.top + plotH - bH;
+        cx.fillStyle = 'rgba(100,149,200,0.65)';
+        cx.fillRect(x + 1, y, barW - 2, bH);
+        cx.strokeStyle = 'rgba(100,149,200,0.9)';
+        cx.lineWidth = 0.5;
+        cx.strokeRect(x + 1, y, barW - 2, bH);
+      });
+
+      // X-axis labels
+      cx.fillStyle = 'rgba(200,169,110,0.45)';
+      cx.font = '10px Inter,sans-serif';
+      cx.textAlign = 'center';
+      const xTicks = 6;
+      for (let i = 0; i <= xTicks; i++) {
+        const val = lo + (hi - lo) * i / xTicks;
+        const x = PAD.left + (i / xTicks) * plotW;
+        cx.fillText(val.toFixed(1), x, PAD.top + plotH + 14);
+      }
+
+      // Axis labels
+      cx.fillStyle = 'rgba(200,169,110,0.6)';
+      cx.font = '11px Inter,sans-serif';
+      cx.textAlign = 'center';
+      cx.fillText('Maximum value', PAD.left + plotW / 2, CH - 4);
+      cx.save(); cx.translate(12, PAD.top + plotH / 2); cx.rotate(-Math.PI/2);
+      cx.fillText('Empirical density', 0, 0); cx.restore();
+
+      // Title
+      cx.font = '11px Inter,sans-serif';
+      cx.textAlign = 'center';
+      cx.fillStyle = 'rgba(200,169,110,0.7)';
+      cx.fillText(`Distribution of max fBM on [0,1]  (H = ${H.toFixed(2)})`, PAD.left + plotW/2, PAD.top - 10);
+    }
+
+    // ── DEMO 2: NNGP Correlation vs Depth (exact port of Python code) ──
+    // JavaScript port of run_network() from Tristan's research code
+
+    function randn() {
+      // Box-Muller transform for standard normal samples
+      let u = 0, v = 0;
+      while (u === 0) u = Math.random();
+      while (v === 0) v = Math.random();
+      return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+    }
+
+    function randnVec(n) {
+      return Array.from({length: n}, randn);
+    }
+
+    function randnMatrix(rows, cols) {
+      return Array.from({length: rows}, () => randnVec(cols));
+    }
+
+    function norm(v) {
+      return Math.sqrt(v.reduce((s, x) => s + x*x, 0));
+    }
+
+    function normalize(v) {
+      const n = norm(v);
+      return n === 0 ? v : v.map(x => x / n);
+    }
+
+    function matVecMul(W, h) {
+      // W: rows x cols, h: cols → result: rows
+      return W.map(row => row.reduce((s, w, j) => s + w * h[j], 0));
+    }
+
+    function applyAct(z, act) {
+      switch(act) {
+        case 'relu': return z.map(x => Math.max(0, x));
+        case 'erf':  return z.map(x => erfApprox(x));
+        case 'tanh': return z.map(x => Math.tanh(x));
+        default: return z;
+      }
+    }
+
+    // Approximation of erf() — Abramowitz & Stegun formula 7.1.26
+    function erfApprox(x) {
+      const sign = x >= 0 ? 1 : -1;
+      x = Math.abs(x);
+      const t = 1 / (1 + 0.3275911 * x);
+      const y = 1 - (((((1.061405429*t - 1.453152027)*t) + 1.421413741)*t - 0.284496736)*t + 0.254829592)*t * Math.exp(-x*x);
+      return sign * y;
+    }
+
+    function runNetwork(width, act, depth, inputDim) {
+      // Exact port of Python run_network()
+      let h1 = normalize(randnVec(inputDim));
+      let h2 = normalize(randnVec(inputDim));
+      const corrs = [];
+
+      for (let layer = 0; layer < depth; layer++) {
+        // W ~ N(0, 1/len(h)) of shape (width, len(h))
+        const len = h1.length;
+        const scale = 1 / Math.sqrt(len);
+        const W = randnMatrix(width, len).map(row => row.map(w => w * scale));
+
+        h1 = applyAct(matVecMul(W, h1), act);
+        h2 = applyAct(matVecMul(W, h2), act);
+
+        const n1 = norm(h1), n2 = norm(h2);
+        const rho = (n1 === 0 || n2 === 0) ? 0
+          : h1.reduce((s, v, i) => s + v * h2[i], 0) / (n1 * n2);
+        corrs.push(rho);
+      }
+      return corrs;
+    }
+
+    function runKernel() {
+      const c = document.getElementById('kernel-canvas');
+      const cx = c.getContext('2d');
+      const CW = c.offsetWidth, CH = c.offsetHeight;
+      c.width = CW; c.height = CH;
+      const act = document.getElementById('kernel-act').value;
+      const width = parseInt(document.getElementById('kernel-width').value);
+      const maxDepth = parseInt(document.getElementById('kernel-depth').value);
+      const runs = 30;       // matches Python: runs = 30
+      const inputDim = 21;   // matches Python: d = 21
+
+      // Average over 30 runs — exact match to Python np.mean([run_network(...) for _ in range(runs)])
+      const allRuns = Array.from({length: runs}, () => runNetwork(width, act, maxDepth, inputDim));
+      const corrs = Array.from({length: maxDepth}, (_, d) =>
+        allRuns.reduce((s, r) => s + r[d], 0) / runs
+      );
+
+      cx.clearRect(0, 0, CW, CH);
+      const PAD = { top: 30, right: 20, bottom: 40, left: 52 };
+      const plotW = CW - PAD.left - PAD.right;
+      const plotH = CH - PAD.top - PAD.bottom;
+
+      const minC = Math.min(...corrs) - 0.02;
+      const maxC = Math.max(...corrs) + 0.02;
+      const range = maxC - minC || 1;
+
+      function toX(d) { return PAD.left + (d / (maxDepth - 1)) * plotW; }
+      function toY(v) { return PAD.top + plotH - ((v - minC) / range) * plotH; }
+
+      // Grid
+      const yTicks = 5;
+      cx.strokeStyle = 'rgba(200,169,110,0.08)'; cx.lineWidth = 1;
+      for (let i = 0; i <= yTicks; i++) {
+        const v = minC + (range * i / yTicks);
+        const y = toY(v);
+        cx.beginPath(); cx.moveTo(PAD.left, y); cx.lineTo(PAD.left + plotW, y); cx.stroke();
+        cx.fillStyle = 'rgba(200,169,110,0.45)';
+        cx.font = '10px Inter,sans-serif'; cx.textAlign = 'right';
+        cx.fillText(v.toFixed(2), PAD.left - 6, y + 3);
+      }
+      const xTicks = Math.min(maxDepth - 1, 8);
+      for (let i = 0; i <= xTicks; i++) {
+        const d = Math.round(i * (maxDepth - 1) / xTicks);
+        const x = toX(d);
+        cx.strokeStyle = 'rgba(200,169,110,0.08)';
+        cx.beginPath(); cx.moveTo(x, PAD.top); cx.lineTo(x, PAD.top + plotH); cx.stroke();
+        cx.fillStyle = 'rgba(200,169,110,0.45)';
+        cx.font = '10px Inter,sans-serif'; cx.textAlign = 'center';
+        cx.fillText(d, x, PAD.top + plotH + 14);
+      }
+
+      // Zero line if needed
+      if (minC < 0 && maxC > 0) {
+        cx.strokeStyle = 'rgba(200,169,110,0.2)'; cx.lineWidth = 1;
+        cx.beginPath(); cx.moveTo(PAD.left, toY(0)); cx.lineTo(PAD.left + plotW, toY(0)); cx.stroke();
+      }
+
+      // Axes
+      cx.strokeStyle = 'rgba(200,169,110,0.3)'; cx.lineWidth = 1;
+      cx.beginPath(); cx.moveTo(PAD.left, PAD.top); cx.lineTo(PAD.left, PAD.top + plotH); cx.stroke();
+      cx.beginPath(); cx.moveTo(PAD.left, PAD.top + plotH); cx.lineTo(PAD.left + plotW, PAD.top + plotH); cx.stroke();
+
+      // Curve
+      cx.beginPath();
+      corrs.forEach((v, d) => { d === 0 ? cx.moveTo(toX(d), toY(v)) : cx.lineTo(toX(d), toY(v)); });
+      cx.strokeStyle = '#4a90c8'; cx.lineWidth = 2; cx.stroke();
+
+      // Dots at each depth
+      corrs.forEach((v, d) => {
+        cx.beginPath(); cx.arc(toX(d), toY(v), 2.5, 0, Math.PI*2);
+        cx.fillStyle = '#4a90c8'; cx.fill();
+      });
+
+      // Labels
+      const actLabel = {relu:'RELU', erf:'ERF', tanh:'TANH'}[act];
+      cx.fillStyle = 'rgba(200,169,110,0.7)';
+      cx.font = '11px Inter,sans-serif'; cx.textAlign = 'center';
+      cx.fillText(`${actLabel}  (width = ${width})`, PAD.left + plotW/2, PAD.top - 10);
+      cx.fillStyle = 'rgba(200,169,110,0.45)';
+      cx.fillText('Depth', PAD.left + plotW/2, CH - 4);
+      cx.save(); cx.translate(12, PAD.top + plotH/2); cx.rotate(-Math.PI/2);
+      cx.fillText('Correlation', 0, 0); cx.restore();
+    }
+
+    // ── DEMO 3: Stochastic Path Generator ────────────────────────
+    const spCanvas = document.getElementById('sp-canvas');
+    const spCtx = spCanvas.getContext('2d');
+    let spPaths = [];
+    let spAnimating = false;
+
+    function resizeSP() {
+      spCanvas.width = spCanvas.offsetWidth;
+      spCanvas.height = spCanvas.offsetHeight;
+      redrawSP();
+    }
+
+    function clearPaths() {
+      spPaths = [];
+      spCtx.clearRect(0,0,spCanvas.width,spCanvas.height);
+      drawSPGrid();
+    }
+
+    function drawSPGrid() {
+      const W=spCanvas.width, H=spCanvas.height;
+      spCtx.strokeStyle='rgba(200,169,110,0.06)'; spCtx.lineWidth=1;
+      for(let i=0;i<=4;i++){
+        spCtx.beginPath(); spCtx.moveTo(0,(i/4)*H); spCtx.lineTo(W,(i/4)*H); spCtx.stroke();
+      }
+      spCtx.strokeStyle='rgba(200,169,110,0.12)'; spCtx.lineWidth=1;
+      spCtx.beginPath(); spCtx.moveTo(0,H/2); spCtx.lineTo(W,H/2); spCtx.stroke();
+    }
+
+    function redrawSP() {
+      const W=spCanvas.width, H=spCanvas.height;
+      spCtx.clearRect(0,0,W,H);
+      drawSPGrid();
+      const colors=['#c8a96e','#a08050','#d4b87e','#e8cc94','#b09060','#8a6840','#c0a060','#dac080','#907040','#b8a070','#e0c888','#a89058','#c8b080','#d0b878','#b0a060','#c4a868','#9a7848','#d8be88','#b8985a','#cca868'];
+      spPaths.forEach((path, pi) => {
+        if(path.drawn.length < 2) return;
+        spCtx.beginPath();
+        path.drawn.forEach((pt,i) => {
+          const x=pt.x, y=pt.y;
+          i===0?spCtx.moveTo(x,y):spCtx.lineTo(x,y);
+        });
+        spCtx.strokeStyle=colors[pi%colors.length];
+        spCtx.lineWidth=1.2;
+        spCtx.globalAlpha=0.7;
+        spCtx.stroke();
+        spCtx.globalAlpha=1;
+        // Dot at tip
+        const tip=path.drawn[path.drawn.length-1];
+        spCtx.beginPath(); spCtx.arc(tip.x,tip.y,2.5,0,Math.PI*2);
+        spCtx.fillStyle=colors[pi%colors.length]; spCtx.fill();
+      });
+    }
+
+    function animateSP() {
+      if(!spAnimating) return;
+      const W=spCanvas.width, H=spCanvas.height;
+      const drift=parseFloat(document.getElementById('sp-drift').value);
+      const vol=parseFloat(document.getElementById('sp-vol').value);
+      let allDone=true;
+      spPaths.forEach(path => {
+        if(path.drawn.length < path.total) {
+          allDone=false;
+          const steps=3;
+          for(let s=0;s<steps&&path.drawn.length<path.total;s++){
+            const last=path.drawn[path.drawn.length-1];
+            const z=(Math.random()+Math.random()-1)*1.2;
+            const nx=last.x+2;
+            const ny=last.y+drift*0.8+z*vol*8;
+            if(nx>W||ny<0||ny>H) { path.total=path.drawn.length; break; }
+            path.drawn.push({x:nx,y:ny});
+          }
+        }
+      });
+      redrawSP();
+      if(!allDone) requestAnimationFrame(animateSP);
+      else spAnimating=false;
+    }
+
+    spCanvas.addEventListener('click', (e) => {
+      const rect=spCanvas.getBoundingClientRect();
+      const x=e.clientX-rect.left, y=e.clientY-rect.top;
+      const count=parseInt(document.getElementById('sp-count').value);
+      const W=spCanvas.width;
+      for(let i=0;i<count;i++){
+        spPaths.push({ drawn:[{x,y}], total:Math.floor((W-x)/2)+1 });
+      }
+      if(!spAnimating){ spAnimating=true; animateSP(); }
+    });
+
+    window.addEventListener('resize', () => { resizeSP(); });
+
+    // Init all demos once DOM is ready
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        runBM();
+        runKernel();
+        resizeSP();
+        drawSPGrid();
+      }, 200);
+    });
   </script>
 
 </body>
