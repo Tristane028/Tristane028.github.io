@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tristan Endo</title>
+  <meta name="description" content="Math-CS student at UC San Diego researching NLP, AI hallucination detection, and stochastic processes.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://tristane028.github.io/">
+  <meta property="og:title" content="Tristan Endo">
+  <meta property="og:description" content="Math-CS student at UC San Diego researching NLP, AI hallucination detection, and stochastic processes.">
+  <meta property="og:site_name" content="Tristan Endo">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Tristan Endo">
+  <meta name="twitter:description" content="Math-CS student at UC San Diego researching NLP, AI hallucination detection, and stochastic processes.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0e0e0e;
+      --surface: #161616;
+      --border: #242424;
+      --accent: #c8a96e;
+      --text: #e2ddd8;
+      --muted: #7a7570;
+      --faint: #2a2a2a;
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-sans: 'Inter', system-ui, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.8;
+      overflow-x: hidden;
+    }
+
+    /* CANVAS */
+    #nn-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    /* HERO PHOTO */
+    .hero-layout {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 4rem;
+      align-items: center;
+      width: 100%;
+    }
+    .hero-photo-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+    .hero-photo {
+      width: 220px;
+      height: 270px;
+      object-fit: cover;
+      object-position: center top;
+      filter: grayscale(20%) contrast(1.05);
+      border: 1px solid var(--border);
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 5rem;
+      background: rgba(14,14,14,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-style: italic;
+      font-size: 1.3rem;
+      color: var(--accent);
+      letter-spacing: 0.02em;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 3rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 400;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    /* SECTIONS */
+    section {
+      position: relative;
+      z-index: 1;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 7rem 2rem;
+    }
+
+    /* HERO */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 10rem;
+      padding-bottom: 4rem;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--font-sans);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 2.5rem;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .hero-name {
+      font-family: var(--font-serif);
+      font-size: clamp(4rem, 10vw, 8rem);
+      font-weight: 300;
+      line-height: 0.92;
+      letter-spacing: -0.01em;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.8s 0.1s ease both;
+      color: var(--text);
+    }
+
+    .hero-name em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-rule {
+      width: 3rem;
+      height: 1px;
+      background: var(--accent);
+      margin: 2rem 0;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+
+    .hero-title {
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.8s 0.25s ease both;
+    }
+
+    .hero-desc {
+      max-width: 480px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.9;
+      margin-bottom: 3.5rem;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+      animation: fadeUp 0.8s 0.4s ease both;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.7rem 1.8rem;
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.3s;
+      cursor: pointer;
+      font-weight: 400;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg);
+      border: 1px solid var(--accent);
+    }
+
+    .btn-primary:hover {
+      background: transparent;
+      color: var(--accent);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* SECTION HEADERS */
+    .section-eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      font-weight: 400;
+    }
+
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 300;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.5rem;
+      line-height: 1.1;
+      color: var(--text);
+    }
+
+    .section-title em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .section-rule {
+      width: 2.5rem;
+      height: 1px;
+      background: var(--border);
+      margin: 1.8rem 0 3.5rem;
+    }
+
+    /* DIVIDER */
+    .divider {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    /* ABOUT */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 6rem;
+      align-items: start;
+    }
+
+    .about-text p {
+      color: var(--muted);
+      margin-bottom: 1.4rem;
+      font-size: 0.95rem;
+      line-height: 1.9;
+    }
+
+    .about-text p strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .about-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+      padding-top: 0.5rem;
+    }
+
+    .stat-number {
+      font-family: var(--font-serif);
+      font-size: 2.8rem;
+      font-weight: 300;
+      color: var(--text);
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .stat-divider {
+      width: 1.5rem;
+      height: 1px;
+      background: var(--accent);
+      margin: 0.6rem 0;
+    }
+
+    .stat-label {
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* PROJECTS */
+    .projects-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-card {
+      display: grid;
+      grid-template-columns: 3rem 1fr auto;
+      gap: 2rem;
+      align-items: start;
+      padding: 2.5rem 0;
+      border-bottom: 1px solid var(--border);
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.3s;
+    }
+
+    .project-card:first-child { border-top: 1px solid var(--border); }
+    .project-card:hover .project-name { color: var(--accent); }
+    .project-card:hover .project-arrow { transform: translate(4px, -4px); color: var(--accent); }
+
+    .project-num {
+      font-family: var(--font-serif);
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-style: italic;
+      padding-top: 0.3rem;
+    }
+
+    .project-name {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 0.6rem;
+      line-height: 1.2;
+      transition: color 0.3s;
+    }
+
+    .project-desc {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 1.2rem;
+      max-width: 560px;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.7rem;
+      border: 1px solid var(--faint);
+      color: var(--muted);
+    }
+
+    .project-arrow {
+      font-size: 1.1rem;
+      color: var(--muted);
+      padding-top: 0.3rem;
+      transition: all 0.3s;
+    }
+
+    /* SKILLS */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 3rem;
+    }
+
+    .skill-group-title {
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      font-weight: 400;
+    }
+
+    .skill-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .skill-item {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    /* SANDBOX */
+    .sandbox-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 4rem;
+    }
+
+    .demo-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 2rem;
+    }
+
+    .demo-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .demo-title {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: var(--text);
+    }
+
+    .demo-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+      max-width: 600px;
+    }
+
+    .demo-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      align-items: center;
+    }
+
+    .demo-control {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .demo-control label {
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .demo-control input[type=range] {
+      -webkit-appearance: none;
+      width: 140px;
+      height: 2px;
+      background: var(--border);
+      outline: none;
+      cursor: pointer;
+    }
+
+    .demo-control input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      background: var(--accent);
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .demo-control select {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.3rem 0.6rem;
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .demo-control select:focus { border-color: var(--accent); }
+
+    .demo-val {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .demo-canvas-wrap {
+      position: relative;
+      width: 100%;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      overflow: hidden;
+    }
+
+    .demo-canvas {
+      display: block;
+      width: 100%;
+      height: 280px;
+    }
+
+    .demo-btn {
+      display: inline-block;
+      padding: 0.45rem 1.2rem;
+      font-family: var(--font-sans);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .demo-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* CONTACT */
+    #contact { text-align: center; }
+    #contact .section-eyebrow, #contact .section-title { text-align: center; }
+    #contact .section-rule { margin-left: auto; margin-right: auto; }
+
+    .contact-desc {
+      color: var(--muted);
+      max-width: 400px;
+      margin: 0 auto 3rem;
+      font-size: 0.95rem;
+      line-height: 1.9;
+    }
+
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      margin-top: 3.5rem;
+    }
+
+    .contact-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.3s;
+      border-bottom: 1px solid transparent;
+      padding-bottom: 2px;
+    }
+
+    .contact-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav { padding: 1.2rem 1.5rem; }
+      .nav-links { gap: 1.5rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .skills-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+      .project-card { grid-template-columns: 2rem 1fr; }
+      .project-arrow { display: none; }
+      .hero-layout { grid-template-columns: 1fr; }
+      .hero-photo-wrap { justify-content: flex-start; }
+      .hero-photo { width: 160px; height: 200px; }
+    }
+
+    @media (max-width: 500px) {
+      .nav-links { display: none; }
+      .skills-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NEURAL NETWORK CANVAS -->
+  <canvas id="nn-canvas"></canvas>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#hero" class="nav-logo">T. Endo</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Research</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#sandbox">Sandbox</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/Tristane028/Tristane028.github.io/main/_05_17_26__Tristan_Endo_Resume.pdf" target="_blank" style="color: var(--accent); border: 1px solid var(--accent); padding: 0.3rem 0.8rem;">Curriculum Vitaé ↗</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-layout">
+      <div class="hero-left">
+        <h1 class="hero-name">Tristan<br><em>Endo</em></h1>
+        <div class="hero-eyebrow">Math–Computer Science · UC San Diego</div>
+        <div class="hero-rule"></div>
+        <p class="hero-title">Researcher · Engineer · Student</p>
+        <p class="hero-desc">
+          Third-year Math-CS student at UCSD, passionate about math and its applications
+          towards data science and finance — currently exploring NLP and AI hallucination detection.
+        </p>
+        <div class="hero-cta">
+          <a href="#projects" class="btn btn-primary">View Research</a>
+          <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+        </div>
+      </div>
+      <div class="hero-photo-wrap">
+        <img class="hero-photo" src="profile.jpg" alt="Tristan Endo">
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="fade-in">
+      <p class="section-eyebrow">About</p>
+      <h2 class="section-title">Who I <em>Am</em></h2>
+      <div class="section-rule"></div>
+    </div>
+    <div class="about-grid fade-in">
+      <div class="about-text">
+        <p>
+          I'm <strong>Tristan Endo</strong>, a third-year Math-CS student at <strong>UC San Diego</strong>,
+          passionate about mathematics and its real-world applications in data science and finance.
+        </p>
+        <p>
+          I've built programs that examine the behavior of neural networks, simulate distributions
+          of Brownian motion, and extract audio stems based on frequency — and I'm currently
+          interning at Tekly Studio as a Quantitative Research &amp; AI Engineering intern, where I
+          develop and backtest ML-driven trading strategies on financial time series.
+        </p>
+        <p>
+          Right now, I'm most excited about natural language processing and its connection to
+          AI hallucination. I believe that by studying the patterns and sentence structures
+          of AI responses, we can identify inconsistencies in what the model produces —
+          which is a meaningful step toward reducing the spread of misinformation.
+        </p>
+      </div>
+      <div class="about-stats">
+        <div class="stat-item">
+          <div class="stat-number">2024</div>
+          <div class="stat-divider"></div>
+          <div class="stat-label">Started at UCSD</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">2027</div>
+          <div class="stat-divider"></div>
+          <div class="stat-label">Expected graduation</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" style="font-size:1.1rem; line-height:1.3;">Industry Roles</div>
+          <div class="stat-divider"></div>
+          <div class="stat-label">Tekly Studio</div>
+          <div class="stat-label">Think Twice Legal</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" style="font-size:1.1rem; line-height:1.3;">Natural Language Processing</div>
+          <div class="stat-divider"></div>
+          <div class="stat-label">Current focus — AI hallucination detection</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="fade-in">
+      <p class="section-eyebrow">Research &amp; Projects</p>
+      <h2 class="section-title">Selected <em>Research</em></h2>
+      <p class="projects-desc">
+      A selection of research projects I've worked on across mathematics, machine learning, and audio engineering. Click any project to view the full code and write-up on GitHub.</p>
+      <div class="section-rule"></div>
+    </div>
+    <div class="projects-list">
+
+      <a href="https://github.com/Tristane028/Neural-Network-Gaussian-Process-and-Conjugate-Kernels" target="_blank" class="project-card fade-in">
+        <div class="project-num">01</div>
+        <div>
+          <div class="project-name">Neural Network Gaussian Process &amp; Conjugate Kernels</div>
+          <p class="project-desc">Research with Prof. Alexander Cloninger at UCSD. I examined how different activation functions — ReLU, erf, and tanh — produce different conjugate kernels in neural networks, and looked at what happens to those kernels as network width increases toward the infinite-width limit predicted by NNGP theory.</p>
+          <div class="project-tags">
+            <span class="tag">Gaussian Processes</span><span class="tag">Theoretical Machine Learning</span>
+          </div>
+        </div>
+        <div class="project-arrow">↗</div>
+      </a>
+
+      <a href="https://github.com/Tristane028/Springer-Fibers" target="_blank" class="project-card fade-in">
+        <div class="project-num">02</div>
+        <div>
+          <div class="project-name">Springer Fibers — Algebraic Geometry &amp; Combinatorics</div>
+          <p class="project-desc">Ongoing research with Prof. Raymond Chou at UCSD. I built a Python tool that takes Jordan block structures as input and computes valid Young tableau fillings, Schubert cell matrices, and Plücker coordinates to help characterize the irreducible components of Springer fibers.</p>
+          <div class="project-tags">
+            <span class="tag">Algebraic Geometry</span><span class="tag">Combinatorics</span>
+          </div>
+        </div>
+        <div class="project-arrow">↗</div>
+      </a>
+
+      <a href="https://github.com/Tristane028/Brownian-Motion-Distributions-Simulation" target="_blank" class="project-card fade-in">
+        <div class="project-num">03</div>
+        <div>
+          <div class="project-name">Brownian Motion &amp; Stochastic Processes</div>
+          <p class="project-desc">Research with Prof. Robert Webber at UCSD. I simulated fractional Brownian motion across different Hurst parameters to study how the distribution of peaks changes, and derived the conditional distributions for the Brownian Bridge and Ornstein-Uhlenbeck Bridge.</p>
+          <div class="project-tags">
+            <span class="tag">Probability Theory</span><span class="tag">Stochastic Processes</span>
+          </div>
+        </div>
+        <div class="project-arrow">↗</div>
+      </a>
+
+      <a href="https://github.com/Tristane028/Audio-Signal-Processing-Demucs-Project" target="_blank" class="project-card fade-in">
+        <div class="project-num">04</div>
+        <div>
+          <div class="project-name">Demucs Source Separation - Audio Signal Processing</div>
+          <p class="project-desc">I used Meta Research's Demucs model to separate a full song into its individual components — vocals, drums, bass, and guitar — by frequency, then visualized each stem through spectrogram analysis. Built as part of my audio engineering work at Think Twice Legal.</p>
+          <div class="project-tags">
+            <span class="tag">Fourier Analysis</span><span class="tag">Signal Processing</span>
+          </div>
+        </div>
+        <div class="project-arrow">↗</div>
+      </a>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="skills-grid fade-in">
+      <div class="skill-group">
+        <div class="skill-group-title">Languages</div>
+        <div class="skill-list">
+          <span class="skill-item">C / C++</span>
+          <span class="skill-item">HTML</span>
+          <span class="skill-item">Java</span>
+          <span class="skill-item">MATLAB</span>
+          <span class="skill-item">Python</span>
+          <span class="skill-item">R</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Computational Methods</div>
+        <div class="skill-list">
+          <span class="skill-item">Backpropagation</span>
+          <span class="skill-item">Kernel Methods</span>
+          <span class="skill-item">Monte Carlo Simulation</span>
+          <span class="skill-item">Spectral Analysis</span>
+          <span class="skill-item">Time Series Forecasting</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Mathematics</div>
+        <div class="skill-list">
+          <span class="skill-item">Abstract Algebra</span>
+          <span class="skill-item">Enumerative Combinatorics</span>
+          <span class="skill-item">Probability Theory</span>
+          <span class="skill-item">Real Analysis</span>
+          <span class="skill-item">Stochastic Processes</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Areas of Interest</div>
+        <div class="skill-list">
+          <span class="skill-item">Algorithmic Trading</span>
+          <span class="skill-item">Audio Source Separation</span>
+          <span class="skill-item">Exploratory Data Analysis</span>
+          <span class="skill-item">NLP / AI Hallucination</span>
+          <span class="skill-item">Time-Series Modeling</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- PLAYGROUND -->
+  <section id="sandbox">
+    <div class="fade-in">
+      <p class="section-eyebrow">Interactive</p>
+      <h2 class="section-title">Simulation <em>Sandbox</em></h2>
+      <div class="section-rule"></div>
+    </div>
+    <div class="sandbox-grid">
+
+      <!-- DEMO 1: Brownian Motion Histogram -->
+      <div class="demo-block fade-in">
+        <div class="demo-header">
+          <div class="demo-title">Distribution of Maximals on [0,1], Fractional Brownian Motion</div>
+          <button class="demo-btn" onclick="runBM()">Resample</button>
+        </div>
+        <p class="demo-desc">Simulate the empirical distribution of the maximum value of fractional Brownian motion over [0,1] for a given Hurst parameter H. Each bar shows the frequency of a range of maximum values across many simulated paths — matching the exact distributions I studied with Prof. Webber.</p>
+        <div class="demo-controls">
+          <div class="demo-control">
+            <label>Hurst Parameter (H)</label>
+            <input type="range" id="bm-hurst" min="0.05" max="0.95" step="0.05" value="0.25" oninput="document.getElementById('bm-hval').textContent=parseFloat(this.value).toFixed(2); runBM()">
+            <span class="demo-val">H = <span id="bm-hval">0.25</span></span>
+          </div>
+          <div class="demo-control">
+            <label>Simulations</label>
+            <input type="range" id="bm-paths" min="200" max="2000" step="200" value="800" oninput="document.getElementById('bm-pval').textContent=this.value; runBM()">
+            <span class="demo-val"><span id="bm-pval">800</span> samples</span>
+          </div>
+          <div class="demo-control">
+            <label>Bins</label>
+            <input type="range" id="bm-bins" min="10" max="60" step="5" value="30" oninput="document.getElementById('bm-bval').textContent=this.value; runBM()">
+            <span class="demo-val"><span id="bm-bval">30</span> bins</span>
+          </div>
+        </div>
+        <div class="demo-canvas-wrap">
+          <canvas class="demo-canvas" id="bm-canvas"></canvas>
+        </div>
+      </div>
+
+      <!-- DEMO 2: NNGP Correlation vs Depth -->
+      <div class="demo-block fade-in">
+        <div class="demo-header">
+          <div class="demo-title">NNGP Kernel Correlation vs Depth</div>
+          <button class="demo-btn" onclick="runKernel()">Recompute</button>
+        </div>
+        <p class="demo-desc">Select an activation function and network width to see how kernel correlation evolves with depth — matching the style of plots from my research with Prof. Cloninger. ReLU networks converge smoothly; erf and tanh exhibit oscillatory behavior at finite width.</p>
+        <div class="demo-controls">
+          <div class="demo-control">
+            <label>Activation Function</label>
+            <select id="kernel-act" onchange="runKernel()">
+              <option value="relu">RELU</option>
+              <option value="erf">ERF</option>
+              <option value="tanh">TANH</option>
+            </select>
+          </div>
+          <div class="demo-control">
+            <label>Network Width</label>
+            <input type="range" id="kernel-width" min="2" max="512" step="1" value="36" oninput="document.getElementById('kernel-wval').textContent=this.value; runKernel()">
+            <span class="demo-val">width = <span id="kernel-wval">36</span></span>
+          </div>
+          <div class="demo-control">
+            <label>Max Depth</label>
+            <input type="range" id="kernel-depth" min="5" max="30" step="1" value="17" oninput="document.getElementById('kernel-dval').textContent=this.value; runKernel()">
+            <span class="demo-val">depth = <span id="kernel-dval">17</span></span>
+          </div>
+        </div>
+        <div class="demo-canvas-wrap">
+          <canvas class="demo-canvas" id="kernel-canvas"></canvas>
+        </div>
+      </div>
+
+      <!-- DEMO 3: Stochastic Path Generator -->
+      <div class="demo-block fade-in">
+        <div class="demo-header">
+          <div class="demo-title">Stochastic Path Generator</div>
+          <button class="demo-btn" onclick="clearPaths()">Clear</button>
+        </div>
+        <p class="demo-desc">Click anywhere on the canvas to plant a starting point and watch stochastic paths diverge from it in real time. Each path evolves independently under Brownian dynamics — a live illustration of path-dependent randomness.</p>
+        <div class="demo-controls">
+          <div class="demo-control">
+            <label>Drift (μ)</label>
+            <input type="range" id="sp-drift" min="-1" max="1" step="0.1" value="0" oninput="document.getElementById('sp-dval').textContent=parseFloat(this.value).toFixed(1)">
+            <span class="demo-val">μ = <span id="sp-dval">0.0</span></span>
+          </div>
+          <div class="demo-control">
+            <label>Volatility (σ)</label>
+            <input type="range" id="sp-vol" min="0.1" max="2" step="0.1" value="0.6" oninput="document.getElementById('sp-vval').textContent=parseFloat(this.value).toFixed(1)">
+            <span class="demo-val">σ = <span id="sp-vval">0.6</span></span>
+          </div>
+          <div class="demo-control">
+            <label>Paths per click</label>
+            <input type="range" id="sp-count" min="1" max="20" step="1" value="8" oninput="document.getElementById('sp-cval').textContent=this.value">
+            <span class="demo-val"><span id="sp-cval">8</span> paths</span>
+          </div>
+        </div>
+        <div class="demo-canvas-wrap" style="cursor:crosshair;">
+          <canvas class="demo-canvas" id="sp-canvas"></canvas>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="fade-in">
+      <p class="section-eyebrow">Contact</p>
+      <h2 class="section-title">Let's <em>Connect</em></h2>
+      <div class="section-rule"></div>
+      <p class="contact-desc">
+        I'm always open to internships, research opportunities, and interesting
+        problems to work on. Feel free to reach out — I'd love to connect.
+      </p>
+      <a href="mailto:ttendo@ucsd.edu" class="btn btn-primary">Say Hello →</a>
+      <div class="contact-links">
+        <a href="https://github.com/Tristane028" class="contact-link" target="_blank">GitHub</a>
+        <a href="https://www.linkedin.com/in/tristan-endo-35339532a/" class="contact-link" target="_blank">LinkedIn</a>
+        <a href="mailto:ttendo@ucsd.edu" class="contact-link">Email</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 Tristan Endo &nbsp;·&nbsp; Built with HTML &amp; CSS &nbsp;·&nbsp; Hosted on GitHub Pages</p>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    const canvas = document.getElementById('nn-canvas');
+    const ctx = canvas.getContext('2d');
+    let W, H, nodes;
+    const ACCENT = 'rgba(200, 169, 110,';
+    const LAYERS = [0.18, 0.38, 0.58, 0.78, 0.92];
+
+    function resize() {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+      buildNetwork();
+    }
+
+    function buildNetwork() {
+      nodes = [];
+      LAYERS.forEach((lx, li) => {
+        const count = [6,10,12,10,6][li];
+        for (let i = 0; i < count; i++) {
+          nodes.push({
+            x: lx*W+(Math.random()-.5)*W*0.06,
+            y: H*0.15+(i/(count-1))*H*0.7+(Math.random()-.5)*30,
+            vx:(Math.random()-.5)*0.18, vy:(Math.random()-.5)*0.18,
+            r:Math.random()*1.8+1.2, pulse:Math.random()*Math.PI*2,
+            pulseSpeed:0.012+Math.random()*0.018, layer:li,
+            alpha:0.3+Math.random()*0.4
+          });
+        }
+      });
+      for (let i=0;i<8;i++) nodes.push({
+        x:Math.random()*W, y:Math.random()*H,
+        vx:(Math.random()-.5)*0.12, vy:(Math.random()-.5)*0.12,
+        r:1, pulse:Math.random()*Math.PI*2,
+        pulseSpeed:0.008+Math.random()*0.01, layer:-1,
+        alpha:0.1+Math.random()*0.15
+      });
+    }
+
+    function drawFrame() {
+      ctx.clearRect(0,0,W,H);
+      nodes.forEach(n => {
+        n.x+=n.vx; n.y+=n.vy; n.pulse+=n.pulseSpeed;
+        if(n.x<0||n.x>W) n.vx*=-1;
+        if(n.y<0||n.y>H) n.vy*=-1;
+      });
+      for(let i=0;i<nodes.length;i++) {
+        for(let j=i+1;j<nodes.length;j++) {
+          const a=nodes[i],b=nodes[j];
+          const dx=a.x-b.x,dy=a.y-b.y,dist=Math.sqrt(dx*dx+dy*dy);
+          if(dist<160&&(a.layer===-1||b.layer===-1||Math.abs(a.layer-b.layer)<=1)) {
+            const s=1-dist/160,p=(Math.sin(a.pulse)+1)/2;
+            ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+            ctx.strokeStyle=`${ACCENT}${s*0.18*(0.6+p*0.4)})`; ctx.lineWidth=s*0.8; ctx.stroke();
+          }
+        }
+      }
+      nodes.forEach(n => {
+        const p=(Math.sin(n.pulse)+1)/2, g=n.r*(2.5+p*2);
+        const grad=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,g);
+        grad.addColorStop(0,`${ACCENT}${n.alpha*(0.6+p*0.4)})`);
+        grad.addColorStop(1,`${ACCENT}0)`);
+        ctx.beginPath(); ctx.arc(n.x,n.y,g,0,Math.PI*2);
+        ctx.fillStyle=grad; ctx.fill();
+        ctx.beginPath(); ctx.arc(n.x,n.y,n.r*(0.8+p*0.4),0,Math.PI*2);
+        ctx.fillStyle=`${ACCENT}${n.alpha})`; ctx.fill();
+      });
+      requestAnimationFrame(drawFrame);
+    }
+    window.addEventListener('resize', resize);
+    resize(); drawFrame();
+
+    function singleFBMMax(steps, H) {
+      let prev = 0, maxVal = 0;
+      for (let i = 1; i < steps; i++) {
+        const z = (Math.random()+Math.random()+Math.random()+Math.random()+Math.random()+Math.random()-3)/3;
+        prev += z * Math.pow(1/steps, H);
+        if (prev > maxVal) maxVal = prev;
+      }
+      return maxVal;
+    }
+
+    function runBM() {
+      const c = document.getElementById('bm-canvas');
+      const cx = c.getContext('2d');
+      const CW = c.offsetWidth, CH = c.offsetHeight;
+      c.width = CW; c.height = CH;
+      const H = parseFloat(document.getElementById('bm-hurst').value);
+      const nSim = parseInt(document.getElementById('bm-paths').value);
+      const nBins = parseInt(document.getElementById('bm-bins').value);
+      const steps = 200;
+      const maxVals = [];
+      for (let i = 0; i < nSim; i++) maxVals.push(singleFBMMax(steps, H));
+      const lo = 0, hi = Math.max(...maxVals) * 1.05;
+      const binW = (hi - lo) / nBins;
+      const counts = new Array(nBins).fill(0);
+      maxVals.forEach(v => { const b = Math.min(Math.floor((v - lo) / binW), nBins - 1); counts[b]++; });
+      const densities = counts.map(c => c / (nSim * binW));
+      const maxD = Math.max(...densities) || 1;
+      cx.clearRect(0, 0, CW, CH);
+      const PAD = { top: 30, right: 20, bottom: 40, left: 52 };
+      const plotW = CW - PAD.left - PAD.right;
+      const plotH = CH - PAD.top - PAD.bottom;
+      const yTicks = 5;
+      cx.strokeStyle = 'rgba(200,169,110,0.08)'; cx.lineWidth = 1;
+      for (let i = 0; i <= yTicks; i++) {
+        const y = PAD.top + plotH - (i / yTicks) * plotH;
+        cx.beginPath(); cx.moveTo(PAD.left, y); cx.lineTo(PAD.left + plotW, y); cx.stroke();
+        cx.fillStyle = 'rgba(200,169,110,0.45)'; cx.font = '10px Inter,sans-serif'; cx.textAlign = 'right';
+        cx.fillText((maxD * i / yTicks).toFixed(2), PAD.left - 6, y + 3);
+      }
+      cx.strokeStyle = 'rgba(200,169,110,0.3)'; cx.lineWidth = 1;
+      cx.beginPath(); cx.moveTo(PAD.left, PAD.top); cx.lineTo(PAD.left, PAD.top + plotH); cx.stroke();
+      cx.beginPath(); cx.moveTo(PAD.left, PAD.top + plotH); cx.lineTo(PAD.left + plotW, PAD.top + plotH); cx.stroke();
+      const barW = plotW / nBins;
+      densities.forEach((d, i) => {
+        const x = PAD.left + i * barW; const bH = (d / maxD) * plotH; const y = PAD.top + plotH - bH;
+        cx.fillStyle = 'rgba(100,149,200,0.65)'; cx.fillRect(x + 1, y, barW - 2, bH);
+        cx.strokeStyle = 'rgba(100,149,200,0.9)'; cx.lineWidth = 0.5; cx.strokeRect(x + 1, y, barW - 2, bH);
+      });
+      cx.fillStyle = 'rgba(200,169,110,0.45)'; cx.font = '10px Inter,sans-serif'; cx.textAlign = 'center';
+      const xTicks = 6;
+      for (let i = 0; i <= xTicks; i++) { const val = lo + (hi - lo) * i / xTicks; const x = PAD.left + (i / xTicks) * plotW; cx.fillText(val.toFixed(1), x, PAD.top + plotH + 14); }
+      cx.fillStyle = 'rgba(200,169,110,0.6)'; cx.font = '11px Inter,sans-serif'; cx.textAlign = 'center';
+      cx.fillText('Maximum value', PAD.left + plotW / 2, CH - 4);
+      cx.save(); cx.translate(12, PAD.top + plotH / 2); cx.rotate(-Math.PI/2); cx.fillText('Empirical density', 0, 0); cx.restore();
+      cx.font = '11px Inter,sans-serif'; cx.textAlign = 'center'; cx.fillStyle = 'rgba(200,169,110,0.7)';
+      cx.fillText(`Distribution of max fBM on [0,1]  (H = ${H.toFixed(2)})`, PAD.left + plotW/2, PAD.top - 10);
+    }
+
+    function randn() { let u = 0, v = 0; while (u === 0) u = Math.random(); while (v === 0) v = Math.random(); return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v); }
+    function randnVec(n) { return Array.from({length: n}, randn); }
+    function randnMatrix(rows, cols) { return Array.from({length: rows}, () => randnVec(cols)); }
+    function norm(v) { return Math.sqrt(v.reduce((s, x) => s + x*x, 0)); }
+    function normalize(v) { const n = norm(v); return n === 0 ? v : v.map(x => x / n); }
+    function matVecMul(W, h) { return W.map(row => row.reduce((s, w, j) => s + w * h[j], 0)); }
+    function applyAct(z, act) { switch(act) { case 'relu': return z.map(x => Math.max(0, x)); case 'erf': return z.map(x => erfApprox(x)); case 'tanh': return z.map(x => Math.tanh(x)); default: return z; } }
+    function erfApprox(x) { const sign = x >= 0 ? 1 : -1; x = Math.abs(x); const t = 1 / (1 + 0.3275911 * x); const y = 1 - (((((1.061405429*t - 1.453152027)*t) + 1.421413741)*t - 0.284496736)*t + 0.254829592)*t * Math.exp(-x*x); return sign * y; }
+    function runNetwork(width, act, depth, inputDim) {
+      let h1 = normalize(randnVec(inputDim)); let h2 = normalize(randnVec(inputDim)); const corrs = [];
+      for (let layer = 0; layer < depth; layer++) {
+        const len = h1.length; const scale = 1 / Math.sqrt(len);
+        const W = randnMatrix(width, len).map(row => row.map(w => w * scale));
+        h1 = applyAct(matVecMul(W, h1), act); h2 = applyAct(matVecMul(W, h2), act);
+        const n1 = norm(h1), n2 = norm(h2);
+        const rho = (n1 === 0 || n2 === 0) ? 0 : h1.reduce((s, v, i) => s + v * h2[i], 0) / (n1 * n2);
+        corrs.push(rho);
+      }
+      return corrs;
+    }
+    function runKernel() {
+      const c = document.getElementById('kernel-canvas'); const cx = c.getContext('2d');
+      const CW = c.offsetWidth, CH = c.offsetHeight; c.width = CW; c.height = CH;
+      const act = document.getElementById('kernel-act').value;
+      const width = parseInt(document.getElementById('kernel-width').value);
+      const maxDepth = parseInt(document.getElementById('kernel-depth').value);
+      const runs = 30; const inputDim = 21;
+      const allRuns = Array.from({length: runs}, () => runNetwork(width, act, maxDepth, inputDim));
+      const corrs = Array.from({length: maxDepth}, (_, d) => allRuns.reduce((s, r) => s + r[d], 0) / runs);
+      cx.clearRect(0, 0, CW, CH);
+      const PAD = { top: 30, right: 20, bottom: 40, left: 52 };
+      const plotW = CW - PAD.left - PAD.right; const plotH = CH - PAD.top - PAD.bottom;
+      const minC = Math.min(...corrs) - 0.02; const maxC = Math.max(...corrs) + 0.02; const range = maxC - minC || 1;
+      function toX(d) { return PAD.left + (d / (maxDepth - 1)) * plotW; }
+      function toY(v) { return PAD.top + plotH - ((v - minC) / range) * plotH; }
+      const yTicks = 5;
+      cx.strokeStyle = 'rgba(200,169,110,0.08)'; cx.lineWidth = 1;
+      for (let i = 0; i <= yTicks; i++) { const v = minC + (range * i / yTicks); const y = toY(v); cx.beginPath(); cx.moveTo(PAD.left, y); cx.lineTo(PAD.left + plotW, y); cx.stroke(); cx.fillStyle = 'rgba(200,169,110,0.45)'; cx.font = '10px Inter,sans-serif'; cx.textAlign = 'right'; cx.fillText(v.toFixed(2), PAD.left - 6, y + 3); }
+      const xTicks = Math.min(maxDepth - 1, 8);
+      for (let i = 0; i <= xTicks; i++) { const d = Math.round(i * (maxDepth - 1) / xTicks); const x = toX(d); cx.strokeStyle = 'rgba(200,169,110,0.08)'; cx.beginPath(); cx.moveTo(x, PAD.top); cx.lineTo(x, PAD.top + plotH); cx.stroke(); cx.fillStyle = 'rgba(200,169,110,0.45)'; cx.font = '10px Inter,sans-serif'; cx.textAlign = 'center'; cx.fillText(d, x, PAD.top + plotH + 14); }
+      if (minC < 0 && maxC > 0) { cx.strokeStyle = 'rgba(200,169,110,0.2)'; cx.lineWidth = 1; cx.beginPath(); cx.moveTo(PAD.left, toY(0)); cx.lineTo(PAD.left + plotW, toY(0)); cx.stroke(); }
+      cx.strokeStyle = 'rgba(200,169,110,0.3)'; cx.lineWidth = 1;
+      cx.beginPath(); cx.moveTo(PAD.left, PAD.top); cx.lineTo(PAD.left, PAD.top + plotH); cx.stroke();
+      cx.beginPath(); cx.moveTo(PAD.left, PAD.top + plotH); cx.lineTo(PAD.left + plotW, PAD.top + plotH); cx.stroke();
+      cx.beginPath();
+      corrs.forEach((v, d) => { d === 0 ? cx.moveTo(toX(d), toY(v)) : cx.lineTo(toX(d), toY(v)); });
+      cx.strokeStyle = '#4a90c8'; cx.lineWidth = 2; cx.stroke();
+      corrs.forEach((v, d) => { cx.beginPath(); cx.arc(toX(d), toY(v), 2.5, 0, Math.PI*2); cx.fillStyle = '#4a90c8'; cx.fill(); });
+      const actLabel = {relu:'RELU', erf:'ERF', tanh:'TANH'}[act];
+      cx.fillStyle = 'rgba(200,169,110,0.7)'; cx.font = '11px Inter,sans-serif'; cx.textAlign = 'center';
+      cx.fillText(`${actLabel}  (width = ${width})`, PAD.left + plotW/2, PAD.top - 10);
+      cx.fillStyle = 'rgba(200,169,110,0.45)'; cx.fillText('Depth', PAD.left + plotW/2, CH - 4);
+      cx.save(); cx.translate(12, PAD.top + plotH/2); cx.rotate(-Math.PI/2); cx.fillText('Correlation', 0, 0); cx.restore();
+    }
+
+    const spCanvas = document.getElementById('sp-canvas');
+    const spCtx = spCanvas.getContext('2d');
+    let spPaths = []; let spAnimating = false;
+    function resizeSP() { spCanvas.width = spCanvas.offsetWidth; spCanvas.height = spCanvas.offsetHeight; redrawSP(); }
+    function clearPaths() { spPaths = []; spCtx.clearRect(0,0,spCanvas.width,spCanvas.height); drawSPGrid(); }
+    function drawSPGrid() { const W=spCanvas.width, H=spCanvas.height; spCtx.strokeStyle='rgba(200,169,110,0.06)'; spCtx.lineWidth=1; for(let i=0;i<=4;i++){ spCtx.beginPath(); spCtx.moveTo(0,(i/4)*H); spCtx.lineTo(W,(i/4)*H); spCtx.stroke(); } spCtx.strokeStyle='rgba(200,169,110,0.12)'; spCtx.lineWidth=1; spCtx.beginPath(); spCtx.moveTo(0,H/2); spCtx.lineTo(W,H/2); spCtx.stroke(); }
+    function redrawSP() { const W=spCanvas.width, H=spCanvas.height; spCtx.clearRect(0,0,W,H); drawSPGrid(); const colors=['#c8a96e','#a08050','#d4b87e','#e8cc94','#b09060','#8a6840','#c0a060','#dac080','#907040','#b8a070','#e0c888','#a89058','#c8b080','#d0b878','#b0a060','#c4a868','#9a7848','#d8be88','#b8985a','#cca868']; spPaths.forEach((path, pi) => { if(path.drawn.length < 2) return; spCtx.beginPath(); path.drawn.forEach((pt,i) => { const x=pt.x, y=pt.y; i===0?spCtx.moveTo(x,y):spCtx.lineTo(x,y); }); spCtx.strokeStyle=colors[pi%colors.length]; spCtx.lineWidth=1.2; spCtx.globalAlpha=0.7; spCtx.stroke(); spCtx.globalAlpha=1; const tip=path.drawn[path.drawn.length-1]; spCtx.beginPath(); spCtx.arc(tip.x,tip.y,2.5,0,Math.PI*2); spCtx.fillStyle=colors[pi%colors.length]; spCtx.fill(); }); }
+    function animateSP() { if(!spAnimating) return; const W=spCanvas.width, H=spCanvas.height; const drift=parseFloat(document.getElementById('sp-drift').value); const vol=parseFloat(document.getElementById('sp-vol').value); let allDone=true; spPaths.forEach(path => { if(path.drawn.length < path.total) { allDone=false; const steps=3; for(let s=0;s<steps&&path.drawn.length<path.total;s++){ const last=path.drawn[path.drawn.length-1]; const z=(Math.random()+Math.random()-1)*1.2; const nx=last.x+2; const ny=last.y+drift*0.8+z*vol*8; if(nx>W||ny<0||ny>H) { path.total=path.drawn.length; break; } path.drawn.push({x:nx,y:ny}); } } }); redrawSP(); if(!allDone) requestAnimationFrame(animateSP); else spAnimating=false; }
+    spCanvas.addEventListener('click', (e) => { const rect=spCanvas.getBoundingClientRect(); const x=e.clientX-rect.left, y=e.clientY-rect.top; const count=parseInt(document.getElementById('sp-count').value); const W=spCanvas.width; for(let i=0;i<count;i++){ spPaths.push({ drawn:[{x,y}], total:Math.floor((W-x)/2)+1 }); } if(!spAnimating){ spAnimating=true; animateSP(); } });
+    window.addEventListener('resize', () => { resizeSP(); });
+    window.addEventListener('load', () => { setTimeout(() => { runBM(); runKernel(); resizeSP(); drawSPGrid(); }, 200); });
+  <\/script>
+
+</body>
+</html>
