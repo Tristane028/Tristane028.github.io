@@ -1160,7 +1160,7 @@
     spCanvas.addEventListener('click', (e) => { const rect=spCanvas.getBoundingClientRect(); const x=e.clientX-rect.left, y=e.clientY-rect.top; const count=parseInt(document.getElementById('sp-count').value); const W=spCanvas.width; for(let i=0;i<count;i++){ spPaths.push({ drawn:[{x,y}], total:Math.floor((W-x)/2)+1 }); } if(!spAnimating){ spAnimating=true; animateSP(); } });
     window.addEventListener('resize', () => { resizeSP(); });
     window.addEventListener('load', () => { setTimeout(() => { runBM(); runKernel(); resizeSP(); drawSPGrid(); }, 200); });
-  <\/script>
+  </script>
 
 </body>
 </html>
