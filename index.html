@@ -25,6 +25,35 @@
     }
     html { scroll-behavior: smooth; }
     body { background: var(--bg); color: var(--text); font-family: var(--font-sans); font-size: 15px; font-weight: 300; line-height: 1.8; overflow-x: hidden; }
+
+    /* HERO PHOTO */
+    .hero-layout {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 4rem;
+      align-items: center;
+      width: 100%;
+    }
+    .hero-photo-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+    .hero-photo {
+      width: 220px;
+      height: 270px;
+      object-fit: cover;
+      object-position: center top;
+      filter: grayscale(20%) contrast(1.05);
+      border: 1px solid var(--border);
+    }
+    @media (max-width: 768px) {
+      .hero-layout { grid-template-columns: 1fr; }
+      .hero-photo-wrap { justify-content: flex-start; }
+      .hero-photo { width: 160px; height: 200px; }
+    }
+
     #nn-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.5; }
     nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 5rem; background: rgba(14,14,14,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
     .nav-logo { font-family: var(--font-serif); font-weight: 400; font-style: italic; font-size: 1.3rem; color: var(--accent); letter-spacing: 0.02em; text-decoration: none; }
@@ -131,17 +160,24 @@
   </nav>
 
   <section id="hero">
-    <h1 class="hero-name">Tristan<br><em>Endo</em></h1>
-    <div class="hero-eyebrow">Math–Computer Science · UC San Diego</div>
-    <div class="hero-rule"></div>
-    <p class="hero-title">Researcher · Engineer · Student</p>
-    <p class="hero-desc">
-      Third year Math-CS student at UCSD, passionate about math and its applications
-      towards data science and finance — currently exploring NLP and AI hallucination detection.
-    </p>
-    <div class="hero-cta">
-      <a href="#projects" class="btn btn-primary">View Research</a>
-      <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+    <div class="hero-layout">
+      <div class="hero-left">
+        <h1 class="hero-name">Tristan<br><em>Endo</em></h1>
+        <div class="hero-eyebrow">Math–Computer Science · UC San Diego</div>
+        <div class="hero-rule"></div>
+        <p class="hero-title">Researcher · Engineer · Student</p>
+        <p class="hero-desc">
+          Third year Math-CS student at UCSD, passionate about math and its applications
+          towards data science and finance — currently exploring NLP and AI hallucination detection.
+        </p>
+        <div class="hero-cta">
+          <a href="#projects" class="btn btn-primary">View Research</a>
+          <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+        </div>
+      </div>
+      <div class="hero-photo-wrap">
+        <img class="hero-photo" src="profile.jpg" alt="Tristan Endo">
+      </div>
     </div>
   </section>
 
