@@ -640,8 +640,7 @@
       <li><a href="#skills">Skills</a></li>
       <li><a href="#simulation">Simulation</a></li>
       <li><a href="#contact">Contact</a></li>
-      <li><a href="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/Tristane028/Tristane028.github.io/main/Endo_Curriculum_Vitaé_05_28_2026.pdf
-" target="_blank" style="color: var(--accent); border: 1px solid var(--accent); padding: 0.3rem 0.8rem;">Curriculum Vitaé ↗</a></li>
+      <li><a href="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/Tristane028/Tristane028.github.io/main/Endo_Curriculum_Vitae_05_28_2026.pdf" target="_blank" style="color: var(--accent); border: 1px solid var(--accent); padding: 0.3rem 0.8rem;">Curriculum Vitaé ↗</a></li>
     </ul>
   </nav>
 
@@ -855,7 +854,7 @@
           <div class="demo-title">Distribution of Maximals on [0,1], Fractional Brownian Motion</div>
           <button class="demo-btn" onclick="runBM()">Resample</button>
         </div>
-        <p class="demo-desc">Simulate the empirical distribution of the maximum value of fractional Brownian motion over [0,1] for a given Hurst parameter H. Each bar shows the frequency of a range of maximum values across many simulated paths — matching the exact distributions I studied with Prof. Webber.</p>
+        <p class="demo-desc">This simulates what I studied with Prof. Webber — the distribution of the maximum value of fractional Brownian motion over [0,1]. Adjust the Hurst parameter H to see how the shape changes: lower H gives rougher, more erratic paths, while higher H produces smoother, more persistent ones. Each bar represents how often the maximum landed in that range across all simulated paths.</p>
         <div class="demo-controls">
           <div class="demo-control">
             <label>Hurst Parameter (H)</label>
@@ -884,7 +883,7 @@
           <div class="demo-title">NNGP Kernel Correlation vs Depth</div>
           <button class="demo-btn" onclick="runKernel()">Recompute</button>
         </div>
-        <p class="demo-desc">Select an activation function and network width to see how kernel correlation evolves with depth — matching the style of plots from my research with Prof. Cloninger. ReLU networks converge smoothly; erf and tanh exhibit oscillatory behavior at finite width.</p>
+        <p class="demo-desc">This is a live version of the experiment I ran with Prof. Cloninger. Select an activation function and adjust the width to see how kernel correlation between two inputs changes as you go deeper into the network. The key finding: ReLU networks converge smoothly toward their infinite-width limit, while erf and tanh show oscillatory behavior at smaller widths — exactly the kind of instability that motivated the research.</p>
         <div class="demo-controls">
           <div class="demo-control">
             <label>Activation Function</label>
@@ -916,7 +915,7 @@
           <div class="demo-title">Stochastic Path Generator</div>
           <button class="demo-btn" onclick="clearPaths()">Clear</button>
         </div>
-        <p class="demo-desc">Click anywhere on the canvas to plant a starting point and watch stochastic paths diverge from it in real time. Each path evolves independently under Brownian dynamics — a live illustration of path-dependent randomness.</p>
+        <p class="demo-desc">Click anywhere on the canvas to drop a starting point and watch paths branch off from it in real time. Each one evolves independently — small random steps accumulate into wildly different trajectories. Try cranking up the volatility or adding drift to see how the dynamics shift. It's a simple but visual way to see why stochastic processes are so hard to predict.</p>
         <div class="demo-controls">
           <div class="demo-control">
             <label>Drift (μ)</label>
