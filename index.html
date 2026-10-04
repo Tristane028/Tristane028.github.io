@@ -640,7 +640,7 @@
       <li><a href="#skills">Skills</a></li>
       <li><a href="#simulation">Simulation</a></li>
       <li><a href="#contact">Contact</a></li>
-      <li><a href="https://tristane028.github.io/Endo_Curriculum_Vitae_07_21_2026.pdf" target="_blank" style="color: var(--accent); border: 1px solid var(--accent); padding: 0.3rem 0.8rem;">Curriculum Vitaé ↗</a></li>
+      <li><a href="https://tristane028.github.io/Endo_Curriculum_Vitae_10_03_2026.pdf" target="_blank" style="color: var(--accent); border: 1px solid var(--accent); padding: 0.3rem 0.8rem;">Curriculum Vitaé ↗</a></li>
     </ul>
   </nav>
 
@@ -913,32 +913,27 @@
         </div>
       </div>
 
-      <!-- DEMO 3: Stochastic Path Generator -->
+      <!-- DEMO 3: Springer Fiber Cell Degeneration -->
       <div class="demo-block fade-in">
         <div class="demo-header">
-          <div class="demo-title">Stochastic Path Generator</div>
-          <button class="demo-btn" onclick="clearPaths()">Clear</button>
+          <div class="demo-title">Springer Fiber Cell Degeneration</div>
+          <button class="demo-btn" onclick="runSF()">Run degeneration</button>
         </div>
-        <p class="demo-desc">Click anywhere on the canvas to drop a starting point and watch the paths spin off from it in real time. Every path does its own thing, just small random steps that pile up into wildly different trajectories. Crank up the volatility or throw in some drift and see how the whole picture changes. It's a really simple way to feel why stochastic processes are such a pain to predict.</p>
+        <p class="demo-desc">A live taste of the Springer fiber visualizer I'm building with Prof. Chou. Each ring is a cell of the fiber, nested from the starting cell on the outside down to the destination at the glowing core, so closure containment becomes something you can literally see. Hit "Run degeneration" and watch the cell collapse inward, with parameters streaming into the core the same way the full 3D tool animates it. Slide the chain length to add or drop intermediate cells.</p>
         <div class="demo-controls">
           <div class="demo-control">
-            <label>Drift (μ)</label>
-            <input type="range" id="sp-drift" min="-1" max="1" step="0.1" value="0" oninput="document.getElementById('sp-dval').textContent=parseFloat(this.value).toFixed(1)">
-            <span class="demo-val">μ = <span id="sp-dval">0.0</span></span>
+            <label>Cells in chain</label>
+            <input type="range" id="sf-cells" min="2" max="6" step="1" value="4" oninput="document.getElementById('sf-cval').textContent=this.value; buildSF()">
+            <span class="demo-val"><span id="sf-cval">4</span> cells</span>
           </div>
           <div class="demo-control">
-            <label>Volatility (σ)</label>
-            <input type="range" id="sp-vol" min="0.1" max="2" step="0.1" value="0.6" oninput="document.getElementById('sp-vval').textContent=parseFloat(this.value).toFixed(1)">
-            <span class="demo-val">σ = <span id="sp-vval">0.6</span></span>
-          </div>
-          <div class="demo-control">
-            <label>Paths per click</label>
-            <input type="range" id="sp-count" min="1" max="20" step="1" value="8" oninput="document.getElementById('sp-cval').textContent=this.value">
-            <span class="demo-val"><span id="sp-cval">8</span> paths</span>
+            <label>Rotation</label>
+            <input type="range" id="sf-spin" min="0" max="100" step="5" value="40" oninput="document.getElementById('sf-sval').textContent=this.value">
+            <span class="demo-val">spin = <span id="sf-sval">40</span></span>
           </div>
         </div>
-        <div class="demo-canvas-wrap" style="cursor:crosshair;">
-          <canvas class="demo-canvas" id="sp-canvas"></canvas>
+        <div class="demo-canvas-wrap">
+          <canvas class="demo-canvas" id="sf-canvas"></canvas>
         </div>
       </div>
 
@@ -1158,17 +1153,135 @@
       cx.save(); cx.translate(12, PAD.top + plotH/2); cx.rotate(-Math.PI/2); cx.fillText('Correlation', 0, 0); cx.restore();
     }
 
-    const spCanvas = document.getElementById('sp-canvas');
-    const spCtx = spCanvas.getContext('2d');
-    let spPaths = []; let spAnimating = false;
-    function resizeSP() { spCanvas.width = spCanvas.offsetWidth; spCanvas.height = spCanvas.offsetHeight; redrawSP(); }
-    function clearPaths() { spPaths = []; spCtx.clearRect(0,0,spCanvas.width,spCanvas.height); drawSPGrid(); }
-    function drawSPGrid() { const W=spCanvas.width, H=spCanvas.height; spCtx.strokeStyle='rgba(200,169,110,0.06)'; spCtx.lineWidth=1; for(let i=0;i<=4;i++){ spCtx.beginPath(); spCtx.moveTo(0,(i/4)*H); spCtx.lineTo(W,(i/4)*H); spCtx.stroke(); } spCtx.strokeStyle='rgba(200,169,110,0.12)'; spCtx.lineWidth=1; spCtx.beginPath(); spCtx.moveTo(0,H/2); spCtx.lineTo(W,H/2); spCtx.stroke(); }
-    function redrawSP() { const W=spCanvas.width, H=spCanvas.height; spCtx.clearRect(0,0,W,H); drawSPGrid(); const colors=['#c8a96e','#a08050','#d4b87e','#e8cc94','#b09060','#8a6840','#c0a060','#dac080','#907040','#b8a070','#e0c888','#a89058','#c8b080','#d0b878','#b0a060','#c4a868','#9a7848','#d8be88','#b8985a','#cca868']; spPaths.forEach((path, pi) => { if(path.drawn.length < 2) return; spCtx.beginPath(); path.drawn.forEach((pt,i) => { const x=pt.x, y=pt.y; i===0?spCtx.moveTo(x,y):spCtx.lineTo(x,y); }); spCtx.strokeStyle=colors[pi%colors.length]; spCtx.lineWidth=1.2; spCtx.globalAlpha=0.7; spCtx.stroke(); spCtx.globalAlpha=1; const tip=path.drawn[path.drawn.length-1]; spCtx.beginPath(); spCtx.arc(tip.x,tip.y,2.5,0,Math.PI*2); spCtx.fillStyle=colors[pi%colors.length]; spCtx.fill(); }); }
-    function animateSP() { if(!spAnimating) return; const W=spCanvas.width, H=spCanvas.height; const drift=parseFloat(document.getElementById('sp-drift').value); const vol=parseFloat(document.getElementById('sp-vol').value); let allDone=true; spPaths.forEach(path => { if(path.drawn.length < path.total) { allDone=false; const steps=3; for(let s=0;s<steps&&path.drawn.length<path.total;s++){ const last=path.drawn[path.drawn.length-1]; const z=(Math.random()+Math.random()-1)*1.2; const nx=last.x+2; const ny=last.y+drift*0.8+z*vol*8; if(nx>W||ny<0||ny>H) { path.total=path.drawn.length; break; } path.drawn.push({x:nx,y:ny}); } } }); redrawSP(); if(!allDone) requestAnimationFrame(animateSP); else spAnimating=false; }
-    spCanvas.addEventListener('click', (e) => { const rect=spCanvas.getBoundingClientRect(); const x=e.clientX-rect.left, y=e.clientY-rect.top; const count=parseInt(document.getElementById('sp-count').value); const W=spCanvas.width; for(let i=0;i<count;i++){ spPaths.push({ drawn:[{x,y}], total:Math.floor((W-x)/2)+1 }); } if(!spAnimating){ spAnimating=true; animateSP(); } });
-    window.addEventListener('resize', () => { resizeSP(); });
-    window.addEventListener('load', () => { setTimeout(() => { runBM(); runKernel(); resizeSP(); drawSPGrid(); }, 200); });
+    // ---- DEMO 3: Springer fiber cell degeneration ----
+    // A compact standalone echo of the full 3D Springer fiber visualizer: the
+    // cells of a degeneration chain drawn as concentric rings (start cell on the
+    // outside, destination at the core); "Run degeneration" sends parameters
+    // spiralling inward into the brightening core.
+    const sfCanvas = document.getElementById('sf-canvas');
+    const sfCtx = sfCanvas.getContext('2d');
+    const SF_GOLD = '200,169,110';
+    const SF_BLUE = '100,149,200';
+    const SF_RUN_MS = 3200;
+    let sfShells = [];
+    let sfParticles = [];
+    let sfRunStart = -1;   // timestamp of the active run, or -1 when idle
+    let sfRot = 0;
+    let sfLast = 0;
+
+    function sfResize() {
+      sfCanvas.width = sfCanvas.offsetWidth;
+      sfCanvas.height = sfCanvas.offsetHeight;
+      buildSF();
+    }
+
+    function buildSF() {
+      const n = parseInt(document.getElementById('sf-cells').value);
+      const D = Math.min(sfCanvas.width, sfCanvas.height);
+      const Rmax = D * 0.44, Rmin = D * 0.08;
+      sfShells = [];
+      for (let i = 0; i < n; i++) {
+        const r = n < 2 ? Rmax : Rmin + (Rmax - Rmin) * ((n - 1 - i) / (n - 1));
+        sfShells.push({ r: r, dashed: (i % 2) === 1 });
+      }
+    }
+
+    function runSF() {
+      buildSF();
+      const D = Math.min(sfCanvas.width, sfCanvas.height);
+      const Rmax = D * 0.44;
+      sfParticles = [];
+      for (let i = 0; i < 120; i++) {
+        sfParticles.push({
+          ang: Math.random() * Math.PI * 2,
+          r0: Rmax * (0.85 + Math.random() * 0.3),
+          delay: Math.random() * 0.55,
+          life: 0.35 + Math.random() * 0.35,
+          swirl: (Math.random() < 0.5 ? -1 : 1) * (1 + Math.random() * 2.2),
+          size: 1 + Math.random() * 1.8
+        });
+      }
+      sfRunStart = performance.now();
+    }
+
+    function sfLoop(now) {
+      if (!sfLast) sfLast = now;
+      const dt = Math.min(0.05, (now - sfLast) / 1000); sfLast = now;
+      const c = sfCtx;
+      const cx = sfCanvas.width / 2, cy = sfCanvas.height / 2;
+      const spin = (parseInt(document.getElementById('sf-spin').value) || 0) / 100;
+      sfRot += dt * (0.1 + spin * 0.9);
+
+      c.clearRect(0, 0, sfCanvas.width, sfCanvas.height);
+
+      // run progress + how "charged" the core is
+      let prog = -1, charge = 0;
+      if (sfRunStart >= 0) {
+        prog = (now - sfRunStart) / SF_RUN_MS;
+        if (prog >= 1) { prog = -1; sfRunStart = -1; sfParticles = []; }
+        else charge = Math.min(1, prog * 1.3);
+      }
+
+      // concentric cell shells (skip the innermost -- that's drawn as the core)
+      for (let i = 0; i < sfShells.length - 1; i++) {
+        const sh = sfShells[i];
+        c.beginPath(); c.arc(cx, cy, sh.r, 0, Math.PI * 2);
+        if (sh.dashed) {
+          c.save();
+          c.setLineDash([5, 8]);
+          c.lineDashOffset = sfRot * 42 * ((i % 2) ? 1 : -1);
+          c.strokeStyle = `rgba(${(i % 2) ? SF_BLUE : SF_GOLD},0.4)`;
+          c.lineWidth = 1; c.stroke();
+          c.restore();
+        } else {
+          c.strokeStyle = `rgba(${SF_GOLD},0.4)`; c.lineWidth = 1.2; c.stroke();
+          c.fillStyle = `rgba(${SF_GOLD},0.03)`; c.fill();
+        }
+      }
+
+      // parameters imploding into the core during a run
+      if (prog >= 0) {
+        for (const p of sfParticles) {
+          const local = (prog - p.delay) / p.life;
+          if (local <= 0 || local >= 1) continue;
+          const e = local * local;
+          const r = p.r0 * (1 - e);
+          const th = p.ang + p.swirl * e;
+          c.beginPath();
+          c.arc(cx + r * Math.cos(th), cy + r * Math.sin(th), p.size, 0, Math.PI * 2);
+          c.fillStyle = `rgba(${SF_GOLD},${(0.85 * Math.sin(local * Math.PI)).toFixed(3)})`;
+          c.fill();
+        }
+      }
+
+      // glowing destination core
+      const baseR = Math.min(sfCanvas.width, sfCanvas.height) * 0.08;
+      const coreR = baseR * (1 + charge * 0.8) * (1 + 0.05 * Math.sin(now / 300));
+      const glow = c.createRadialGradient(cx, cy, 0, cx, cy, coreR * 2.6);
+      glow.addColorStop(0, `rgba(255,228,160,${(0.45 + 0.4 * charge).toFixed(3)})`);
+      glow.addColorStop(1, `rgba(${SF_GOLD},0)`);
+      c.beginPath(); c.arc(cx, cy, coreR * 2.6, 0, Math.PI * 2); c.fillStyle = glow; c.fill();
+      const cg = c.createRadialGradient(cx - coreR * 0.3, cy - coreR * 0.3, 0, cx, cy, coreR);
+      cg.addColorStop(0, '#f6e29a'); cg.addColorStop(1, `rgb(${SF_GOLD})`);
+      c.beginPath(); c.arc(cx, cy, coreR, 0, Math.PI * 2); c.fillStyle = cg; c.fill();
+
+      // labels
+      c.fillStyle = `rgba(${SF_GOLD},0.6)`; c.font = '10px Inter, sans-serif'; c.textAlign = 'center';
+      if (sfShells.length) c.fillText('start cell', cx, cy - sfShells[0].r - 8);
+      c.fillText('destination', cx, cy + coreR + 16);
+
+      requestAnimationFrame(sfLoop);
+    }
+
+    window.addEventListener('resize', () => { sfResize(); });
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        runBM();
+        runKernel();
+        sfResize();
+        requestAnimationFrame(sfLoop);
+      }, 200);
+    });
   </script>
 
 </body>
