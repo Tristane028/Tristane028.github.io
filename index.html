@@ -398,7 +398,7 @@
     /* SKILLS */
     .skills-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 3rem;
     }
 
@@ -715,12 +715,48 @@
       .demo-readout { grid-template-columns: repeat(2, 1fr); }
     }
 
+    /* FUN FACTS */
+    .facts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+    .fact {
+      background: var(--bg);
+      padding: 1.8rem 1.6rem;
+    }
+    .fact-title {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .fact-title em { color: var(--accent); }
+    .fact p {
+      font-size: 0.88rem;
+      line-height: 1.8;
+      color: var(--text);
+    }
+    .fact a { color: var(--accent); }
+    .section-intro {
+      max-width: 560px;
+      font-size: 0.92rem;
+      line-height: 1.9;
+      color: var(--text);
+      margin-top: -1.5rem;
+      margin-bottom: 3rem;
+    }
+
     /* RESPONSIVE */
     @media (max-width: 768px) {
       nav { padding: 1.2rem 1.5rem; }
       .nav-links { gap: 1.5rem; }
       .about-grid { grid-template-columns: 1fr; gap: 3rem; }
       .skills-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+      .facts-grid { grid-template-columns: 1fr; }
       .project-card { grid-template-columns: 2rem 1fr; }
       .project-arrow { display: none; }
       .hero-layout { grid-template-columns: 1fr; }
@@ -761,9 +797,9 @@
         <div class="hero-rule"></div>
         <p class="hero-title">Researcher · Engineer · Student</p>
         <p class="hero-desc">
-          I'm a fourth-year Math-CS student at UCSD, and I like math best when it's actually
+          I am a fourth-year Math-CS student at UCSD, and I like math best when it is actually
           out doing something useful. These days that means data science and finance, and lately
-          I've been going down the NLP rabbit hole trying to catch AI hallucinations before they spread.
+          I have been going down the NLP rabbit hole, trying to catch AI hallucinations before they spread.
         </p>
         <div class="hero-cta">
           <a href="#projects" class="btn btn-primary">View Research</a>
@@ -788,25 +824,25 @@
     <div class="about-grid fade-in">
       <div class="about-text">
         <p>
-          I'm <strong>Tristan Endo (遠藤俊治)</strong>, a fourth-year Math-CS student at <strong>UC San Diego</strong>.
-          Math never really clicked for me until I could watch it actually do something, so I ended up
-          chasing the parts that solve real problems instead of the ones that just sit there on paper.
-          That's pretty much how I drifted into data science and finance.
+          I am <strong>Tristan Endo (遠藤俊治)</strong>, a fourth-year Math-CS student at <strong>UC San Diego</strong>.
+          To be honest, math never really clicked for me until I could watch it actually do something.
+          So I ended up chasing the parts that solve real problems instead of the ones that just sit on
+          paper, and that is pretty much how I drifted into data science and finance.
         </p>
         <p>
-          In practice that's meant a little bit of everything: writing code to poke at how neural
+          In practice, that has meant a little bit of everything: writing code to poke at how neural
           networks behave, simulating Brownian motion, and tearing audio tracks apart by frequency
-          to see what's actually inside them. From January to August 2026 I was a Quantitative
-          Research &amp; AI Engineering intern at Tekly Studio, where I finished the full ML track and
+          to see what is actually inside them. From January to August 2026, I was a Quantitative
+          Research &amp; AI Engineering intern at Tekly Studio. There, I finished the full ML track and
           built an XGBoost momentum strategy for crypto markets, tested with purged cross-validation
-          and walk-forward backtesting so the model never got to peek at the future. Right now most of
+          and walk-forward backtesting so the model never got to peek at the future. Right now, most of
           my time goes to research with Prof. Raymond Chou on Springer fibers.
         </p>
         <p>
-          The thing I keep circling back to lately is NLP, specifically how it ties into AI
-          hallucination. My hunch is that if you look closely enough at the patterns and sentence
-          structure in what a model spits out, you can start catching the inconsistencies before
-          they snowball. That feels like a problem actually worth chasing.
+          The question I keep circling back to is how we can tell when a model is wrong. Lately, that
+          has pulled me toward NLP and AI hallucination. My hunch is that if you look closely enough at
+          the patterns and sentence structure in what a model says, you can start catching the
+          inconsistencies before they snowball. That feels like a problem actually worth chasing.
         </p>
       </div>
       <div class="about-stats">
@@ -843,7 +879,7 @@
       <p class="section-eyebrow">Research &amp; Projects</p>
       <h2 class="section-title">Selected <em>Research</em></h2>
       <p class="projects-desc">
-      A handful of the research projects I've gotten to work on across math, machine learning, and audio engineering. Click into any of them for the full code and write-up over on GitHub.</p>
+      Here are a handful of the research projects I have gotten to work on across math, machine learning, and audio engineering. Click into any of them for the full code and write-up on GitHub.</p>
       <div class="section-rule"></div>
     </div>
     <div class="projects-list">
@@ -904,48 +940,41 @@
   <!-- SKILLS -->
   <section id="skills">
     <div class="fade-in">
-      <h2 class="section-title">Coursework / <em>Skills</em></h2>
+      <p class="section-eyebrow">Skills</p>
+      <h2 class="section-title">My <em>Toolkit</em></h2>
       <div class="section-rule"></div>
+      <p class="section-intro">These are the tools I actually reach for. Most of what I build starts in Python and ends with me checking whether the result is too good to be true.</p>
     </div>
     <div class="skills-grid fade-in">
       <div class="skill-group">
         <div class="skill-group-title">Languages</div>
         <div class="skill-list">
-          <span class="skill-item">C / C++</span>
-          <span class="skill-item">HTML</span>
-          <span class="skill-item">Java / JavaScript</span>
           <span class="skill-item">Python</span>
+          <span class="skill-item">C / C++</span>
+          <span class="skill-item">Java / JavaScript</span>
           <span class="skill-item">R</span>
+          <span class="skill-item">SQL</span>
+          <span class="skill-item">MATLAB</span>
         </div>
       </div>
       <div class="skill-group">
-        <div class="skill-group-title">Computational Methods</div>
+        <div class="skill-group-title">ML &amp; Data</div>
         <div class="skill-list">
-          <span class="skill-item">Backpropagation</span>
-          <span class="skill-item">Kernel Methods</span>
-          <span class="skill-item">Monte Carlo Simulation</span>
-          <span class="skill-item">Spectral Analysis</span>
-          <span class="skill-item">Time Series Forecasting</span>
+          <span class="skill-item">PyTorch</span>
+          <span class="skill-item">scikit-learn</span>
+          <span class="skill-item">XGBoost</span>
+          <span class="skill-item">pandas / NumPy</span>
+          <span class="skill-item">SymPy</span>
         </div>
       </div>
       <div class="skill-group">
-        <div class="skill-group-title">Mathematics</div>
+        <div class="skill-group-title">Methods</div>
         <div class="skill-list">
-          <span class="skill-item">Abstract Algebra</span>
-          <span class="skill-item">Enumerative Combinatorics</span>
-          <span class="skill-item">Probability Theory</span>
-          <span class="skill-item">Real Analysis</span>
-          <span class="skill-item">Stochastic Processes</span>
-        </div>
-      </div>
-      <div class="skill-group">
-        <div class="skill-group-title">Areas of Interest</div>
-        <div class="skill-list">
-          <span class="skill-item">Algorithmic Trading</span>
-          <span class="skill-item">Audio Source Separation</span>
-          <span class="skill-item">Exploratory Data Analysis</span>
-          <span class="skill-item">NLP / AI Hallucination</span>
-          <span class="skill-item">Time-Series Modeling</span>
+          <span class="skill-item">Model evaluation &amp; validation</span>
+          <span class="skill-item">Kernel methods</span>
+          <span class="skill-item">Monte Carlo simulation</span>
+          <span class="skill-item">Time-series modeling</span>
+          <span class="skill-item">Spectral analysis</span>
         </div>
       </div>
     </div>
@@ -1097,15 +1126,45 @@
 
   <div class="divider"></div>
 
+  <!-- FUN FACTS -->
+  <section id="fun">
+    <div class="fade-in">
+      <p class="section-eyebrow">Fun Facts</p>
+      <h2 class="section-title">Outside the <em>Math</em></h2>
+      <div class="section-rule"></div>
+      <p class="section-intro">A few things about me that do not quite fit on a CV.</p>
+    </div>
+    <div class="facts-grid fade-in">
+      <div class="fact">
+        <div class="fact-title">I coach <em>swim</em> and <em>volleyball</em></div>
+        <p>When I am not doing math, I am teaching kids how to swim and helping coach volleyball. In all honesty, it has made me a better researcher. If I cannot explain a flip turn simply, I probably do not understand it as well as I think I do.</p>
+      </div>
+      <div class="fact">
+        <div class="fact-title">Over <em>1,000</em> paper cranes</div>
+        <p>I have folded over a thousand origami cranes, and lately I have moved on to folding figures out of dollar bills. Safe to say, it is the most hands-on geometry I do all week.</p>
+      </div>
+      <div class="fact">
+        <div class="fact-title">Competitive <em>Pok&eacute;mon</em></div>
+        <p>I play competitive Pok&eacute;mon in the VGC format, and of course I turned it into a data project. <a href="https://tristane028.github.io/Starlight-Pokemon-Datasheet/" target="_blank">Project Astral</a> is a team builder I made that pulls insights out of my own match data.</p>
+      </div>
+      <div class="fact">
+        <div class="fact-title">Conversations are <em>data</em> too</div>
+        <p>Lately, I have been listening my way into conversational science, neuroscience, and philosophy, with podcasts from people like Vanessa Van Edwards and Vinh Giang. It might sound far from math, but it is the same question I keep asking about models: why do people say what they say, and how can you tell when they mean it?</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
   <!-- CONTACT -->
   <section id="contact">
     <div class="fade-in">
       <p class="section-eyebrow">Contact</p>
-      <h2 class="section-title">Let's <em>Connect</em></h2>
+      <h2 class="section-title">Get in <em>Touch</em></h2>
       <div class="section-rule"></div>
       <p class="contact-desc">
-        I'm always down for internships, research opportunities, or honestly just an
-        interesting problem to chew on. Feel free to reach out, I'd love to hear from you.
+        I am always open to internships, research opportunities, or honestly just an
+        interesting problem to chew on. Feel free to reach out. I would love to hear from you.
       </p>
       <a href="mailto:ttendo@ucsd.edu" class="btn btn-primary">Say Hello →</a>
       <div class="contact-links">
