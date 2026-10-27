@@ -4,15 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Tristan Endo</title>
-  <meta name="description" content="Math-CS student at UC San Diego researching NLP, AI hallucination detection, and stochastic processes.">
+  <meta name="description" content="Math-CS student at UC San Diego working on machine learning, Springer fibers in algebraic geometry, and stochastic processes.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://tristane028.github.io/">
   <meta property="og:title" content="Tristan Endo">
-  <meta property="og:description" content="Math-CS student at UC San Diego researching NLP, AI hallucination detection, and stochastic processes.">
+  <meta property="og:description" content="Math-CS student at UC San Diego working on machine learning, Springer fibers in algebraic geometry, and stochastic processes.">
   <meta property="og:site_name" content="Tristan Endo">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Tristan Endo">
-  <meta name="twitter:description" content="Math-CS student at UC San Diego researching NLP, AI hallucination detection, and stochastic processes.">
+  <meta name="twitter:description" content="Math-CS student at UC San Diego working on machine learning, Springer fibers in algebraic geometry, and stochastic processes.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
@@ -607,6 +607,114 @@
 
     .fade-in.visible { opacity: 1; transform: translateY(0); }
 
+
+    /* ---- NNGP + Springer demos ---- */
+    .demo-charts {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 1rem;
+    }
+    .demo-canvas.tall { height: 300px; }
+    .demo-canvas.short { height: 230px; }
+    .chart-cap {
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      padding: 0.55rem 0.8rem 0;
+    }
+    .demo-readout {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      margin-top: 1rem;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+    .readout-cell {
+      background: var(--bg);
+      padding: 0.7rem 0.9rem;
+    }
+    .readout-k {
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .readout-v {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      line-height: 1.2;
+      color: var(--text);
+    }
+    .readout-s { font-size: 0.72rem; color: var(--muted); line-height: 1.4; }
+    .demo-note {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-top: 1rem;
+      max-width: 680px;
+    }
+    .demo-note a, .demo-desc a { color: var(--accent); }
+    .demo-btns { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+    .demo-btn:disabled { opacity: 0.35; cursor: default; border-color: var(--border); color: var(--text); }
+    #sweep-wrap { display: none; margin-top: 1rem; }
+
+    .sf-layout {
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      gap: 1rem;
+      align-items: stretch;
+    }
+    .sf-canvas { display: block; width: 100%; height: 400px; cursor: pointer; }
+    .sf-panel {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      padding: 1rem;
+      font-size: 0.8rem;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      min-width: 0;
+      height: 400px;
+      overflow-y: auto;
+    }
+    .sf-h {
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.3rem;
+    }
+    .sf-tableau { display: inline-grid; gap: 2px; margin: 0.2rem 0 0.4rem; }
+    .sf-box {
+      width: 24px; height: 24px;
+      border: 1px solid rgba(200,169,110,0.5);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem;
+    }
+    .sf-mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.74rem; overflow-wrap: anywhere; }
+    .sf-muted { color: var(--muted); }
+    .sf-chain { display: flex; flex-wrap: wrap; gap: 0.3rem; align-items: center; }
+    .sf-chip {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.7rem;
+      padding: 0.1rem 0.45rem;
+      border: 1px solid var(--border);
+    }
+    .sf-legend { display: flex; flex-wrap: wrap; gap: 0.7rem; font-size: 0.7rem; color: var(--muted); margin-top: 0.6rem; }
+    .sf-legend i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 0.3rem; vertical-align: -1px; }
+    .sf-log { font-size: 0.74rem; display: flex; flex-direction: column; gap: 0.15rem; }
+    .sf-log .on { color: var(--accent); }
+
+    @media (max-width: 860px) {
+      .demo-charts { grid-template-columns: 1fr; }
+      .sf-layout { grid-template-columns: 1fr; }
+      .sf-panel { height: auto; overflow-y: visible; }
+      .demo-readout { grid-template-columns: repeat(2, 1fr); }
+    }
+
     /* RESPONSIVE */
     @media (max-width: 768px) {
       nav { padding: 1.2rem 1.5rem; }
@@ -640,7 +748,7 @@
       <li><a href="#skills">Skills</a></li>
       <li><a href="#simulation">Simulation</a></li>
       <li><a href="#contact">Contact</a></li>
-      <li><a href="https://tristane028.github.io/Endo_Curriculum_Vitae_10_03_2026.pdf" target="_blank" style="color: var(--accent); border: 1px solid var(--accent); padding: 0.3rem 0.8rem;">Curriculum Vitaé ↗</a></li>
+      <li><a href="https://tristane028.github.io/Endo_Curriculum_Vitae_10_21_2026.pdf" target="_blank" style="color: var(--accent); border: 1px solid var(--accent); padding: 0.3rem 0.8rem;">Curriculum Vitaé ↗</a></li>
     </ul>
   </nav>
 
@@ -688,9 +796,11 @@
         <p>
           In practice that's meant a little bit of everything: writing code to poke at how neural
           networks behave, simulating Brownian motion, and tearing audio tracks apart by frequency
-          to see what's actually inside them. These days I'm interning at Tekly Studio as a
-          Quantitative Research &amp; AI Engineering intern, where I build and backtest ML-driven
-          trading strategies on financial time series.
+          to see what's actually inside them. From January to August 2026 I was a Quantitative
+          Research &amp; AI Engineering intern at Tekly Studio, where I finished the full ML track and
+          built an XGBoost momentum strategy for crypto markets, tested with purged cross-validation
+          and walk-forward backtesting so the model never got to peek at the future. Right now most of
+          my time goes to research with Prof. Raymond Chou on Springer fibers.
         </p>
         <p>
           The thing I keep circling back to lately is NLP, specifically how it ties into AI
@@ -738,28 +848,28 @@
     </div>
     <div class="projects-list">
 
-      <a href="https://github.com/Tristane028/Neural-Network-Gaussian-Process-and-Conjugate-Kernels" target="_blank" class="project-card fade-in">
+      <a href="https://github.com/Tristane028/Springer-Fibers" target="_blank" class="project-card fade-in">
         <div class="project-num">01</div>
         <div>
+          <div class="project-name">Springer Fibers: Algebraic Geometry &amp; Combinatorics</div>
+          <p class="project-desc">Ongoing research with Prof. Raymond Chou at UCSD, with Alexander Ryan. I built a Python/SymPy pipeline that takes a Jordan type, builds every cell of its Springer fiber with Pl&uuml;cker coordinates, and searches for witness curves showing which cells each closure meets. It now covers 99 Jordan types with two, three, and four rows (25,588 cells and 709,116 relations), well past the two-row cases where the existing theory gives answers. Along the way I found that a clean-looking result can still hide gaps: an exact check of (3,2,2) confirmed every relation the search found, and also turned up intersections it had missed in 68 of 210 closures. Try the explorer in the Simulation section below.</p>
+          <div class="project-tags">
+            <span class="tag">Algebraic Geometry</span><span class="tag">Combinatorics</span><span class="tag">Interactive Visualization</span>
+          </div>
+        </div>
+        <div class="project-arrow">&nearr;</div>
+      </a>
+
+      <a href="https://github.com/Tristane028/Neural-Network-Gaussian-Process-and-Conjugate-Kernels" target="_blank" class="project-card fade-in">
+        <div class="project-num">02</div>
+        <div>
           <div class="project-name">Neural Network Gaussian Process &amp; Conjugate Kernels</div>
-          <p class="project-desc">Research with Prof. Alexander Cloninger at UCSD. I dug into how different activation functions (ReLU, erf, and tanh) end up giving you totally different conjugate kernels, then followed what happens to those kernels as the network gets wider and creeps toward the infinite-width limit that NNGP theory predicts.</p>
+          <p class="project-desc">Course project in Prof. Alexander Cloninger's MATH 216B at UCSD. In the infinite-width limit, a random network turns into a Gaussian process, and you can write down exactly how the correlation between two inputs changes layer by layer. I worked out how ReLU, erf, and tanh behave: with depth, ReLU drives every pair of inputs toward correlation 1 (degeneration), while erf and tanh push them toward a fixed point below 1 (decorrelation). Then I coded finite-width networks to test how well those predictions hold in practice. The live version is in the Simulation section below.</p>
           <div class="project-tags">
             <span class="tag">Gaussian Processes</span><span class="tag">Theoretical Machine Learning</span>
           </div>
         </div>
-        <div class="project-arrow">↗</div>
-      </a>
-
-      <a href="https://github.com/Tristane028/Springer-Fibers" target="_blank" class="project-card fade-in">
-        <div class="project-num">02</div>
-        <div>
-          <div class="project-name">Springer Fibers: Algebraic Geometry &amp; Combinatorics</div>
-          <p class="project-desc">Ongoing research with Prof. Raymond Chou at UCSD. I built a Python tool that takes in a Jordan block structure and spits out the valid Young tableau fillings, Schubert cell matrices, and Plücker coordinates. The end goal is to help pin down the irreducible components of Springer fibers, which is a lot trickier than it sounds.</p>
-          <div class="project-tags">
-            <span class="tag">Algebraic Geometry</span><span class="tag">Combinatorics</span>
-          </div>
-        </div>
-        <div class="project-arrow">↗</div>
+        <div class="project-arrow">&nearr;</div>
       </a>
 
       <a href="https://github.com/Tristane028/Brownian-Motion-Distributions-Simulation" target="_blank" class="project-card fade-in">
@@ -881,60 +991,105 @@
         </div>
       </div>
 
-      <!-- DEMO 2: NNGP Correlation vs Depth -->
+      <!-- DEMO 2: NNGP theory vs finite-width networks -->
       <div class="demo-block fade-in">
         <div class="demo-header">
-          <div class="demo-title">NNGP Kernel Correlation vs Depth</div>
-          <button class="demo-btn" onclick="runKernel()">Recompute</button>
+          <div class="demo-title">Neural Network Gaussian Processes: Theory vs. Real Networks</div>
+          <div class="demo-btns">
+            <button class="demo-btn" onclick="runKernel()">Resample networks</button>
+            <button class="demo-btn" id="sweep-btn" onclick="runSweep()">Run width sweep</button>
+          </div>
         </div>
-        <p class="demo-desc">This is a live version of the experiment I ran with Prof. Cloninger. Pick an activation function and slide the width around to see how the correlation between two inputs shifts as the network gets deeper. Here's the fun part: ReLU eases smoothly toward its infinite-width limit, but erf and tanh both get wobbly and start oscillating at smaller widths. That weird instability is basically the whole reason I got hooked on this in the first place.</p>
+        <p class="demo-desc">This is the experiment from my MATH 216B course project with Prof. Cloninger, rebuilt to run live. Two inputs with correlation &rho;<sub>0</sub> go through a random network. As the width goes to infinity, their correlation at every layer is given exactly by the NNGP kernel recursion (gold line). The blue line is the average over real, finite-width random networks, and the band shows how much individual networks scatter around it. At the default settings, ReLU drives the correlation toward 1 with depth, so every input starts to look the same (degeneration), while erf and tanh push it toward a fixed point below 1 (decorrelation).</p>
         <div class="demo-controls">
           <div class="demo-control">
-            <label>Activation Function</label>
-            <select id="kernel-act" onchange="runKernel()">
-              <option value="relu">RELU</option>
-              <option value="erf">ERF</option>
-              <option value="tanh">TANH</option>
+            <label>Activation</label>
+            <select id="kernel-act" onchange="scheduleKernel()">
+              <option value="relu">ReLU</option>
+              <option value="erf">erf</option>
+              <option value="tanh">tanh</option>
             </select>
           </div>
           <div class="demo-control">
-            <label>Network Width</label>
-            <input type="range" id="kernel-width" min="2" max="512" step="1" value="36" oninput="document.getElementById('kernel-wval').textContent=this.value; runKernel()">
-            <span class="demo-val">width = <span id="kernel-wval">36</span></span>
+            <label>Weight variance &sigma;<sub>w</sub>&sup2;</label>
+            <input type="range" id="kernel-sw" min="0.5" max="4" step="0.1" value="2" oninput="document.getElementById('kernel-swval').textContent=parseFloat(this.value).toFixed(1); scheduleKernel()">
+            <span class="demo-val">&sigma;<sub>w</sub>&sup2; = <span id="kernel-swval">2.0</span></span>
           </div>
           <div class="demo-control">
-            <label>Max Depth</label>
-            <input type="range" id="kernel-depth" min="5" max="30" step="1" value="17" oninput="document.getElementById('kernel-dval').textContent=this.value; runKernel()">
-            <span class="demo-val">depth = <span id="kernel-dval">17</span></span>
+            <label>Bias variance &sigma;<sub>b</sub>&sup2;</label>
+            <input type="range" id="kernel-sb" min="0" max="0.5" step="0.05" value="0" oninput="document.getElementById('kernel-sbval').textContent=parseFloat(this.value).toFixed(2); scheduleKernel()">
+            <span class="demo-val">&sigma;<sub>b</sub>&sup2; = <span id="kernel-sbval">0.00</span></span>
+          </div>
+          <div class="demo-control">
+            <label>Input correlation &rho;<sub>0</sub></label>
+            <input type="range" id="kernel-rho" min="-0.9" max="0.95" step="0.05" value="0.3" oninput="document.getElementById('kernel-rval').textContent=parseFloat(this.value).toFixed(2); scheduleKernel()">
+            <span class="demo-val">&rho;<sub>0</sub> = <span id="kernel-rval">0.30</span></span>
+          </div>
+          <div class="demo-control">
+            <label>Network width</label>
+            <input type="range" id="kernel-width" min="4" max="512" step="4" value="64" oninput="document.getElementById('kernel-wval').textContent=this.value; scheduleKernel()">
+            <span class="demo-val">width = <span id="kernel-wval">64</span></span>
+          </div>
+          <div class="demo-control">
+            <label>Depth</label>
+            <input type="range" id="kernel-depth" min="5" max="40" step="1" value="20" oninput="document.getElementById('kernel-dval').textContent=this.value; scheduleKernel()">
+            <span class="demo-val">depth = <span id="kernel-dval">20</span></span>
           </div>
         </div>
-        <div class="demo-canvas-wrap">
-          <canvas class="demo-canvas" id="kernel-canvas"></canvas>
+        <div class="demo-charts">
+          <div class="demo-canvas-wrap">
+            <div class="chart-cap">Correlation vs. depth</div>
+            <canvas class="demo-canvas tall" id="kernel-canvas"></canvas>
+          </div>
+          <div class="demo-canvas-wrap">
+            <div class="chart-cap">Why: the correlation map</div>
+            <canvas class="demo-canvas tall" id="map-canvas"></canvas>
+          </div>
         </div>
+        <div class="demo-readout">
+          <div class="readout-cell"><div class="readout-k">Theory at final depth</div><div class="readout-v" id="ro-theory">&ndash;</div><div class="readout-s">infinite width</div></div>
+          <div class="readout-cell"><div class="readout-k">Networks at final depth</div><div class="readout-v" id="ro-sim">&ndash;</div><div class="readout-s" id="ro-sim-s">mean &plusmn; sd</div></div>
+          <div class="readout-cell"><div class="readout-k">&chi;<sub>1</sub> at q*</div><div class="readout-v" id="ro-chi">&ndash;</div><div class="readout-s" id="ro-phase">&nbsp;</div></div>
+          <div class="readout-cell"><div class="readout-k">Fixed point c*</div><div class="readout-v" id="ro-cstar">&ndash;</div><div class="readout-s">where correlations end up</div></div>
+        </div>
+        <div id="sweep-wrap" class="demo-canvas-wrap">
+          <div class="chart-cap">Width sweep: how far real networks sit from the theory</div>
+          <canvas class="demo-canvas short" id="sweep-canvas"></canvas>
+        </div>
+        <p class="demo-note">The right panel shows one step of the recursion, c<sub>l+1</sub> = f(c<sub>l</sub>), at the limiting variance q*, with the staircase tracing where the correlation goes layer by layer. Its slope at c = 1 is &chi;<sub>1</sub>: below 1 the network is in the ordered phase and inputs collapse together, above 1 it is chaotic and they spread apart. ReLU with &sigma;<sub>w</sub>&sup2; = 2 sits exactly at &chi;<sub>1</sub> = 1, which is why its correlation creeps toward 1 so slowly. The width sweep measures the RMS gap between real networks and the theory across all layers, against a dashed 1/&radic;width reference.</p>
       </div>
 
-      <!-- DEMO 3: Springer Fiber Cell Degeneration -->
+      <!-- DEMO 3: Springer fiber closure explorer -->
       <div class="demo-block fade-in">
         <div class="demo-header">
-          <div class="demo-title">Springer Fiber Cell Degeneration</div>
-          <button class="demo-btn" onclick="runSF()">Run degeneration</button>
+          <div class="demo-title">Springer Fiber Closure Explorer</div>
+          <div class="demo-btns">
+            <button class="demo-btn" id="sf-route-btn" onclick="sfStartRoute()" disabled>Play halving route</button>
+            <button class="demo-btn" onclick="sfReset()">Reset</button>
+          </div>
         </div>
-        <p class="demo-desc">A live taste of the Springer fiber visualizer I'm building with Prof. Chou. Each ring is a cell of the fiber, nested from the starting cell on the outside down to the destination at the glowing core, so closure containment becomes something you can literally see. Hit "Run degeneration" and watch the cell collapse inward, with parameters streaming into the core the same way the full 3D tool animates it. Slide the chain length to add or drop intermediate cells.</p>
+        <p class="demo-desc">A compact, flat version of the <a href="https://tristane028.github.io/Springer-Fibers/Visuals.html" target="_blank">full 3D viewer</a> from my research with Prof. Chou, running on real data from the project. Each dot is a cell of the Springer fiber, stacked by dimension. Click a cell to light up every cell its closure meets. Click one of those to look from inside both closures at once, and keep nesting. Hover a lit cell to see the witness curve that proves the relation. With one cell selected, play its halving route: pick a cell, keep only the part of the closure inside it, and land on a single cell, shrinking by a power of 2 each step.</p>
         <div class="demo-controls">
           <div class="demo-control">
-            <label>Cells in chain</label>
-            <input type="range" id="sf-cells" min="2" max="6" step="1" value="4" oninput="document.getElementById('sf-cval').textContent=this.value; buildSF()">
-            <span class="demo-val"><span id="sf-cval">4</span> cells</span>
-          </div>
-          <div class="demo-control">
-            <label>Rotation</label>
-            <input type="range" id="sf-spin" min="0" max="100" step="5" value="40" oninput="document.getElementById('sf-sval').textContent=this.value">
-            <span class="demo-val">spin = <span id="sf-sval">40</span></span>
+            <label>Jordan type</label>
+            <select id="sf-type" onchange="sfLoad(this.value)">
+              <option value="22">(2,2) &middot; 6 cells</option>
+              <option value="32" selected>(3,2) &middot; 10 cells</option>
+              <option value="42">(4,2) &middot; 15 cells</option>
+              <option value="33">(3,3) &middot; 20 cells</option>
+              <option value="211">(2,1,1) &middot; 12 cells</option>
+              <option value="221">(2,2,1) &middot; 30 cells</option>
+              <option value="321">(3,2,1) &middot; 60 cells</option>
+            </select>
           </div>
         </div>
-        <div class="demo-canvas-wrap">
-          <canvas class="demo-canvas" id="sf-canvas"></canvas>
+        <div class="sf-layout">
+          <div class="demo-canvas-wrap">
+            <canvas class="sf-canvas" id="sf-canvas"></canvas>
+          </div>
+          <div class="sf-panel" id="sf-panel"></div>
         </div>
+        <p class="demo-note">An arrow from A to B means the closure of cell A meets cell B. The witness is a one-parameter family of points in A whose limit lands in B. These relations do not compose: if A's closure meets B and B's closure meets C, A's closure need not meet C. Across the whole project the search has found closure data for 99 Jordan types (25,588 cells and 709,116 relations), and every cell with more than one cell in its closure has a halving route.</p>
       </div>
 
     </div>
@@ -1098,188 +1253,535 @@
       cx.fillText(`Distribution of max fBM on [0,1]  (H = ${H.toFixed(2)})`, PAD.left + plotW/2, PAD.top - 10);
     }
 
-    function randn() { let u = 0, v = 0; while (u === 0) u = Math.random(); while (v === 0) v = Math.random(); return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v); }
-    function randnVec(n) { return Array.from({length: n}, randn); }
-    function randnMatrix(rows, cols) { return Array.from({length: rows}, () => randnVec(cols)); }
-    function norm(v) { return Math.sqrt(v.reduce((s, x) => s + x*x, 0)); }
-    function normalize(v) { const n = norm(v); return n === 0 ? v : v.map(x => x / n); }
-    function matVecMul(W, h) { return W.map(row => row.reduce((s, w, j) => s + w * h[j], 0)); }
-    function applyAct(z, act) { switch(act) { case 'relu': return z.map(x => Math.max(0, x)); case 'erf': return z.map(x => erfApprox(x)); case 'tanh': return z.map(x => Math.tanh(x)); default: return z; } }
+    const SF_DATA = {"22":{"cells":[["1234",0,[]],["1243",1,["a1"]],["1324",1,["a1"]],["2134",1,["a1"]],["2143",2,["a1","a2"]],["2413",2,["a2","a3"]]],"edges":[[1,0,"a1","",""],[2,0,"a1","",""],[3,0,"a1","",""],[4,0,"a1","a2 = a1",""],[4,1,"a1","a2 = 0","a1 = 0"],[4,3,"a2","a1 = 0","a1 = 0"],[5,0,"a3","a2 = a3^3",""],[5,2,"a2","a3 = a2","a1 = 0"],[5,4,"a2","a3 = 0","a1 = 0, a2 = 0"]]},"32":{"cells":[["12345",0,[]],["12354",1,["a1"]],["12435",1,["a1"]],["13245",1,["a1"]],["13254",2,["a1","a2"]],["13524",2,["a2","a3"]],["21345",1,["a1"]],["21354",2,["a1","a2"]],["21435",2,["a1","a2"]],["24135",2,["a2","a3"]]],"edges":[[1,0,"a1","",""],[2,0,"a1","",""],[3,0,"a1","",""],[4,0,"a1","a2 = a1",""],[4,1,"a1","a2 = 0","a1 = 0"],[4,3,"a2","a1 = 0","a1 = 0"],[5,0,"a3","a2 = a3^3",""],[5,2,"a2","a3 = a2","a1 = 0"],[5,4,"a2","a3 = 0","a1 = 0, a2 = 0"],[6,0,"a1","",""],[7,0,"a1","a2 = a1",""],[7,1,"a1","a2 = 0","a1 = 0"],[7,6,"a2","a1 = 0","a1 = 0"],[8,0,"a1","a2 = a1",""],[8,2,"a1","a2 = 0","a1 = 0"],[8,6,"a2","a1 = 0","a1 = 0"],[9,0,"a3","a2 = a3^3",""],[9,3,"a2","a3 = a2","a1 = 0"],[9,8,"a2","a3 = 0","a1 = 0, a2 = 0"]]},"42":{"cells":[["123456",0,[]],["123546",1,["a1"]],["123564",1,["a2"]],["124356",1,["a1"]],["132456",1,["a1"]],["132546",2,["a1","a2"]],["132564",2,["a1","a3"]],["135246",2,["a2","a3"]],["135264",2,["a2","a4"]],["135624",2,["a3","a5"]],["213456",1,["a1"]],["213546",2,["a1","a2"]],["213564",2,["a1","a3"]],["214356",2,["a1","a2"]],["241356",2,["a2","a3"]]],"edges":[[1,0,"a1","",""],[2,1,"a2","","a1 = 0"],[3,0,"a1","",""],[4,0,"a1","",""],[5,0,"a1","a2 = a1",""],[5,1,"a1","a2 = 0","a1 = 0"],[5,4,"a2","a1 = 0","a1 = 0"],[6,1,"a1","a3 = a1","a1 = 0"],[6,2,"a1","a3 = 0","a2 = 0"],[6,5,"a3","a1 = 0","a1 = 0, a2 = 0"],[7,0,"a3","a2 = a3^3",""],[7,3,"a2","a3 = a2","a1 = 0"],[7,5,"a2","a3 = 0","a1 = 0, a2 = 0"],[8,5,"a2","a4 = a2","a1 = 0, a2 = 0"],[8,6,"a2","a4 = 0","a1 = 0, a3 = 0"],[8,7,"a4","a2 = 0","a2 = 0, a3 = 0"],[9,4,"a3","a5 = a3","a1 = 0"],[9,5,"a5","a3 = a5^2","a1 = 0, a2 = -1"],[9,8,"a3","a5 = 0","a2 = 0, a4 = 0"],[10,0,"a1","",""],[11,0,"a1","a2 = a1",""],[11,1,"a1","a2 = 0","a1 = 0"],[11,10,"a2","a1 = 0","a1 = 0"],[12,1,"a1","a3 = a1","a1 = 0"],[12,2,"a1","a3 = 0","a2 = 0"],[12,11,"a3","a1 = 0","a1 = 0, a2 = 0"],[13,0,"a1","a2 = a1",""],[13,3,"a1","a2 = 0","a1 = 0"],[13,10,"a2","a1 = 0","a1 = 0"],[14,0,"a3","a2 = a3^3",""],[14,4,"a2","a3 = a2","a1 = 0"],[14,13,"a2","a3 = 0","a1 = 0, a2 = 0"]]},"33":{"cells":[["123456",0,[]],["123465",1,["a1"]],["123546",1,["a1"]],["124356",1,["a1"]],["124365",2,["a1","a2"]],["124635",2,["a2","a3"]],["132456",1,["a1"]],["132465",2,["a1","a2"]],["132546",2,["a1","a2"]],["135246",2,["a2","a3"]],["213456",1,["a1"]],["213465",2,["a1","a2"]],["213546",2,["a1","a2"]],["214356",2,["a1","a2"]],["214365",3,["a1","a2","a3"]],["214635",3,["a1","a3","a4"]],["241356",2,["a2","a3"]],["241365",3,["a2","a3","a4"]],["241635",3,["a2","a4","a5"]],["246135",3,["a3","a5","a6"]]],"edges":[[1,0,"a1","",""],[2,0,"a1","",""],[3,0,"a1","",""],[4,0,"a1","a2 = a1",""],[4,1,"a1","a2 = 0","a1 = 0"],[4,3,"a2","a1 = 0","a1 = 0"],[5,0,"a3","a2 = a3^3",""],[5,2,"a2","a3 = a2","a1 = 0"],[5,4,"a2","a3 = 0","a1 = 0, a2 = 0"],[6,0,"a1","",""],[7,0,"a1","a2 = a1",""],[7,1,"a1","a2 = 0","a1 = 0"],[7,6,"a2","a1 = 0","a1 = 0"],[8,0,"a1","a2 = a1",""],[8,2,"a1","a2 = 0","a1 = 0"],[8,6,"a2","a1 = 0","a1 = 0"],[9,0,"a3","a2 = a3^3",""],[9,3,"a2","a3 = a2","a1 = 0"],[9,8,"a2","a3 = 0","a1 = 0, a2 = 0"],[10,0,"a1","",""],[11,0,"a1","a2 = a1",""],[11,1,"a1","a2 = 0","a1 = 0"],[11,10,"a2","a1 = 0","a1 = 0"],[12,0,"a1","a2 = a1",""],[12,2,"a1","a2 = 0","a1 = 0"],[12,10,"a2","a1 = 0","a1 = 0"],[13,0,"a1","a2 = a1",""],[13,3,"a1","a2 = 0","a1 = 0"],[13,10,"a2","a1 = 0","a1 = 0"],[14,0,"a1","a2 = a1, a3 = a1",""],[14,1,"a1","a2 = a1, a3 = 0","a1 = 0"],[14,3,"a1","a2 = 0, a3 = a1","a1 = 0"],[14,4,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[14,10,"a2","a1 = 0, a3 = a2","a1 = 0"],[14,11,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[14,13,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[15,0,"a1","a3 = a1^3, a4 = a1",""],[15,2,"a1","a3 = 0, a4 = a1","a1 = 0"],[15,4,"a1","a3 = a1, a4 = 0","a1 = 0, a2 = 0"],[15,5,"a1","a3 = 0, a4 = 0","a2 = 0, a3 = 0"],[15,10,"a4","a1 = 0, a3 = a4^3","a1 = 0"],[15,12,"a3","a1 = 0, a4 = a3","a1 = 0, a2 = 0"],[15,14,"a3","a1 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[16,0,"a3","a2 = a3^3",""],[16,6,"a2","a3 = a2","a1 = 0"],[16,13,"a2","a3 = 0","a1 = 0, a2 = 0"],[17,0,"a3","a2 = a3^3, a4 = a3",""],[17,1,"a3","a2 = a3^3, a4 = 0","a1 = 0"],[17,6,"a2","a3 = a2, a4 = a2","a1 = 0"],[17,7,"a2","a3 = a2, a4 = 0","a1 = 0, a2 = 0"],[17,13,"a2","a3 = 0, a4 = a2","a1 = 0, a2 = 0"],[17,14,"a2","a3 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[17,16,"a4","a2 = 0, a3 = 0","a2 = 0, a3 = 0"],[18,0,"a5","a2 = a5^3, a4 = a5^3",""],[18,2,"a4","a2 = a4^3, a5 = a4","a1 = 0"],[18,6,"a2","a4 = a2^3, a5 = a2","a1 = 0"],[18,8,"a2","a4 = 0, a5 = a2","a1 = 0, a2 = 0"],[18,14,"a2","a4 = a2, a5 = 0","a1 = 0, a2 = 0, a3 = 0"],[18,15,"a2","a4 = 0, a5 = 0","a1 = 0, a3 = 0, a4 = 0"],[18,17,"a4","a2 = 0, a5 = 0","a2 = 0, a3 = 0, a4 = 0"],[19,0,"a3","a5 = a3^3, a6 = a3",""],[19,8,"a3","a5 = a3^2, a6 = a3","a1 = -1, a2 = -1"],[19,9,"a3","a5 = 0, a6 = a3","a2 = 0, a3 = 0"],[19,11,"a3","a5 = a3, a6 = 0","a1 = 0, a2 = 0"],[19,14,"a5","a3 = a5^2, a6 = 0","a1 = 0, a2 = -1, a3 = 0"],[19,18,"a3","a5 = 0, a6 = 0","a2 = 0, a4 = 0, a5 = 0"]]},"211":{"cells":[["1234",0,[]],["1243",1,["a1"]],["1324",1,["a1"]],["1342",2,["a1","a2"]],["1423",2,["a1","a2"]],["1432",3,["a1","a2","a3"]],["2134",1,["a1"]],["2143",2,["a1","a2"]],["2314",2,["a1","a2"]],["3124",2,["a1","a2"]],["3142",3,["a1","a2","a3"]],["3214",3,["a1","a2","a3"]]],"edges":[[1,0,"a1","",""],[2,0,"a1","",""],[3,0,"a1","a2 = a1^2",""],[3,1,"a1","a2 = 0","a1 = 0"],[3,2,"a2","a1 = 0","a1 = 0"],[4,0,"a2","a1 = a2^2",""],[4,1,"a1","a2 = 0","a1 = 0"],[4,2,"a1","a2 = a1","a1 = 1"],[5,0,"a1","a2 = 0, a3 = 0",""],[5,1,"a1","a2 = a1, a3 = 0","a1 = -1"],[5,2,"a1","a2 = 0, a3 = a1","a1 = 1"],[5,3,"a1","a2 = 1, a3 = a1","a1 = 1, a2 = 0"],[5,4,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[6,0,"a1","",""],[7,0,"a1","a2 = a1",""],[7,1,"a1","a2 = 0","a1 = 0"],[7,6,"a2","a1 = 0","a1 = 0"],[8,0,"a1","a2 = a1^2",""],[8,2,"a1","a2 = 0","a1 = 0"],[8,6,"a2","a1 = 0","a1 = 0"],[9,0,"a2","a1 = a2^2",""],[9,2,"a1","a2 = 0","a1 = 0"],[9,6,"a1","a2 = a1","a1 = 1"],[10,0,"a2","a1 = a2^2, a3 = a2^2",""],[10,1,"a2","a1 = a2^2, a3 = 0","a1 = 0"],[10,2,"a1","a2 = 0, a3 = a1","a1 = 0"],[10,3,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[10,6,"a1","a2 = a1, a3 = a1^2","a1 = 1"],[10,7,"a1","a2 = a1, a3 = 0","a1 = 1, a2 = 0"],[10,9,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[11,0,"a1","a2 = 0, a3 = 0",""],[11,2,"a1","a2 = a1, a3 = 0","a1 = -1"],[11,6,"a1","a2 = 0, a3 = a1","a1 = 1"],[11,8,"a1","a2 = 1, a3 = a1","a1 = 1, a2 = 0"],[11,9,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"]]},"221":{"cells":[["12345",0,[]],["12354",1,["a1"]],["12435",1,["a1"]],["12453",2,["a1","a2"]],["12534",2,["a1","a2"]],["12543",3,["a1","a2","a3"]],["13245",1,["a1"]],["13254",2,["a1","a2"]],["13425",2,["a1","a2"]],["14235",2,["a1","a2"]],["14253",3,["a1","a2","a3"]],["14325",3,["a1","a2","a3"]],["21345",1,["a1"]],["21354",2,["a1","a2"]],["21435",2,["a1","a2"]],["21453",3,["a1","a2","a3"]],["21534",3,["a1","a2","a3"]],["21543",4,["a1","a2","a3","a4"]],["23145",2,["a1","a2"]],["23154",3,["a1","a2","a3"]],["23514",3,["a2","a3","a4"]],["25134",3,["a2","a3","a4"]],["25143",4,["a2","a3","a4","a5"]],["25314",4,["a2","a3","a4","a5"]],["31245",2,["a1","a2"]],["31254",3,["a1","a2","a3"]],["31425",3,["a1","a2","a3"]],["32145",3,["a1","a2","a3"]],["32154",4,["a1","a2","a3","a4"]],["32514",4,["a1","a3","a4","a5"]]],"edges":[[1,0,"a1","",""],[2,0,"a1","",""],[3,0,"a1","a2 = a1^2",""],[3,1,"a1","a2 = 0","a1 = 0"],[3,2,"a2","a1 = 0","a1 = 0"],[4,0,"a2","a1 = a2^2",""],[4,1,"a1","a2 = 0","a1 = 0"],[4,2,"a1","a2 = a1","a1 = 1"],[5,0,"a1","a2 = 0, a3 = 0",""],[5,1,"a1","a2 = a1, a3 = 0","a1 = -1"],[5,2,"a1","a2 = 0, a3 = a1","a1 = 1"],[5,3,"a1","a2 = 1, a3 = a1","a1 = 1, a2 = 0"],[5,4,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[6,0,"a1","",""],[7,0,"a1","a2 = a1",""],[7,1,"a1","a2 = 0","a1 = 0"],[7,6,"a2","a1 = 0","a1 = 0"],[8,0,"a1","a2 = a1^2",""],[8,2,"a1","a2 = 0","a1 = 0"],[8,6,"a2","a1 = 0","a1 = 0"],[9,0,"a2","a1 = a2^2",""],[9,2,"a1","a2 = 0","a1 = 0"],[9,6,"a1","a2 = a1","a1 = 1"],[10,0,"a2","a1 = a2^2, a3 = a2^2",""],[10,1,"a2","a1 = a2^2, a3 = 0","a1 = 0"],[10,2,"a1","a2 = 0, a3 = a1","a1 = 0"],[10,3,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[10,6,"a1","a2 = a1, a3 = a1^2","a1 = 1"],[10,7,"a1","a2 = a1, a3 = 0","a1 = 1, a2 = 0"],[10,9,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[11,0,"a1","a2 = 0, a3 = 0",""],[11,2,"a1","a2 = a1, a3 = 0","a1 = -1"],[11,6,"a1","a2 = 0, a3 = a1","a1 = 1"],[11,8,"a1","a2 = 1, a3 = a1","a1 = 1, a2 = 0"],[11,9,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[12,0,"a1","",""],[13,0,"a1","a2 = a1",""],[13,1,"a1","a2 = 0","a1 = 0"],[13,12,"a2","a1 = 0","a1 = 0"],[14,0,"a1","a2 = a1",""],[14,2,"a1","a2 = 0","a1 = 0"],[14,12,"a2","a1 = 0","a1 = 0"],[15,0,"a1","a2 = a1, a3 = a1^2",""],[15,1,"a1","a2 = a1, a3 = 0","a1 = 0"],[15,2,"a1","a2 = 0, a3 = a1","a1 = 0"],[15,3,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[15,12,"a2","a1 = 0, a3 = a2^2","a1 = 0"],[15,13,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[15,14,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[16,0,"a1","a2 = a1^2, a3 = a1",""],[16,1,"a1","a2 = a1, a3 = 0","a1 = 0"],[16,2,"a1","a2 = 0, a3 = a1","a1 = 0"],[16,4,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[16,12,"a3","a1 = 0, a2 = a3^2","a1 = 0"],[16,13,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[16,14,"a2","a1 = 0, a3 = a2","a1 = 0, a2 = 1"],[17,0,"a1","a2 = a1, a3 = 0, a4 = 0",""],[17,1,"a1","a2 = a1, a3 = a1, a4 = 0","a1 = -1"],[17,2,"a1","a2 = 0, a3 = 1, a4 = a1","a1 = 0"],[17,3,"a1","a2 = 0, a3 = 0, a4 = a1","a1 = 0, a2 = 0"],[17,4,"a1","a2 = 0, a3 = a1, a4 = 0","a1 = 0, a2 = 0"],[17,5,"a1","a2 = 0, a3 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[17,12,"a2","a1 = 0, a3 = 0, a4 = 0","a1 = 0"],[17,13,"a2","a1 = 0, a3 = a2, a4 = 0","a1 = 0, a2 = -1"],[17,14,"a2","a1 = 0, a3 = 0, a4 = a2","a1 = 0, a2 = 1"],[17,15,"a2","a1 = 0, a3 = 1, a4 = a2","a1 = 0, a2 = 1, a3 = 0"],[17,16,"a3","a1 = 0, a2 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[18,0,"a1","a2 = a1^2",""],[18,6,"a1","a2 = 0","a1 = 0"],[18,12,"a2","a1 = 0","a1 = 0"],[19,0,"a1","a2 = a1^2, a3 = a1",""],[19,1,"a1","a2 = a1^2, a3 = 0","a1 = 0"],[19,6,"a1","a2 = 0, a3 = a1","a1 = 0"],[19,7,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[19,12,"a2","a1 = 0, a3 = a2","a1 = 0"],[19,13,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[19,18,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[20,2,"a3","a2 = a3^2, a4 = a3","a1 = 0"],[20,6,"a2","a3 = a2^3, a4 = a2","a1 = -1"],[20,8,"a2","a3 = 0, a4 = a2","a1 = -1, a2 = 0"],[20,13,"a2","a3 = a2^2, a4 = 0","a1 = 0, a2 = 0"],[20,16,"a2","a3 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[20,19,"a3","a2 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[21,2,"a3","a2 = a3^3, a4 = a3","a1 = 1"],[21,6,"a2","a3 = a2^2, a4 = a2","a1 = 0"],[21,9,"a2","a3 = 0, a4 = a2","a1 = 0, a2 = 0"],[21,13,"a3","a2 = a3^2, a4 = 0","a1 = 0, a2 = 0"],[21,16,"a2","a3 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[21,19,"a2","a3 = a2, a4 = 0","a1 = 0, a2 = 1, a3 = 0"],[22,2,"a3","a2 = a3^3, a4 = 0, a5 = a3","a1 = 1"],[22,3,"a3","a2 = a3^3, a4 = 1, a5 = a3","a1 = 1, a2 = 0"],[22,6,"a2","a3 = a2^2, a4 = 0, a5 = a2","a1 = 0"],[22,7,"a2","a3 = a2^2, a4 = a2, a5 = a2","a1 = 0, a2 = 0"],[22,9,"a2","a3 = 0, a4 = 1, a5 = a2","a1 = 0, a2 = 0"],[22,10,"a2","a3 = 0, a4 = 0, a5 = a2","a1 = 0, a2 = 0, a3 = 0"],[22,12,"a3","a2 = a3^2, a4 = 0, a5 = 0","a1 = 0"],[22,13,"a3","a2 = a3^2, a4 = a3, a5 = 0","a1 = 0, a2 = -1"],[22,16,"a2","a3 = 0, a4 = a2, a5 = 0","a1 = 0, a2 = 0, a3 = 0"],[22,17,"a2","a3 = 0, a4 = 0, a5 = 0","a1 = 0, a2 = 0, a3 = 0, a4 = 0"],[22,18,"a2","a3 = a2, a4 = 0, a5 = 0","a1 = 0, a2 = 1"],[22,19,"a2","a3 = a2, a4 = a2, a5 = 0","a1 = 0, a2 = 1, a3 = -1"],[22,21,"a4","a2 = 0, a3 = 0, a5 = 0","a2 = 0, a3 = 0, a4 = 0"],[23,0,"a3","a2 = a3^3, a4 = 0, a5 = a3",""],[23,2,"a4","a2 = a4^3, a3 = a4^2, a5 = a4","a1 = 0"],[23,6,"a2","a3 = 1, a4 = a2^3, a5 = a2","a1 = 0"],[23,8,"a2","a3 = 0, a4 = a2^2, a5 = a2","a1 = 0, a2 = 0"],[23,9,"a2","a3 = a2^2, a4 = 0, a5 = a2","a1 = 0, a2 = 0"],[23,11,"a2","a3 = 0, a4 = 0, a5 = a2","a1 = 0, a2 = 0, a3 = 0"],[23,13,"a2","a3 = 0, a4 = 0, a5 = 0","a1 = 0, a2 = 0"],[23,16,"a2","a3 = a2, a4 = 0, a5 = 0","a1 = 0, a2 = -1, a3 = 0"],[23,19,"a2","a3 = 0, a4 = a2, a5 = 0","a1 = 0, a2 = 1, a3 = 0"],[23,20,"a2","a3 = 1, a4 = a2, a5 = 0","a2 = 1, a3 = 0, a4 = 0"],[23,21,"a3","a2 = 0, a4 = 0, a5 = 0","a2 = 0, a3 = 0, a4 = 0"],[24,0,"a2","a1 = a2^2",""],[24,6,"a1","a2 = 0","a1 = 0"],[24,12,"a1","a2 = a1","a1 = 1"],[25,0,"a2","a1 = a2^2, a3 = a2",""],[25,1,"a2","a1 = a2^2, a3 = 0","a1 = 0"],[25,6,"a1","a2 = 0, a3 = a1","a1 = 0"],[25,7,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[25,12,"a1","a2 = a1, a3 = a1","a1 = 1"],[25,13,"a1","a2 = a1, a3 = 0","a1 = 1, a2 = 0"],[25,24,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[26,0,"a2","a1 = a2^2, a3 = a2^2",""],[26,2,"a2","a1 = a2^2, a3 = 0","a1 = 0"],[26,6,"a1","a2 = 0, a3 = a1","a1 = 0"],[26,8,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[26,12,"a1","a2 = a1, a3 = a1^2","a1 = 1"],[26,14,"a1","a2 = a1, a3 = 0","a1 = 1, a2 = 0"],[26,24,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[27,0,"a1","a2 = 0, a3 = 0",""],[27,6,"a1","a2 = a1, a3 = 0","a1 = -1"],[27,12,"a1","a2 = 0, a3 = a1","a1 = 1"],[27,18,"a1","a2 = 1, a3 = a1","a1 = 1, a2 = 0"],[27,24,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[28,0,"a1","a2 = 0, a3 = 0, a4 = a1",""],[28,1,"a1","a2 = 0, a3 = 0, a4 = 0","a1 = 0"],[28,6,"a1","a2 = a1, a3 = 0, a4 = a1","a1 = -1"],[28,7,"a1","a2 = a1, a3 = 0, a4 = 0","a1 = -1, a2 = 0"],[28,12,"a1","a2 = 0, a3 = a1, a4 = a1","a1 = 1"],[28,13,"a1","a2 = 0, a3 = a1, a4 = 0","a1 = 1, a2 = 0"],[28,18,"a1","a2 = 1, a3 = a1, a4 = a1","a1 = 1, a2 = 0"],[28,19,"a1","a2 = 1, a3 = a1, a4 = 0","a1 = 1, a2 = 0, a3 = 0"],[28,24,"a2","a1 = 0, a3 = 0, a4 = a2","a1 = 0, a2 = 0"],[28,25,"a2","a1 = 0, a3 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[28,27,"a4","a1 = 0, a2 = 0, a3 = 0","a1 = 0, a2 = 0, a3 = 0"],[29,1,"a1","a3 = a1^2, a4 = 0, a5 = 0","a1 = 0"],[29,2,"a3","a1 = a3^2, a4 = 0, a5 = a3","a1 = 0"],[29,4,"a1","a3 = 0, a4 = 0, a5 = 0","a1 = 0, a2 = 0"],[29,6,"a1","a3 = a1^3, a4 = 0, a5 = a1","a1 = -1"],[29,8,"a1","a3 = 0, a4 = 0, a5 = a1","a1 = -1, a2 = 0"],[29,13,"a1","a3 = a1^2, a4 = a1, a5 = 0","a1 = 1, a2 = 0"],[29,14,"a1","a3 = 0, a4 = a1, a5 = a1","a1 = 1, a2 = 0"],[29,16,"a1","a3 = 0, a4 = a1, a5 = 0","a1 = 1, a2 = 0, a3 = 0"],[29,19,"a1","a3 = a1, a4 = a1, a5 = 1","a1 = 1, a2 = 0, a3 = 1"],[29,20,"a1","a3 = 0, a4 = a1, a5 = 1","a2 = 0, a3 = 0, a4 = 1"],[29,24,"a5","a1 = 0, a3 = a5^3, a4 = 0","a1 = 0, a2 = 0"],[29,26,"a3","a1 = 0, a4 = 0, a5 = a3","a1 = 0, a2 = 0, a3 = 0"],[29,28,"a3","a1 = 0, a4 = 0, a5 = 0","a1 = 0, a2 = 0, a3 = 0, a4 = 0"]]},"321":{"cells":[["123456",0,[]],["123465",1,["a1"]],["123546",1,["a1"]],["124356",1,["a1"]],["124365",2,["a1","a2"]],["124536",2,["a1","a2"]],["124563",2,["a2","a3"]],["124635",2,["a2","a3"]],["124653",3,["a2","a3","a4"]],["125346",2,["a1","a2"]],["125436",3,["a1","a2","a3"]],["125463",3,["a1","a3","a4"]],["132456",1,["a1"]],["132465",2,["a1","a2"]],["132546",2,["a1","a2"]],["134256",2,["a1","a2"]],["134265",3,["a1","a2","a3"]],["134625",3,["a1","a3","a4"]],["142356",2,["a1","a2"]],["142365",3,["a1","a2","a3"]],["142536",3,["a1","a2","a3"]],["142563",3,["a1","a3","a4"]],["142635",3,["a1","a3","a4"]],["142653",4,["a1","a3","a4","a5"]],["143256",3,["a1","a2","a3"]],["143265",4,["a1","a2","a3","a4"]],["143625",4,["a2","a3","a4","a5"]],["146235",3,["a2","a4","a5"]],["146253",4,["a2","a4","a5","a6"]],["146325",4,["a2","a3","a5","a6"]],["213456",1,["a1"]],["213465",2,["a1","a2"]],["213546",2,["a1","a2"]],["214356",2,["a1","a2"]],["214365",3,["a1","a2","a3"]],["214536",3,["a1","a2","a3"]],["214563",3,["a1","a3","a4"]],["214635",3,["a1","a3","a4"]],["214653",4,["a1","a3","a4","a5"]],["215346",3,["a1","a2","a3"]],["215436",4,["a1","a2","a3","a4"]],["215463",4,["a1","a2","a4","a5"]],["231456",2,["a1","a2"]],["231465",3,["a1","a2","a3"]],["231546",3,["a1","a2","a3"]],["235146",3,["a2","a3","a4"]],["251346",3,["a2","a3","a4"]],["251436",4,["a2","a3","a4","a5"]],["251463",4,["a2","a3","a5","a6"]],["253146",4,["a2","a3","a4","a5"]],["312456",2,["a1","a2"]],["312465",3,["a1","a2","a3"]],["312546",3,["a1","a2","a3"]],["314256",3,["a1","a2","a3"]],["314265",4,["a1","a2","a3","a4"]],["314625",4,["a1","a2","a4","a5"]],["321456",3,["a1","a2","a3"]],["321465",4,["a1","a2","a3","a4"]],["321546",4,["a1","a2","a3","a4"]],["325146",4,["a1","a3","a4","a5"]]],"edges":[[1,0,"a1","",""],[2,0,"a1","",""],[3,0,"a1","",""],[4,0,"a1","a2 = a1",""],[4,1,"a1","a2 = 0","a1 = 0"],[4,3,"a2","a1 = 0","a1 = 0"],[5,0,"a1","a2 = a1^2",""],[5,2,"a1","a2 = 0","a1 = 0"],[5,3,"a2","a1 = 0","a1 = 0"],[6,3,"a2","a3 = a2^2","a1 = 0"],[6,4,"a2","a3 = 0","a1 = 0, a2 = 0"],[6,5,"a3","a2 = 0","a1 = 0, a2 = 0"],[7,3,"a3","a2 = a3^2","a1 = 0"],[7,4,"a2","a3 = 0","a1 = 0, a2 = 0"],[7,5,"a2","a3 = a2","a1 = 0, a2 = 1"],[8,3,"a2","a3 = 0, a4 = 0","a1 = 0"],[8,4,"a2","a3 = a2, a4 = 0","a1 = 0, a2 = -1"],[8,5,"a2","a3 = 0, a4 = a2","a1 = 0, a2 = 1"],[8,6,"a2","a3 = 1, a4 = a2","a2 = 1, a3 = 0"],[8,7,"a3","a2 = 0, a4 = 0","a2 = 0, a3 = 0"],[9,0,"a2","a1 = a2^2",""],[9,2,"a1","a2 = 0","a1 = 0"],[9,3,"a1","a2 = a1","a1 = 1"],[10,0,"a1","a2 = 0, a3 = 0",""],[10,2,"a1","a2 = a1, a3 = 0","a1 = -1"],[10,3,"a1","a2 = 0, a3 = a1","a1 = 1"],[10,5,"a1","a2 = 1, a3 = a1","a1 = 1, a2 = 0"],[10,9,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[11,0,"a1","a3 = a1^2, a4 = 0",""],[11,1,"a1","a3 = 0, a4 = 0","a1 = 0"],[11,3,"a1","a3 = a1^2, a4 = a1","a1 = 1"],[11,4,"a1","a3 = 0, a4 = a1","a1 = 1, a2 = 0"],[11,5,"a3","a1 = 0, a4 = a3","a1 = 0, a2 = 0"],[11,6,"a4","a1 = 0, a3 = 0","a2 = 0, a3 = 0"],[11,10,"a3","a1 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[12,0,"a1","",""],[13,0,"a1","a2 = a1",""],[13,1,"a1","a2 = 0","a1 = 0"],[13,12,"a2","a1 = 0","a1 = 0"],[14,0,"a1","a2 = a1",""],[14,2,"a1","a2 = 0","a1 = 0"],[14,12,"a2","a1 = 0","a1 = 0"],[15,0,"a1","a2 = a1^2",""],[15,3,"a1","a2 = 0","a1 = 0"],[15,12,"a2","a1 = 0","a1 = 0"],[16,0,"a1","a2 = a1^2, a3 = a1",""],[16,1,"a1","a2 = a1^2, a3 = 0","a1 = 0"],[16,3,"a1","a2 = 0, a3 = a1","a1 = 0"],[16,4,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[16,12,"a2","a1 = 0, a3 = a2","a1 = 0"],[16,13,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[16,15,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[17,2,"a1","a3 = 0, a4 = a1^2","a1 = 0"],[17,3,"a1","a3 = a1^3, a4 = a1","a1 = -1"],[17,4,"a1","a3 = a1^2, a4 = 0","a1 = 0, a2 = 0"],[17,5,"a1","a3 = 0, a4 = a1","a1 = -1, a2 = 0"],[17,7,"a1","a3 = 0, a4 = 0","a2 = 0, a3 = 0"],[17,12,"a4","a1 = 0, a3 = a4^3","a1 = 0"],[17,14,"a3","a1 = 0, a4 = a3","a1 = 0, a2 = 0"],[17,16,"a3","a1 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[18,0,"a2","a1 = a2^2",""],[18,3,"a1","a2 = 0","a1 = 0"],[18,12,"a1","a2 = a1","a1 = 1"],[19,0,"a2","a1 = a2^2, a3 = a2",""],[19,1,"a2","a1 = a2^2, a3 = 0","a1 = 0"],[19,3,"a1","a2 = 0, a3 = a1","a1 = 0"],[19,4,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[19,12,"a1","a2 = a1, a3 = a1","a1 = 1"],[19,13,"a1","a2 = a1, a3 = 0","a1 = 1, a2 = 0"],[19,18,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[20,0,"a2","a1 = a2^2, a3 = a2^2",""],[20,2,"a2","a1 = a2^2, a3 = 0","a1 = 0"],[20,3,"a1","a2 = 0, a3 = a1","a1 = 0"],[20,5,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[20,12,"a1","a2 = a1, a3 = a1^2","a1 = 1"],[20,14,"a1","a2 = a1, a3 = 0","a1 = 1, a2 = 0"],[20,18,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[21,3,"a1","a3 = a1, a4 = a1^2","a1 = 0"],[21,4,"a1","a3 = a1, a4 = 0","a1 = 0, a2 = 0"],[21,5,"a1","a3 = 0, a4 = a1","a1 = 0, a2 = 0"],[21,6,"a1","a3 = 0, a4 = 0","a2 = 0, a3 = 0"],[21,18,"a3","a1 = 0, a4 = a3^2","a1 = 0, a2 = 0"],[21,19,"a3","a1 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[21,20,"a4","a1 = 0, a3 = 0","a1 = 0, a2 = 0, a3 = 0"],[22,3,"a1","a3 = a1^2, a4 = a1","a1 = 0"],[22,4,"a1","a3 = a1, a4 = 0","a1 = 0, a2 = 0"],[22,5,"a1","a3 = 0, a4 = a1","a1 = 0, a2 = 0"],[22,7,"a1","a3 = 0, a4 = 0","a2 = 0, a3 = 0"],[22,18,"a4","a1 = 0, a3 = a4^2","a1 = 0, a2 = 0"],[22,19,"a3","a1 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[22,20,"a3","a1 = 0, a4 = a3","a1 = 0, a2 = 0, a3 = 1"],[23,3,"a1","a3 = a1, a4 = 0, a5 = 0","a1 = 0"],[23,4,"a1","a3 = a1, a4 = a1, a5 = 0","a1 = 0, a2 = -1"],[23,5,"a1","a3 = 0, a4 = 1, a5 = a1","a1 = 0, a2 = 0"],[23,6,"a1","a3 = 0, a4 = 0, a5 = a1","a2 = 0, a3 = 0"],[23,7,"a1","a3 = 0, a4 = a1, a5 = 0","a2 = 0, a3 = 0"],[23,8,"a1","a3 = 0, a4 = 0, a5 = 0","a2 = 0, a3 = 0, a4 = 0"],[23,18,"a3","a1 = 0, a4 = 0, a5 = 0","a1 = 0, a2 = 0"],[23,19,"a3","a1 = 0, a4 = a3, a5 = 0","a1 = 0, a2 = 0, a3 = -1"],[23,20,"a3","a1 = 0, a4 = 0, a5 = a3","a1 = 0, a2 = 0, a3 = 1"],[23,21,"a3","a1 = 0, a4 = 1, a5 = a3","a1 = 0, a3 = 1, a4 = 0"],[23,22,"a4","a1 = 0, a3 = 0, a5 = 0","a1 = 0, a3 = 0, a4 = 0"],[24,0,"a1","a2 = 0, a3 = 0",""],[24,3,"a1","a2 = a1, a3 = 0","a1 = -1"],[24,12,"a1","a2 = 0, a3 = a1","a1 = 1"],[24,15,"a1","a2 = 1, a3 = a1","a1 = 1, a2 = 0"],[24,18,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[25,0,"a1","a2 = 0, a3 = 0, a4 = a1",""],[25,1,"a1","a2 = 0, a3 = 0, a4 = 0","a1 = 0"],[25,3,"a1","a2 = a1, a3 = 0, a4 = a1","a1 = -1"],[25,4,"a1","a2 = a1, a3 = 0, a4 = 0","a1 = -1, a2 = 0"],[25,12,"a1","a2 = 0, a3 = a1, a4 = a1","a1 = 1"],[25,13,"a1","a2 = 0, a3 = a1, a4 = 0","a1 = 1, a2 = 0"],[25,15,"a1","a2 = 1, a3 = a1, a4 = a1","a1 = 1, a2 = 0"],[25,16,"a1","a2 = 1, a3 = a1, a4 = 0","a1 = 1, a2 = 0, a3 = 0"],[25,18,"a2","a1 = 0, a3 = 0, a4 = a2","a1 = 0, a2 = 0"],[25,19,"a2","a1 = 0, a3 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[25,24,"a4","a1 = 0, a2 = 0, a3 = 0","a1 = 0, a2 = 0, a3 = 0"],[26,0,"a5","a2 = 0, a3 = a5^3, a4 = 0",""],[26,2,"a2","a3 = 0, a4 = 0, a5 = a2^2","a1 = 0"],[26,3,"a2","a3 = a2^3, a4 = 0, a5 = a2","a1 = -1"],[26,4,"a2","a3 = a2^2, a4 = 1, a5 = 0","a1 = 0, a2 = 0"],[26,5,"a2","a3 = 0, a4 = 0, a5 = a2","a1 = -1, a2 = 0"],[26,7,"a2","a3 = 0, a4 = 1, a5 = 0","a2 = 0, a3 = 0"],[26,12,"a4","a2 = 0, a3 = a4^3, a5 = a4","a1 = 1"],[26,14,"a2","a3 = 0, a4 = a2, a5 = -a2^2","a1 = 0, a2 = 0"],[26,16,"a3","a2 = 0, a4 = a3, a5 = 0","a1 = 0, a2 = 0, a3 = 0"],[26,17,"a4","a2 = 0, a3 = 0, a5 = 0","a1 = 0, a3 = 0, a4 = 0"],[26,18,"a2","a3 = a2^3, a4 = 1, a5 = -a2","a1 = 0, a2 = 1"],[26,19,"a2","a3 = a2^2, a4 = 0, a5 = 0","a1 = 0, a2 = 0, a3 = 0"],[26,20,"a2","a3 = 0, a4 = 1, a5 = -a2","a1 = 0, a2 = 1, a3 = 0"],[26,22,"a2","a3 = 0, a4 = 0, a5 = 0","a1 = 0, a3 = 0, a4 = 0"],[26,25,"a3","a2 = 0, a4 = 0, a5 = 0","a1 = 0, a2 = 0, a3 = 0, a4 = 0"],[27,0,"a2","a4 = a2^2, a5 = a2",""],[27,3,"a5","a2 = a5^3, a4 = a5^2","a1 = -1"],[27,5,"a4","a2 = a4^3, a5 = a4","a1 = 0, a2 = 1"],[27,10,"a2","a4 = 0, a5 = a2","a1 = 0, a2 = 0, a3 = 0"],[27,19,"a4","a2 = a4^2, a5 = 0","a1 = 0, a2 = 0, a3 = 0"],[27,22,"a2","a4 = 0, a5 = 0","a1 = 0, a3 = 0, a4 = 0"],[28,0,"a2","a4 = a2^2, a5 = 0, a6 = a2",""],[28,1,"a2","a4 = a2^2, a5 = a2, a6 = a2","a1 = 0"],[28,3,"a5","a2 = a5^3, a4 = a5^2, a6 = -a5","a1 = 1"],[28,4,"a5","a2 = a5^3, a4 = a5^2, a6 = a5","a1 = -1, a2 = 0"],[28,5,"a4","a2 = a4^3, a5 = 0, a6 = a4","a1 = 0, a2 = 1"],[28,6,"a4","a2 = a4^3, a5 = 1, a6 = a4","a2 = 1, a3 = 0"],[28,10,"a2","a4 = 0, a5 = 1, a6 = a2","a1 = 0, a2 = 0, a3 = 0"],[28,11,"a2","a4 = 0, a5 = 0, a6 = a2","a1 = 0, a3 = 0, a4 = 0"],[28,18,"a4","a2 = a4^2, a5 = 0, a6 = 0","a1 = 0, a2 = 0"],[28,19,"a4","a2 = a4^2, a5 = a4, a6 = 0","a1 = 0, a2 = 0, a3 = -1"],[28,22,"a2","a4 = 0, a5 = a2, a6 = 0","a1 = 0, a3 = 0, a4 = 0"],[28,23,"a2","a4 = 0, a5 = 0, a6 = 0","a1 = 0, a3 = 0, a4 = 0, a5 = 0"],[28,24,"a2","a4 = a2, a5 = 0, a6 = 0","a1 = 0, a2 = 1, a3 = 0"],[28,25,"a2","a4 = a2, a5 = a2, a6 = 0","a1 = 0, a2 = 1, a3 = 0, a4 = -1"],[28,27,"a5","a2 = 0, a4 = 0, a6 = 0","a2 = 0, a4 = 0, a5 = 0"],[29,0,"a2","a3 = 1, a5 = a2^3, a6 = a2",""],[29,2,"a2","a3 = 0, a5 = a2^2, a6 = a2","a1 = 0"],[29,3,"a3","a2 = a3^3, a5 = 0, a6 = a3","a1 = 0"],[29,5,"a3","a2 = a3^3, a5 = a3^2, a6 = a3","a1 = -1, a2 = 0"],[29,9,"a2","a3 = 0, a5 = 0, a6 = a2","a1 = 0, a2 = 0"],[29,10,"a2","a3 = a2, a5 = 0, a6 = a2","a1 = 0, a2 = -1, a3 = 0"],[29,19,"a2","a3 = 0, a5 = 0, a6 = 0","a1 = 0, a2 = 0, a3 = 0"],[29,22,"a2","a3 = a2, a5 = 0, a6 = 0","a1 = 0, a3 = -1, a4 = 0"],[29,25,"a2","a3 = 0, a5 = a2, a6 = 0","a1 = 0, a2 = 1, a3 = 0, a4 = 0"],[29,26,"a2","a3 = 1, a5 = a2, a6 = 0","a2 = 1, a3 = 0, a4 = 0, a5 = 0"],[29,27,"a3","a2 = 0, a5 = 0, a6 = 0","a2 = 0, a4 = 0, a5 = 0"],[30,0,"a1","",""],[31,0,"a1","a2 = a1",""],[31,1,"a1","a2 = 0","a1 = 0"],[31,30,"a2","a1 = 0","a1 = 0"],[32,0,"a1","a2 = a1",""],[32,2,"a1","a2 = 0","a1 = 0"],[32,30,"a2","a1 = 0","a1 = 0"],[33,0,"a1","a2 = a1",""],[33,3,"a1","a2 = 0","a1 = 0"],[33,30,"a2","a1 = 0","a1 = 0"],[34,0,"a1","a2 = a1, a3 = a1",""],[34,1,"a1","a2 = a1, a3 = 0","a1 = 0"],[34,3,"a1","a2 = 0, a3 = a1","a1 = 0"],[34,4,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[34,30,"a2","a1 = 0, a3 = a2","a1 = 0"],[34,31,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[34,33,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[35,0,"a1","a2 = a1, a3 = a1^2",""],[35,2,"a1","a2 = a1, a3 = 0","a1 = 0"],[35,3,"a1","a2 = 0, a3 = a1","a1 = 0"],[35,5,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[35,30,"a2","a1 = 0, a3 = a2^2","a1 = 0"],[35,32,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[35,33,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[36,3,"a1","a3 = a1, a4 = a1^2","a1 = 0"],[36,4,"a1","a3 = a1, a4 = 0","a1 = 0, a2 = 0"],[36,5,"a1","a3 = 0, a4 = a1","a1 = 0, a2 = 0"],[36,6,"a1","a3 = 0, a4 = 0","a2 = 0, a3 = 0"],[36,33,"a3","a1 = 0, a4 = a3^2","a1 = 0, a2 = 0"],[36,34,"a3","a1 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[36,35,"a4","a1 = 0, a3 = 0","a1 = 0, a2 = 0, a3 = 0"],[37,3,"a1","a3 = a1^2, a4 = a1","a1 = 0"],[37,4,"a1","a3 = a1, a4 = 0","a1 = 0, a2 = 0"],[37,5,"a1","a3 = 0, a4 = a1","a1 = 0, a2 = 0"],[37,7,"a1","a3 = 0, a4 = 0","a2 = 0, a3 = 0"],[37,33,"a4","a1 = 0, a3 = a4^2","a1 = 0, a2 = 0"],[37,34,"a3","a1 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[37,35,"a3","a1 = 0, a4 = a3","a1 = 0, a2 = 0, a3 = 1"],[38,3,"a1","a3 = a1, a4 = 0, a5 = 0","a1 = 0"],[38,4,"a1","a3 = a1, a4 = a1, a5 = 0","a1 = 0, a2 = -1"],[38,5,"a1","a3 = 0, a4 = 1, a5 = a1","a1 = 0, a2 = 0"],[38,6,"a1","a3 = 0, a4 = 0, a5 = a1","a2 = 0, a3 = 0"],[38,7,"a1","a3 = 0, a4 = a1, a5 = 0","a2 = 0, a3 = 0"],[38,8,"a1","a3 = 0, a4 = 0, a5 = 0","a2 = 0, a3 = 0, a4 = 0"],[38,33,"a3","a1 = 0, a4 = 0, a5 = 0","a1 = 0, a2 = 0"],[38,34,"a3","a1 = 0, a4 = a3, a5 = 0","a1 = 0, a2 = 0, a3 = -1"],[38,35,"a3","a1 = 0, a4 = 0, a5 = a3","a1 = 0, a2 = 0, a3 = 1"],[38,36,"a3","a1 = 0, a4 = 1, a5 = a3","a1 = 0, a3 = 1, a4 = 0"],[38,37,"a4","a1 = 0, a3 = 0, a5 = 0","a1 = 0, a3 = 0, a4 = 0"],[39,0,"a1","a2 = a1^2, a3 = a1",""],[39,2,"a1","a2 = a1, a3 = 0","a1 = 0"],[39,3,"a1","a2 = 0, a3 = a1","a1 = 0"],[39,9,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[39,30,"a3","a1 = 0, a2 = a3^2","a1 = 0"],[39,32,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[39,33,"a2","a1 = 0, a3 = a2","a1 = 0, a2 = 1"],[40,0,"a1","a2 = a1, a3 = 0, a4 = 0",""],[40,2,"a1","a2 = a1, a3 = a1, a4 = 0","a1 = -1"],[40,3,"a1","a2 = 0, a3 = 1, a4 = a1","a1 = 0"],[40,5,"a1","a2 = 0, a3 = 0, a4 = a1","a1 = 0, a2 = 0"],[40,9,"a1","a2 = 0, a3 = a1, a4 = 0","a1 = 0, a2 = 0"],[40,10,"a1","a2 = 0, a3 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[40,30,"a2","a1 = 0, a3 = 0, a4 = 0","a1 = 0"],[40,32,"a2","a1 = 0, a3 = a2, a4 = 0","a1 = 0, a2 = -1"],[40,33,"a2","a1 = 0, a3 = 0, a4 = a2","a1 = 0, a2 = 1"],[40,35,"a2","a1 = 0, a3 = 1, a4 = a2","a1 = 0, a2 = 1, a3 = 0"],[40,39,"a3","a1 = 0, a2 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[41,0,"a1","a2 = a1, a4 = a1^2, a5 = 0",""],[41,1,"a1","a2 = a1, a4 = 0, a5 = 0","a1 = 0"],[41,3,"a1","a2 = a1, a4 = a1^2, a5 = a1","a1 = 1"],[41,4,"a1","a2 = a1, a4 = 0, a5 = a1","a1 = 1, a2 = 0"],[41,5,"a1","a2 = 0, a4 = a1, a5 = a1","a1 = 0, a2 = 0"],[41,6,"a1","a2 = 0, a4 = 0, a5 = a1","a2 = 0, a3 = 0"],[41,10,"a1","a2 = 0, a4 = a1, a5 = 0","a1 = 0, a2 = 0, a3 = 0"],[41,11,"a1","a2 = 0, a4 = 0, a5 = 0","a1 = 0, a3 = 0, a4 = 0"],[41,30,"a2","a1 = 0, a4 = a2^2, a5 = 0","a1 = 0"],[41,31,"a2","a1 = 0, a4 = 0, a5 = 0","a1 = 0, a2 = 0"],[41,33,"a2","a1 = 0, a4 = a2^2, a5 = a2","a1 = 0, a2 = 1"],[41,34,"a2","a1 = 0, a4 = 0, a5 = a2","a1 = 0, a2 = 1, a3 = 0"],[41,35,"a4","a1 = 0, a2 = 0, a5 = a4","a1 = 0, a2 = 0, a3 = 0"],[41,36,"a5","a1 = 0, a2 = 0, a4 = 0","a1 = 0, a3 = 0, a4 = 0"],[41,40,"a4","a1 = 0, a2 = 0, a5 = 0","a1 = 0, a2 = 0, a3 = 0, a4 = 0"],[42,0,"a1","a2 = a1^2",""],[42,12,"a1","a2 = 0","a1 = 0"],[42,30,"a2","a1 = 0","a1 = 0"],[43,0,"a1","a2 = a1^2, a3 = a1",""],[43,1,"a1","a2 = a1^2, a3 = 0","a1 = 0"],[43,12,"a1","a2 = 0, a3 = a1","a1 = 0"],[43,13,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[43,30,"a2","a1 = 0, a3 = a2","a1 = 0"],[43,31,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[43,42,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[44,0,"a1","a2 = a1^2, a3 = a1",""],[44,2,"a1","a2 = a1^2, a3 = 0","a1 = 0"],[44,12,"a1","a2 = 0, a3 = a1","a1 = 0"],[44,14,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[44,30,"a2","a1 = 0, a3 = a2","a1 = 0"],[44,32,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[44,42,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[45,3,"a3","a2 = a3^2, a4 = a3","a1 = 0"],[45,12,"a2","a3 = a2^3, a4 = a2","a1 = -1"],[45,15,"a2","a3 = 0, a4 = a2","a1 = -1, a2 = 0"],[45,32,"a2","a3 = a2^2, a4 = 0","a1 = 0, a2 = 0"],[45,39,"a2","a3 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[45,44,"a3","a2 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[46,3,"a3","a2 = a3^3, a4 = a3","a1 = 1"],[46,12,"a2","a3 = a2^2, a4 = a2","a1 = 0"],[46,18,"a2","a3 = 0, a4 = a2","a1 = 0, a2 = 0"],[46,32,"a3","a2 = a3^2, a4 = 0","a1 = 0, a2 = 0"],[46,39,"a2","a3 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[46,44,"a2","a3 = a2, a4 = 0","a1 = 0, a2 = 1, a3 = 0"],[47,3,"a3","a2 = a3^3, a4 = 0, a5 = a3","a1 = 1"],[47,5,"a3","a2 = a3^3, a4 = 1, a5 = a3","a1 = 1, a2 = 0"],[47,12,"a2","a3 = a2^2, a4 = 0, a5 = a2","a1 = 0"],[47,14,"a2","a3 = a2^2, a4 = a2, a5 = a2","a1 = 0, a2 = 0"],[47,18,"a2","a3 = 0, a4 = 1, a5 = a2","a1 = 0, a2 = 0"],[47,20,"a2","a3 = 0, a4 = 0, a5 = a2","a1 = 0, a2 = 0, a3 = 0"],[47,30,"a3","a2 = a3^2, a4 = 0, a5 = 0","a1 = 0"],[47,32,"a3","a2 = a3^2, a4 = a3, a5 = 0","a1 = 0, a2 = -1"],[47,39,"a2","a3 = 0, a4 = a2, a5 = 0","a1 = 0, a2 = 0, a3 = 0"],[47,40,"a2","a3 = 0, a4 = 0, a5 = 0","a1 = 0, a2 = 0, a3 = 0, a4 = 0"],[47,42,"a2","a3 = a2, a4 = 0, a5 = 0","a1 = 0, a2 = 1"],[47,44,"a2","a3 = a2, a4 = a2, a5 = 0","a1 = 0, a2 = 1, a3 = -1"],[47,46,"a4","a2 = 0, a3 = 0, a5 = 0","a2 = 0, a3 = 0, a4 = 0"],[48,3,"a3","a2 = a3^3, a5 = a3^2, a6 = a3","a1 = 1"],[48,4,"a3","a2 = a3^3, a5 = 0, a6 = a3","a1 = 1, a2 = 0"],[48,5,"a5","a2 = a5^3, a3 = 0, a6 = a5","a1 = 0, a2 = 0"],[48,6,"a6","a2 = a6^3, a3 = 0, a5 = 0","a2 = 0, a3 = 0"],[48,12,"a2","a3 = a2^2, a5 = a2^3, a6 = a2","a1 = 0"],[48,13,"a2","a3 = a2^2, a5 = 0, a6 = a2","a1 = 0, a2 = 0"],[48,18,"a2","a3 = a2, a5 = a2^2, a6 = a2","a1 = 0, a2 = 1"],[48,19,"a2","a3 = a2, a5 = 0, a6 = a2","a1 = 0, a2 = 1, a3 = 0"],[48,20,"a2","a3 = 0, a5 = a2, a6 = a2","a1 = 0, a2 = 0, a3 = 0"],[48,21,"a2","a3 = 0, a5 = 0, a6 = a2","a1 = 0, a3 = 0, a4 = 0"],[48,30,"a3","a2 = a3^2, a5 = a3^2, a6 = 0","a1 = 0"],[48,31,"a3","a2 = a3^2, a5 = 0, a6 = 0","a1 = 0, a2 = 0"],[48,40,"a2","a3 = 0, a5 = a2, a6 = 0","a1 = 0, a2 = 0, a3 = 0, a4 = 0"],[48,41,"a2","a3 = 0, a5 = 0, a6 = 0","a1 = 0, a2 = 0, a4 = 0, a5 = 0"],[48,42,"a2","a3 = a2, a5 = a2^2, a6 = 0","a1 = 0, a2 = 1"],[48,43,"a2","a3 = a2, a5 = 0, a6 = 0","a1 = 0, a2 = 1, a3 = 0"],[48,47,"a5","a2 = 0, a3 = 0, a6 = 0","a2 = 0, a3 = 0, a4 = 0, a5 = 0"],[49,0,"a3","a2 = a3^3, a4 = 0, a5 = a3",""],[49,3,"a4","a2 = a4^3, a3 = a4^2, a5 = a4","a1 = 0"],[49,12,"a2","a3 = 1, a4 = a2^3, a5 = a2","a1 = 0"],[49,15,"a2","a3 = 0, a4 = a2^2, a5 = a2","a1 = 0, a2 = 0"],[49,18,"a2","a3 = a2^2, a4 = 0, a5 = a2","a1 = 0, a2 = 0"],[49,24,"a2","a3 = 0, a4 = 0, a5 = a2","a1 = 0, a2 = 0, a3 = 0"],[49,32,"a2","a3 = 0, a4 = 0, a5 = 0","a1 = 0, a2 = 0"],[49,39,"a2","a3 = a2, a4 = 0, a5 = 0","a1 = 0, a2 = -1, a3 = 0"],[49,44,"a2","a3 = 0, a4 = a2, a5 = 0","a1 = 0, a2 = 1, a3 = 0"],[49,45,"a2","a3 = 1, a4 = a2, a5 = 0","a2 = 1, a3 = 0, a4 = 0"],[49,46,"a3","a2 = 0, a4 = 0, a5 = 0","a2 = 0, a3 = 0, a4 = 0"],[50,0,"a2","a1 = a2^2",""],[50,12,"a1","a2 = 0","a1 = 0"],[50,30,"a1","a2 = a1","a1 = 1"],[51,0,"a2","a1 = a2^2, a3 = a2",""],[51,1,"a2","a1 = a2^2, a3 = 0","a1 = 0"],[51,12,"a1","a2 = 0, a3 = a1","a1 = 0"],[51,13,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[51,30,"a1","a2 = a1, a3 = a1","a1 = 1"],[51,31,"a1","a2 = a1, a3 = 0","a1 = 1, a2 = 0"],[51,50,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[52,0,"a2","a1 = a2^2, a3 = a2",""],[52,2,"a2","a1 = a2^2, a3 = 0","a1 = 0"],[52,12,"a1","a2 = 0, a3 = a1","a1 = 0"],[52,14,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[52,30,"a1","a2 = a1, a3 = a1","a1 = 1"],[52,32,"a1","a2 = a1, a3 = 0","a1 = 1, a2 = 0"],[52,50,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[53,0,"a2","a1 = a2^2, a3 = a2^2",""],[53,3,"a2","a1 = a2^2, a3 = 0","a1 = 0"],[53,12,"a1","a2 = 0, a3 = a1","a1 = 0"],[53,15,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[53,30,"a1","a2 = a1, a3 = a1^2","a1 = 1"],[53,33,"a1","a2 = a1, a3 = 0","a1 = 1, a2 = 0"],[53,50,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[54,0,"a2","a1 = a2^2, a3 = a2^2, a4 = a2",""],[54,1,"a2","a1 = a2^2, a3 = a2^2, a4 = 0","a1 = 0"],[54,3,"a2","a1 = a2^2, a3 = 0, a4 = a2","a1 = 0"],[54,4,"a2","a1 = a2^2, a3 = 0, a4 = 0","a1 = 0, a2 = 0"],[54,12,"a1","a2 = 0, a3 = a1, a4 = a1","a1 = 0"],[54,13,"a1","a2 = 0, a3 = a1, a4 = 0","a1 = 0, a2 = 0"],[54,15,"a1","a2 = 0, a3 = 0, a4 = a1","a1 = 0, a2 = 0"],[54,16,"a1","a2 = 0, a3 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[54,30,"a1","a2 = a1, a3 = a1^2, a4 = a1","a1 = 1"],[54,31,"a1","a2 = a1, a3 = a1^2, a4 = 0","a1 = 1, a2 = 0"],[54,33,"a1","a2 = a1, a3 = 0, a4 = a1","a1 = 1, a2 = 0"],[54,34,"a1","a2 = a1, a3 = 0, a4 = 0","a1 = 1, a2 = 0, a3 = 0"],[54,50,"a3","a1 = 0, a2 = 0, a4 = a3","a1 = 0, a2 = 0"],[54,51,"a3","a1 = 0, a2 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[54,53,"a4","a1 = 0, a2 = 0, a3 = 0","a1 = 0, a2 = 0, a3 = 0"],[55,2,"a2","a1 = a2^2, a4 = 0, a5 = a2^2","a1 = 0"],[55,3,"a2","a1 = a2^2, a4 = a2^3, a5 = a2","a1 = -1"],[55,4,"a2","a1 = a2^2, a4 = a2^2, a5 = 0","a1 = 0, a2 = 0"],[55,5,"a2","a1 = a2^2, a4 = 0, a5 = a2","a1 = -1, a2 = 0"],[55,7,"a2","a1 = a2^2, a4 = 0, a5 = 0","a2 = 0, a3 = 0"],[55,12,"a1","a2 = 0, a4 = a1^3, a5 = a1","a1 = 0"],[55,14,"a1","a2 = 0, a4 = 0, a5 = a1","a1 = 0, a2 = 0"],[55,16,"a1","a2 = 0, a4 = a1, a5 = 0","a1 = 0, a2 = 0, a3 = 0"],[55,17,"a1","a2 = 0, a4 = 0, a5 = 0","a1 = 0, a3 = 0, a4 = 0"],[55,32,"a1","a2 = a1, a4 = 0, a5 = a1^2","a1 = 1, a2 = 0"],[55,33,"a1","a2 = a1, a4 = a1^3, a5 = a1","a1 = 1, a2 = -1"],[55,34,"a1","a2 = a1, a4 = a1^2, a5 = 0","a1 = 1, a2 = 0, a3 = 0"],[55,35,"a1","a2 = a1, a4 = 0, a5 = a1","a1 = 1, a2 = -1, a3 = 0"],[55,37,"a1","a2 = a1, a4 = 0, a5 = 0","a1 = 1, a3 = 0, a4 = 0"],[55,50,"a5","a1 = 0, a2 = 0, a4 = a5^3","a1 = 0, a2 = 0"],[55,52,"a4","a1 = 0, a2 = 0, a5 = a4","a1 = 0, a2 = 0, a3 = 0"],[55,54,"a4","a1 = 0, a2 = 0, a5 = 0","a1 = 0, a2 = 0, a3 = 0, a4 = 0"],[56,0,"a1","a2 = 0, a3 = 0",""],[56,12,"a1","a2 = a1, a3 = 0","a1 = -1"],[56,30,"a1","a2 = 0, a3 = a1","a1 = 1"],[56,42,"a1","a2 = 1, a3 = a1","a1 = 1, a2 = 0"],[56,50,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[57,0,"a1","a2 = 0, a3 = 0, a4 = a1",""],[57,1,"a1","a2 = 0, a3 = 0, a4 = 0","a1 = 0"],[57,12,"a1","a2 = a1, a3 = 0, a4 = a1","a1 = -1"],[57,13,"a1","a2 = a1, a3 = 0, a4 = 0","a1 = -1, a2 = 0"],[57,30,"a1","a2 = 0, a3 = a1, a4 = a1","a1 = 1"],[57,31,"a1","a2 = 0, a3 = a1, a4 = 0","a1 = 1, a2 = 0"],[57,42,"a1","a2 = 1, a3 = a1, a4 = a1","a1 = 1, a2 = 0"],[57,43,"a1","a2 = 1, a3 = a1, a4 = 0","a1 = 1, a2 = 0, a3 = 0"],[57,50,"a2","a1 = 0, a3 = 0, a4 = a2","a1 = 0, a2 = 0"],[57,51,"a2","a1 = 0, a3 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[57,56,"a4","a1 = 0, a2 = 0, a3 = 0","a1 = 0, a2 = 0, a3 = 0"],[58,0,"a1","a2 = 0, a3 = 0, a4 = a1",""],[58,2,"a1","a2 = 0, a3 = 0, a4 = 0","a1 = 0"],[58,12,"a1","a2 = a1, a3 = 0, a4 = a1","a1 = -1"],[58,14,"a1","a2 = a1, a3 = 0, a4 = 0","a1 = -1, a2 = 0"],[58,30,"a1","a2 = 0, a3 = a1, a4 = a1","a1 = 1"],[58,32,"a1","a2 = 0, a3 = a1, a4 = 0","a1 = 1, a2 = 0"],[58,42,"a1","a2 = 1, a3 = a1, a4 = a1","a1 = 1, a2 = 0"],[58,44,"a1","a2 = 1, a3 = a1, a4 = 0","a1 = 1, a2 = 0, a3 = 0"],[58,50,"a2","a1 = 0, a3 = 0, a4 = a2","a1 = 0, a2 = 0"],[58,52,"a2","a1 = 0, a3 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[58,56,"a4","a1 = 0, a2 = 0, a3 = 0","a1 = 0, a2 = 0, a3 = 0"],[59,2,"a1","a3 = a1^2, a4 = 0, a5 = 0","a1 = 0"],[59,3,"a3","a1 = a3^2, a4 = 0, a5 = a3","a1 = 0"],[59,9,"a1","a3 = 0, a4 = 0, a5 = 0","a1 = 0, a2 = 0"],[59,12,"a1","a3 = a1^3, a4 = 0, a5 = a1","a1 = -1"],[59,15,"a1","a3 = 0, a4 = 0, a5 = a1","a1 = -1, a2 = 0"],[59,32,"a1","a3 = a1^2, a4 = a1, a5 = 0","a1 = 1, a2 = 0"],[59,33,"a1","a3 = 0, a4 = a1, a5 = a1","a1 = 1, a2 = 0"],[59,39,"a1","a3 = 0, a4 = a1, a5 = 0","a1 = 1, a2 = 0, a3 = 0"],[59,44,"a1","a3 = a1, a4 = a1, a5 = 1","a1 = 1, a2 = 0, a3 = 1"],[59,45,"a1","a3 = 0, a4 = a1, a5 = 1","a2 = 0, a3 = 0, a4 = 1"],[59,50,"a5","a1 = 0, a3 = a5^3, a4 = 0","a1 = 0, a2 = 0"],[59,53,"a3","a1 = 0, a4 = 0, a5 = a3","a1 = 0, a2 = 0, a3 = 0"],[59,58,"a3","a1 = 0, a4 = 0, a5 = 0","a1 = 0, a2 = 0, a3 = 0, a4 = 0"]]}};
+    // ---- NNGP theory: infinite-width kernel recursion ----
+    // Gauss-Hermite nodes/weights for integrals against exp(-x^2) (Numerical Recipes gauher).
+    function gaussHermite(n) {
+      const x = new Array(n), w = new Array(n);
+      const PIM4 = 0.7511255444649425, EPS = 1e-14;
+      let z = 0, z1, pp;
+      const m = Math.floor((n + 1) / 2);
+      for (let i = 0; i < m; i++) {
+        if (i === 0) z = Math.sqrt(2 * n + 1) - 1.85575 * Math.pow(2 * n + 1, -0.16667);
+        else if (i === 1) z -= 1.14 * Math.pow(n, 0.426) / z;
+        else if (i === 2) z = 1.86 * z - 0.86 * x[0];
+        else if (i === 3) z = 1.91 * z - 0.91 * x[1];
+        else z = 2 * z - x[i - 2];
+        for (let it = 0; it < 100; it++) {
+          let p1 = PIM4, p2 = 0;
+          for (let j = 0; j < n; j++) {
+            const p3 = p2; p2 = p1;
+            p1 = z * Math.sqrt(2 / (j + 1)) * p2 - Math.sqrt(j / (j + 1)) * p3;
+          }
+          pp = Math.sqrt(2 * n) * p2;
+          z1 = z; z = z1 - p1 / pp;
+          if (Math.abs(z - z1) <= EPS) break;
+        }
+        x[i] = z; x[n - 1 - i] = -z;
+        w[i] = 2 / (pp * pp); w[n - 1 - i] = w[i];
+      }
+      return { x, w };
+    }
+    const GH = gaussHermite(48);
+    const SQRT_PI = Math.sqrt(Math.PI);
+
     function erfApprox(x) { const sign = x >= 0 ? 1 : -1; x = Math.abs(x); const t = 1 / (1 + 0.3275911 * x); const y = 1 - (((((1.061405429*t - 1.453152027)*t) + 1.421413741)*t - 0.284496736)*t + 0.254829592)*t * Math.exp(-x*x); return sign * y; }
-    function runNetwork(width, act, depth, inputDim) {
-      let h1 = normalize(randnVec(inputDim)); let h2 = normalize(randnVec(inputDim)); const corrs = [];
-      for (let layer = 0; layer < depth; layer++) {
-        const len = h1.length; const scale = 1 / Math.sqrt(len);
-        const W = randnMatrix(width, len).map(row => row.map(w => w * scale));
-        h1 = applyAct(matVecMul(W, h1), act); h2 = applyAct(matVecMul(W, h2), act);
-        const n1 = norm(h1), n2 = norm(h2);
-        const rho = (n1 === 0 || n2 === 0) ? 0 : h1.reduce((s, v, i) => s + v * h2[i], 0) / (n1 * n2);
-        corrs.push(rho);
+    const ACT = { relu: x => (x > 0 ? x : 0), erf: erfApprox, tanh: Math.tanh };
+
+    // E[phi(u) phi(v)] for (u, v) ~ N(0, [[k11, k12], [k12, k22]])
+    function gaussPair(act, k11, k12, k22) {
+      if (act === 'relu') {
+        const s = Math.sqrt(k11 * k22);
+        if (s === 0) return 0;
+        const c = Math.max(-1, Math.min(1, k12 / s)), th = Math.acos(c);
+        return s / (2 * Math.PI) * (Math.sin(th) + (Math.PI - th) * c);
       }
-      return corrs;
+      if (act === 'erf') {
+        const d = Math.sqrt((1 + 2 * k11) * (1 + 2 * k22));
+        return (2 / Math.PI) * Math.asin(Math.max(-1, Math.min(1, 2 * k12 / d)));
+      }
+      // tanh: 2-D Gauss-Hermite with u = a z1, v = b z1 + c z2
+      const f = ACT[act];
+      const a = Math.sqrt(Math.max(k11, 0));
+      const b = a > 0 ? k12 / a : 0;
+      const c = Math.sqrt(Math.max(k22 - b * b, 0));
+      let sum = 0;
+      for (let i = 0; i < GH.x.length; i++) {
+        const z1 = Math.SQRT2 * GH.x[i], fu = f(a * z1), wi = GH.w[i];
+        for (let j = 0; j < GH.x.length; j++) {
+          sum += wi * GH.w[j] * fu * f(b * z1 + c * Math.SQRT2 * GH.x[j]);
+        }
+      }
+      return sum / Math.PI;
     }
+
+    // Pre-activation kernel through depth. Inputs have |x|^2 = d0 and correlation rho0;
+    // weights ~ N(0, sw2 / fan_in), biases ~ N(0, sb2).
+    function theoryKernel(act, sw2, sb2, rho0, depth) {
+      let k11 = sb2 + sw2, k22 = k11, k12 = sb2 + sw2 * rho0;
+      const rhos = [], qs = [];
+      for (let l = 1; l <= depth; l++) {
+        rhos.push(k12 / Math.sqrt(k11 * k22)); qs.push(k11);
+        if (l === depth) break;
+        const n11 = sb2 + sw2 * gaussPair(act, k11, k11, k11);
+        const n12 = sb2 + sw2 * gaussPair(act, k11, k12, k22);
+        k11 = n11; k22 = n11; k12 = n12;
+        if (!isFinite(k11) || k11 > 1e12) { k11 = k22 = 1e12; }
+      }
+      return { rhos, qs };
+    }
+
+    // Correlation map c -> c' at a fixed variance q (for the cobweb plot)
+    function corrMap(act, sw2, sb2, q, c) {
+      const qn = sb2 + sw2 * gaussPair(act, q, q, q);
+      return (sb2 + sw2 * gaussPair(act, q, c * q, q)) / qn;
+    }
+
+    // Fixed point of the length map q -> sb2 + sw2 E[phi(sqrt(q) z)^2]
+    function lengthFixedPoint(act, sw2, sb2, q0) {
+      let q = q0;
+      for (let i = 0; i < 400; i++) {
+        const qn = sb2 + sw2 * gaussPair(act, q, q, q);
+        if (!isFinite(qn) || qn > 1e8) return { q: 1e8, converged: false };
+        if (Math.abs(qn - q) < 1e-12 * Math.max(1, q)) return { q: qn, converged: true };
+        q = qn;
+      }
+      return { q, converged: true };
+    }
+
+    // chi_1 = sw2 E[phi'(sqrt(q) z)^2]: > 1 chaotic (inputs decorrelate), < 1 ordered (inputs collapse)
+    function chi1(act, sw2, q) {
+      const d = act === 'relu' ? (x => (x > 0 ? 1 : 0))
+              : act === 'erf' ? (x => (2 / SQRT_PI) * Math.exp(-x * x))
+              : (x => { const t = Math.tanh(x); return 1 - t * t; });
+      let s = 0; const a = Math.sqrt(Math.max(q, 0));
+      for (let i = 0; i < GH.x.length; i++) { const v = d(a * Math.SQRT2 * GH.x[i]); s += GH.w[i] * v * v; }
+      return sw2 * s / SQRT_PI;
+    }
+
+    // ---- Finite-width simulation ----
+    let _spare = null;
+    function randn() {
+      if (_spare !== null) { const s = _spare; _spare = null; return s; }
+      let u = 0, v = 0; while (u === 0) u = Math.random(); v = Math.random();
+      const r = Math.sqrt(-2.0 * Math.log(u)), t = 2.0 * Math.PI * v;
+      _spare = r * Math.sin(t); return r * Math.cos(t);
+    }
+    function inputPair(d0, rho0) {
+      const u = Array.from({ length: d0 }, randn); let nu = Math.hypot(...u); for (let i = 0; i < d0; i++) u[i] /= nu;
+      const v = Array.from({ length: d0 }, randn); let dot = 0; for (let i = 0; i < d0; i++) dot += u[i] * v[i];
+      for (let i = 0; i < d0; i++) v[i] -= dot * u[i]; let nv = Math.hypot(...v); for (let i = 0; i < d0; i++) v[i] /= nv;
+      const s = Math.sqrt(d0), r2 = Math.sqrt(1 - rho0 * rho0);
+      return [u.map(x => s * x), u.map((x, i) => s * (rho0 * x + r2 * v[i]))];
+    }
+    // One random network; returns the empirical pre-activation correlation at every layer
+    function simulateNet(act, sw2, sb2, rho0, width, depth, d0) {
+      const f = ACT[act];
+      let [h1, h2] = inputPair(d0, rho0);
+      const out = [];
+      for (let l = 1; l <= depth; l++) {
+        const nIn = h1.length, sd = Math.sqrt(sw2 / nIn), sbd = Math.sqrt(sb2);
+        const z1 = new Float64Array(width), z2 = new Float64Array(width);
+        for (let i = 0; i < width; i++) {
+          let a = 0, b = 0;
+          for (let j = 0; j < nIn; j++) { const wij = sd * randn(); a += wij * h1[j]; b += wij * h2[j]; }
+          const bi = sbd * randn(); z1[i] = a + bi; z2[i] = b + bi;
+        }
+        let d12 = 0, d11 = 0, d22 = 0;
+        for (let i = 0; i < width; i++) { d12 += z1[i] * z2[i]; d11 += z1[i] * z1[i]; d22 += z2[i] * z2[i]; }
+        out.push(d11 > 0 && d22 > 0 ? d12 / Math.sqrt(d11 * d22) : 1);
+        h1 = z1.map(f); h2 = z2.map(f);
+      }
+      return out;
+    }
+    // ---- Springer fiber closure data: model + halving routes ----
+    function sfBuildModel(key, raw) {
+      const cells = raw.cells.map(([perm, dim, free], i) => ({ i, perm, dim, free }));
+      const out = cells.map(() => new Map());   // out[a].get(t) = witness for "closure of a meets t"
+      raw.edges.forEach(([s, t, limit, srcSubs, tgtSubs]) => { out[s].set(t, { limit, srcSubs, tgtSubs }); });
+      const maxDim = Math.max(...cells.map(c => c.dim));
+      return { key, cells, out, maxDim, nEdges: raw.edges.length, rows: key.length };
+    }
+    // closure set of a: a itself plus every cell its closure meets
+    function sfClosed(M, a) { const s = new Set([a]); M.out[a].forEach((_, t) => s.add(t)); return s; }
+
+    const SF_DIVS = [128, 64, 32, 16, 8, 4, 2];
+    // 'gradual' route: halve whenever possible, take a bigger divisor only when forced.
+    // Divisors never go back up; each step lands on floor(n/d) or ceil(n/d); ends on the last chosen cell.
+    function sfHalvingRoute(M, a) {
+      const memo = new Map();
+      function f(arr, i) {
+        const n = arr.length; if (n === 1) return [];
+        const key = i + ':' + arr.join(',');
+        if (memo.has(key)) return memo.get(key);
+        memo.set(key, null);
+        const tries = arr.slice().sort((x, y) => M.cells[y].dim - M.cells[x].dim || x - y);
+        let res = null;
+        outer: for (let j = SF_DIVS.length - 1; j >= i; j--) {
+          const d = SF_DIVS[j]; if (n < d) continue;
+          const lo = Math.floor(n / d), hi = Math.ceil(n / d);
+          for (const B of tries) {
+            const cB = sfClosed(M, B), next = arr.filter(x => cB.has(x)), m = next.length;
+            if (m >= n || m < 1 || (m !== lo && m !== hi)) continue;
+            const r = f(next, j);
+            if (r) { res = [{ B, d, from: n, to: m, set: next }, ...r]; break outer; }
+          }
+        }
+        memo.set(key, res); return res;
+      }
+      const start = [...sfClosed(M, a)].sort((x, y) => x - y);
+      return { start, steps: f(start, 0) };
+    }
+
+    // Labeled tableau: rows of the Young diagram top to bottom, boxes numbered down each column
+    function sfTableau(key) {
+      const rows = key.split('').map(Number);
+      const lab = rows.map(r => new Array(r));
+      let k = 1;
+      for (let c = 0; c < Math.max(...rows); c++) for (let r = 0; r < rows.length; r++) if (rows[r] > c) lab[r][c] = k++;
+      return lab;
+    }
+
+    // ---- Shared plotting helpers ----
+    const GOLD = 'rgba(200,169,110,', BLUE = 'rgba(74,144,200,';
+    function setupCanvas(c) {
+      const dpr = window.devicePixelRatio || 1, W = c.offsetWidth, H = c.offsetHeight;
+      c.width = Math.round(W * dpr); c.height = Math.round(H * dpr);
+      const cx = c.getContext('2d'); cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { cx, W, H };
+    }
+    function axes(cx, P, plotW, plotH, xTicks, yTicks, xLab, yLab, W, H) {
+      cx.font = '10px Inter,sans-serif';
+      yTicks.forEach(([v, y]) => {
+        cx.strokeStyle = GOLD + '0.08)'; cx.lineWidth = 1;
+        cx.beginPath(); cx.moveTo(P.left, y); cx.lineTo(P.left + plotW, y); cx.stroke();
+        cx.fillStyle = GOLD + '0.5)'; cx.textAlign = 'right'; cx.fillText(v, P.left - 6, y + 3);
+      });
+      xTicks.forEach(([v, x]) => { cx.fillStyle = GOLD + '0.5)'; cx.textAlign = 'center'; cx.fillText(v, x, P.top + plotH + 14); });
+      cx.strokeStyle = GOLD + '0.3)';
+      cx.beginPath(); cx.moveTo(P.left, P.top); cx.lineTo(P.left, P.top + plotH); cx.lineTo(P.left + plotW, P.top + plotH); cx.stroke();
+      cx.fillStyle = GOLD + '0.6)'; cx.font = '11px Inter,sans-serif'; cx.textAlign = 'center';
+      cx.fillText(xLab, P.left + plotW / 2, H - 6);
+      cx.save(); cx.translate(12, P.top + plotH / 2); cx.rotate(-Math.PI / 2); cx.fillText(yLab, 0, 0); cx.restore();
+    }
+
+    // ---- DEMO 2: NNGP ----
+    let kernelTimer = null;
+    function scheduleKernel() { clearTimeout(kernelTimer); kernelTimer = setTimeout(runKernel, 160); }
+    function kernelParams() {
+      return {
+        act: document.getElementById('kernel-act').value,
+        sw2: parseFloat(document.getElementById('kernel-sw').value),
+        sb2: parseFloat(document.getElementById('kernel-sb').value),
+        rho0: parseFloat(document.getElementById('kernel-rho').value),
+        width: parseInt(document.getElementById('kernel-width').value),
+        depth: parseInt(document.getElementById('kernel-depth').value),
+      };
+    }
+    const D0 = 32;
     function runKernel() {
-      const c = document.getElementById('kernel-canvas'); const cx = c.getContext('2d');
-      const CW = c.offsetWidth, CH = c.offsetHeight; c.width = CW; c.height = CH;
-      const act = document.getElementById('kernel-act').value;
-      const width = parseInt(document.getElementById('kernel-width').value);
-      const maxDepth = parseInt(document.getElementById('kernel-depth').value);
-      const runs = 30; const inputDim = 21;
-      const allRuns = Array.from({length: runs}, () => runNetwork(width, act, maxDepth, inputDim));
-      const corrs = Array.from({length: maxDepth}, (_, d) => allRuns.reduce((s, r) => s + r[d], 0) / runs);
-      cx.clearRect(0, 0, CW, CH);
-      const PAD = { top: 30, right: 20, bottom: 40, left: 52 };
-      const plotW = CW - PAD.left - PAD.right; const plotH = CH - PAD.top - PAD.bottom;
-      const minC = Math.min(...corrs) - 0.02; const maxC = Math.max(...corrs) + 0.02; const range = maxC - minC || 1;
-      function toX(d) { return PAD.left + (d / (maxDepth - 1)) * plotW; }
-      function toY(v) { return PAD.top + plotH - ((v - minC) / range) * plotH; }
-      const yTicks = 5;
-      cx.strokeStyle = 'rgba(200,169,110,0.08)'; cx.lineWidth = 1;
-      for (let i = 0; i <= yTicks; i++) { const v = minC + (range * i / yTicks); const y = toY(v); cx.beginPath(); cx.moveTo(PAD.left, y); cx.lineTo(PAD.left + plotW, y); cx.stroke(); cx.fillStyle = 'rgba(200,169,110,0.45)'; cx.font = '10px Inter,sans-serif'; cx.textAlign = 'right'; cx.fillText(v.toFixed(2), PAD.left - 6, y + 3); }
-      const xTicks = Math.min(maxDepth - 1, 8);
-      for (let i = 0; i <= xTicks; i++) { const d = Math.round(i * (maxDepth - 1) / xTicks); const x = toX(d); cx.strokeStyle = 'rgba(200,169,110,0.08)'; cx.beginPath(); cx.moveTo(x, PAD.top); cx.lineTo(x, PAD.top + plotH); cx.stroke(); cx.fillStyle = 'rgba(200,169,110,0.45)'; cx.font = '10px Inter,sans-serif'; cx.textAlign = 'center'; cx.fillText(d, x, PAD.top + plotH + 14); }
-      if (minC < 0 && maxC > 0) { cx.strokeStyle = 'rgba(200,169,110,0.2)'; cx.lineWidth = 1; cx.beginPath(); cx.moveTo(PAD.left, toY(0)); cx.lineTo(PAD.left + plotW, toY(0)); cx.stroke(); }
-      cx.strokeStyle = 'rgba(200,169,110,0.3)'; cx.lineWidth = 1;
-      cx.beginPath(); cx.moveTo(PAD.left, PAD.top); cx.lineTo(PAD.left, PAD.top + plotH); cx.stroke();
-      cx.beginPath(); cx.moveTo(PAD.left, PAD.top + plotH); cx.lineTo(PAD.left + plotW, PAD.top + plotH); cx.stroke();
+      if (!sweepRunning) document.getElementById('sweep-wrap').style.display = 'none';
+      const p = kernelParams();
+      const th = theoryKernel(p.act, p.sw2, p.sb2, p.rho0, p.depth).rhos;
+      // keep each recompute to roughly 12M weight draws so the page stays responsive
+      const runs = Math.max(4, Math.min(24, Math.floor(1.2e7 / (p.width * p.width * p.depth))));
+      const all = Array.from({ length: runs }, () => simulateNet(p.act, p.sw2, p.sb2, p.rho0, p.width, p.depth, D0));
+      const mean = th.map((_, l) => all.reduce((s, r) => s + r[l], 0) / runs);
+      const sd = th.map((_, l) => Math.sqrt(all.reduce((s, r) => s + (r[l] - mean[l]) ** 2, 0) / Math.max(1, runs - 1)));
+      drawDepthPlot(p, th, all, mean, sd, runs);
+      const fp = lengthFixedPoint(p.act, p.sw2, p.sb2, p.sw2 + p.sb2);
+      const qs = fp.converged ? fp.q : theoryKernel(p.act, p.sw2, p.sb2, p.rho0, p.depth).qs[p.depth - 1];
+      const chi = chi1(p.act, p.sw2, qs);
+      let c = 0.5; for (let i = 0; i < 400; i++) c = corrMap(p.act, p.sw2, p.sb2, qs, c);
+      drawMapPlot(p, qs, th[0], c);
+      const L = p.depth - 1;
+      document.getElementById('ro-theory').textContent = th[L].toFixed(3);
+      document.getElementById('ro-sim').textContent = mean[L].toFixed(3);
+      document.getElementById('ro-sim-s').textContent = `± ${sd[L].toFixed(3)} over ${runs} networks`;
+      document.getElementById('ro-chi').textContent = chi.toFixed(3);
+      document.getElementById('ro-phase').textContent =
+        Math.abs(chi - 1) < 0.005 ? 'critical: edge of chaos' : chi > 1 ? 'chaotic: inputs decorrelate' : 'ordered: inputs collapse';
+      document.getElementById('ro-cstar').textContent = c.toFixed(3);
+    }
+    function drawDepthPlot(p, th, all, mean, sd, runs) {
+      const c = document.getElementById('kernel-canvas');
+      const { cx, W, H } = setupCanvas(c);
+      const P = { top: 16, right: 16, bottom: 34, left: 46 };
+      const plotW = W - P.left - P.right, plotH = H - P.top - P.bottom;
+      let lo = Math.min(0, ...th, ...mean.map((m, i) => m - sd[i])) - 0.05, hi = 1.02;
+      lo = Math.max(-1.02, lo);
+      const X = l => P.left + (l / Math.max(1, p.depth - 1)) * plotW;
+      const Y = v => P.top + plotH - ((v - lo) / (hi - lo)) * plotH;
+      const yT = []; for (let i = 0; i <= 5; i++) { const v = lo + (hi - lo) * i / 5; yT.push([v.toFixed(2), Y(v)]); }
+      const xT = []; const step = Math.max(1, Math.ceil(p.depth / 8)); for (let l = 0; l < p.depth; l += step) xT.push([l + 1, X(l)]);
+      axes(cx, P, plotW, plotH, xT, yT, 'Layer', 'Correlation', W, H);
+      if (lo < 0) { cx.strokeStyle = GOLD + '0.2)'; cx.beginPath(); cx.moveTo(P.left, Y(0)); cx.lineTo(P.left + plotW, Y(0)); cx.stroke(); }
+      // individual networks
+      all.slice(0, 12).forEach(r => {
+        cx.beginPath(); r.forEach((v, l) => (l ? cx.lineTo(X(l), Y(v)) : cx.moveTo(X(l), Y(v))));
+        cx.strokeStyle = BLUE + '0.12)'; cx.lineWidth = 1; cx.stroke();
+      });
+      // +-1 sd band
       cx.beginPath();
-      corrs.forEach((v, d) => { d === 0 ? cx.moveTo(toX(d), toY(v)) : cx.lineTo(toX(d), toY(v)); });
-      cx.strokeStyle = '#4a90c8'; cx.lineWidth = 2; cx.stroke();
-      corrs.forEach((v, d) => { cx.beginPath(); cx.arc(toX(d), toY(v), 2.5, 0, Math.PI*2); cx.fillStyle = '#4a90c8'; cx.fill(); });
-      const actLabel = {relu:'RELU', erf:'ERF', tanh:'TANH'}[act];
-      cx.fillStyle = 'rgba(200,169,110,0.7)'; cx.font = '11px Inter,sans-serif'; cx.textAlign = 'center';
-      cx.fillText(`${actLabel}  (width = ${width})`, PAD.left + plotW/2, PAD.top - 10);
-      cx.fillStyle = 'rgba(200,169,110,0.45)'; cx.fillText('Depth', PAD.left + plotW/2, CH - 4);
-      cx.save(); cx.translate(12, PAD.top + plotH/2); cx.rotate(-Math.PI/2); cx.fillText('Correlation', 0, 0); cx.restore();
+      mean.forEach((m, l) => (l ? cx.lineTo(X(l), Y(Math.min(hi, m + sd[l]))) : cx.moveTo(X(l), Y(Math.min(hi, m + sd[l])))));
+      for (let l = mean.length - 1; l >= 0; l--) cx.lineTo(X(l), Y(Math.max(lo, mean[l] - sd[l])));
+      cx.closePath(); cx.fillStyle = BLUE + '0.16)'; cx.fill();
+      // mean of networks
+      cx.beginPath(); mean.forEach((v, l) => (l ? cx.lineTo(X(l), Y(v)) : cx.moveTo(X(l), Y(v))));
+      cx.strokeStyle = BLUE + '1)'; cx.lineWidth = 2; cx.stroke();
+      // theory
+      cx.beginPath(); th.forEach((v, l) => (l ? cx.lineTo(X(l), Y(v)) : cx.moveTo(X(l), Y(v))));
+      cx.strokeStyle = GOLD + '1)'; cx.lineWidth = 2; cx.setLineDash([]); cx.stroke();
+      // legend
+      cx.font = '10px Inter,sans-serif'; cx.textAlign = 'left';
+      const lx = P.left + 10, ly = P.top + 10;
+      const narrow = W < 420;
+      cx.fillStyle = GOLD + '1)'; cx.fillRect(lx, ly - 4, 14, 2); cx.fillText(narrow ? 'theory' : 'NNGP theory (infinite width)', lx + 20, ly);
+      cx.fillStyle = BLUE + '1)'; cx.fillRect(lx, ly + 10, 14, 2); cx.fillText(narrow ? `${runs} networks` : `${runs} networks, width ${p.width} (mean ± sd)`, lx + 20, ly + 14);
     }
-
-    // ---- DEMO 3: Springer fiber cell degeneration ----
-    // A compact standalone echo of the full 3D Springer fiber visualizer: the
-    // cells of a degeneration chain drawn as concentric rings (start cell on the
-    // outside, destination at the core); "Run degeneration" sends parameters
-    // spiralling inward into the brightening core.
-    const sfCanvas = document.getElementById('sf-canvas');
-    const sfCtx = sfCanvas.getContext('2d');
-    const SF_GOLD = '200,169,110';
-    const SF_BLUE = '100,149,200';
-    const SF_RUN_MS = 3200;
-    let sfShells = [];
-    let sfParticles = [];
-    let sfRunStart = -1;   // timestamp of the active run, or -1 when idle
-    let sfRot = 0;
-    let sfLast = 0;
-
-    function sfResize() {
-      sfCanvas.width = sfCanvas.offsetWidth;
-      sfCanvas.height = sfCanvas.offsetHeight;
-      buildSF();
-    }
-
-    function buildSF() {
-      const n = parseInt(document.getElementById('sf-cells').value);
-      const D = Math.min(sfCanvas.width, sfCanvas.height);
-      const Rmax = D * 0.44, Rmin = D * 0.08;
-      sfShells = [];
-      for (let i = 0; i < n; i++) {
-        const r = n < 2 ? Rmax : Rmin + (Rmax - Rmin) * ((n - 1 - i) / (n - 1));
-        sfShells.push({ r: r, dashed: (i % 2) === 1 });
+    function drawMapPlot(p, q, c1, cstar) {
+      const c = document.getElementById('map-canvas');
+      const { cx, W, H } = setupCanvas(c);
+      const P = { top: 16, right: 14, bottom: 34, left: 40 };
+      const plotW = W - P.left - P.right, plotH = H - P.top - P.bottom;
+      const X = v => P.left + ((v + 1) / 2) * plotW, Y = v => P.top + plotH - ((v + 1) / 2) * plotH;
+      const ticks = [-1, -0.5, 0, 0.5, 1];
+      axes(cx, P, plotW, plotH, ticks.map(v => [v, X(v)]), ticks.map(v => [v, Y(v)]), 'c at layer l', 'c at layer l+1', W, H);
+      cx.strokeStyle = GOLD + '0.25)'; cx.setLineDash([4, 4]); cx.beginPath(); cx.moveTo(X(-1), Y(-1)); cx.lineTo(X(1), Y(1)); cx.stroke(); cx.setLineDash([]);
+      const N = 50, pts = [];
+      for (let i = 0; i <= N; i++) { const x = -1 + 2 * i / N; pts.push([x, corrMap(p.act, p.sw2, p.sb2, q, x)]); }
+      cx.beginPath(); pts.forEach(([x, y], i) => (i ? cx.lineTo(X(x), Y(y)) : cx.moveTo(X(x), Y(y))));
+      cx.strokeStyle = GOLD + '1)'; cx.lineWidth = 2; cx.stroke();
+      // cobweb from the first-layer correlation
+      let v = c1; cx.beginPath(); cx.moveTo(X(v), Y(-1));
+      for (let i = 0; i < Math.min(p.depth, 25); i++) {
+        const nv = corrMap(p.act, p.sw2, p.sb2, q, v);
+        cx.lineTo(X(v), Y(nv)); cx.lineTo(X(nv), Y(nv)); v = nv;
       }
+      cx.strokeStyle = BLUE + '0.8)'; cx.lineWidth = 1.2; cx.stroke();
+      cx.beginPath(); cx.arc(X(cstar), Y(cstar), 4.5, 0, Math.PI * 2); cx.fillStyle = '#f6e29a'; cx.fill();
+      cx.fillStyle = GOLD + '0.8)'; cx.font = '10px Inter,sans-serif'; cx.textAlign = 'left';
+      cx.fillText(`q* = ${q < 1e6 ? q.toFixed(3) : '∞'}`, P.left + 8, P.top + 12);
+    }
+    let sweepRunning = false;
+    function runSweep() {
+      if (sweepRunning) return;
+      sweepRunning = true;
+      const btn = document.getElementById('sweep-btn'); btn.disabled = true; btn.textContent = 'Running…';
+      document.getElementById('sweep-wrap').style.display = 'block';
+      const p = kernelParams();
+      const th = theoryKernel(p.act, p.sw2, p.sb2, p.rho0, p.depth).rhos;
+      const widths = [8, 16, 32, 64, 128, 256, 512], res = [];
+      let k = 0;
+      function next() {
+        if (k === widths.length) { sweepRunning = false; btn.disabled = false; btn.textContent = 'Run width sweep'; return; }
+        const n = widths[k];
+        const runs = Math.max(4, Math.min(24, Math.floor(8e6 / (n * n * p.depth))));
+        let se = 0, cnt = 0;
+        for (let r = 0; r < runs; r++) simulateNet(p.act, p.sw2, p.sb2, p.rho0, n, p.depth, D0).forEach((v, l) => { se += (v - th[l]) ** 2; cnt++; });
+        res.push([n, Math.sqrt(se / cnt)]); k++;
+        drawSweep(p, res, widths);
+        setTimeout(next, 20);
+      }
+      setTimeout(next, 20);
+    }
+    function drawSweep(p, res, widths) {
+      const c = document.getElementById('sweep-canvas');
+      const { cx, W, H } = setupCanvas(c);
+      const P = { top: 16, right: 16, bottom: 34, left: 52 };
+      const plotW = W - P.left - P.right, plotH = H - P.top - P.bottom;
+      const lx0 = Math.log2(widths[0]), lx1 = Math.log2(widths[widths.length - 1]);
+      const errs = res.map(r => r[1]);
+      const e0 = errs[0];
+      const ylo = Math.log10(Math.min(...errs, e0 * Math.sqrt(widths[0] / widths[widths.length - 1])) * 0.7);
+      const yhi = Math.log10(Math.max(...errs) * 1.5);
+      const X = n => P.left + ((Math.log2(n) - lx0) / (lx1 - lx0)) * plotW;
+      const Y = e => P.top + plotH - ((Math.log10(e) - ylo) / (yhi - ylo)) * plotH;
+      const yT = []; for (let i = 0; i <= 4; i++) { const lv = ylo + (yhi - ylo) * i / 4; yT.push([Math.pow(10, lv).toPrecision(2), P.top + plotH - (i / 4) * plotH]); }
+      axes(cx, P, plotW, plotH, widths.map(n => [n, X(n)]), yT, 'Width (log scale)', 'RMS gap', W, H);
+      // 1/sqrt(width) reference through the first point
+      cx.strokeStyle = GOLD + '0.45)'; cx.setLineDash([5, 5]); cx.beginPath();
+      widths.forEach((n, i) => { const e = e0 * Math.sqrt(widths[0] / n); i ? cx.lineTo(X(n), Y(e)) : cx.moveTo(X(n), Y(e)); });
+      cx.stroke(); cx.setLineDash([]);
+      cx.beginPath(); res.forEach(([n, e], i) => (i ? cx.lineTo(X(n), Y(e)) : cx.moveTo(X(n), Y(e))));
+      cx.strokeStyle = BLUE + '1)'; cx.lineWidth = 2; cx.stroke();
+      res.forEach(([n, e]) => { cx.beginPath(); cx.arc(X(n), Y(e), 3, 0, Math.PI * 2); cx.fillStyle = BLUE + '1)'; cx.fill(); });
+      cx.fillStyle = GOLD + '0.8)'; cx.font = '10px Inter,sans-serif'; cx.textAlign = 'right';
+      cx.fillText(`${p.act}, depth ${p.depth}: dashed line = 1/√width`, P.left + plotW, P.top + 10);
     }
 
-    function runSF() {
-      buildSF();
-      const D = Math.min(sfCanvas.width, sfCanvas.height);
-      const Rmax = D * 0.44;
-      sfParticles = [];
-      for (let i = 0; i < 120; i++) {
-        sfParticles.push({
-          ang: Math.random() * Math.PI * 2,
-          r0: Rmax * (0.85 + Math.random() * 0.3),
-          delay: Math.random() * 0.55,
-          life: 0.35 + Math.random() * 0.35,
-          swirl: (Math.random() < 0.5 ? -1 : 1) * (1 + Math.random() * 2.2),
-          size: 1 + Math.random() * 1.8
+    // ---- DEMO 3: Springer fiber closure explorer ----
+    const SF_HUES = ['#3987e5', '#d95926', '#199e70', '#c98500', '#d55181', '#008300', '#9085e9', '#e66767', '#1fa3b8', '#b9802e', '#cf4fb0', '#8a9a10'];
+    const sf = { M: null, pos: [], chain: [], S: null, hover: -1, route: null, anim: null, r: 8 };
+    const sfCanvas = document.getElementById('sf-canvas');
+    function sfName(k) { return '(' + k.split('').join(',') + ')'; }
+    function sfLoad(key) {
+      sf.M = sfBuildModel(key, SF_DATA[key]);
+      sf.chain = []; sf.S = null; sf.hover = -1; sf.route = null; sf.anim = null;
+      sfLayout(); sfPanel();
+    }
+    function sfLayout() {
+      const W = sfCanvas.offsetWidth, H = sfCanvas.offsetHeight, M = sf.M;
+      const layers = Array.from({ length: M.maxDim + 1 }, () => []);
+      M.cells.forEach(c => layers[c.dim].push(c.i));
+      const maxCount = Math.max(...layers.map(l => l.length));
+      const left = 58, right = 16, top = 26, bottom = 26;
+      sf.r = Math.max(4, Math.min(11, ((W - left - right) / maxCount) * 0.32));
+      sf.pos = new Array(M.cells.length);
+      layers.forEach((ids, d) => {
+        ids.sort((a, b) => (M.cells[a].perm < M.cells[b].perm ? -1 : 1));
+        const y = M.maxDim === 0 ? H / 2 : top + (M.maxDim - d) / M.maxDim * (H - top - bottom);
+        ids.forEach((id, k) => { sf.pos[id] = { x: left + (k + 0.5) / ids.length * (W - left - right), y }; });
+      });
+    }
+    function sfFocus() { return sf.chain.length ? sf.chain[sf.chain.length - 1] : -1; }
+    function sfHit(x, y) {
+      let best = -1, bd = Infinity;
+      sf.pos.forEach((p, i) => { const d = Math.hypot(p.x - x, p.y - y); if (d < bd) { bd = d; best = i; } });
+      return bd <= Math.max(sf.r + 5, 10) ? best : -1;
+    }
+    sfCanvas.addEventListener('mousemove', e => {
+      const r = sfCanvas.getBoundingClientRect(); const h = sfHit(e.clientX - r.left, e.clientY - r.top);
+      if (h !== sf.hover) { sf.hover = h; sfPanel(); }
+    });
+    sfCanvas.addEventListener('mouseleave', () => { if (sf.hover !== -1) { sf.hover = -1; sfPanel(); } });
+    sfCanvas.addEventListener('click', e => {
+      if (sf.anim) return;
+      const r = sfCanvas.getBoundingClientRect(); const h = sfHit(e.clientX - r.left, e.clientY - r.top);
+      sf.route = null;
+      if (h < 0) { sfReset(); return; }
+      if (!sf.S || !sf.S.has(h)) { sf.chain = [h]; sf.S = sfClosed(sf.M, h); }
+      else if (h === sfFocus()) { /* already focused */ }
+      else { const cB = sfClosed(sf.M, h); sf.S = new Set([...sf.S].filter(x => cB.has(x))); sf.chain.push(h); }
+      sf.hover = h; sfPanel();
+    });
+    function sfReset() { sf.chain = []; sf.S = null; sf.route = null; sf.anim = null; sfPanel(); }
+    function sfStartRoute() {
+      if (sf.chain.length !== 1 || sf.anim) return;
+      const route = sfHalvingRoute(sf.M, sf.chain[0]);
+      if (!route.steps || !route.steps.length) return;
+      sf.route = route; sf.anim = { t0: performance.now(), step: -1 };
+      sfPanel();
+    }
+    const SF_STEP_MS = 1500;
+    function sfDraw(now) {
+      const M = sf.M; if (!M) { requestAnimationFrame(sfDraw); return; }
+      const { cx, W, H } = setupCanvas(sfCanvas);
+      if (sf.pos.length !== M.cells.length || sf._w !== W || sf._h !== H) { sf._w = W; sf._h = H; sfLayout(); }
+      // which cells are "alive" and how faded the dropping ones are
+      let alive = sf.S, fading = null, fadeT = 0, ringB = -1, done = false;
+      if (sf.anim) {
+        const steps = sf.route.steps, el = now - sf.anim.t0, k = Math.floor(el / SF_STEP_MS), frac = (el % SF_STEP_MS) / SF_STEP_MS;
+        if (k >= steps.length) { done = true; alive = new Set(steps[steps.length - 1].set); ringB = steps[steps.length - 1].B; }
+        else {
+          const before = new Set(k === 0 ? sf.route.start : steps[k - 1].set), after = new Set(steps[k].set);
+          alive = after; ringB = steps[k].B;
+          fading = [...before].filter(x => !after.has(x)); fadeT = Math.max(0, (frac - 0.35) / 0.5);
+        }
+        if (sf.anim.step !== Math.min(k, steps.length)) { sf.anim.step = Math.min(k, steps.length); sfPanel(); }
+        if (done && el > steps.length * SF_STEP_MS + 2500) { sf.anim = null; sfPanel(); }
+      }
+      // dimension guide
+      cx.font = '10px Inter,sans-serif'; cx.textAlign = 'left';
+      const seenY = new Set();
+      M.cells.forEach(c => { const y = sf.pos[c.i].y; if (seenY.has(c.dim)) return; seenY.add(c.dim);
+        cx.strokeStyle = GOLD + '0.06)'; cx.beginPath(); cx.moveTo(50, y); cx.lineTo(W - 10, y); cx.stroke();
+        cx.fillStyle = SF_HUES[c.dim % SF_HUES.length]; cx.beginPath(); cx.arc(12, y, 4, 0, 7); cx.fill();
+        cx.fillStyle = GOLD + '0.55)'; cx.fillText('dim ' + c.dim, 20, y + 3); });
+      // edges
+      const focus = sf.anim ? ringB : sfFocus();
+      if (focus < 0) {
+        cx.strokeStyle = GOLD + (M.nEdges > 150 ? '0.05)' : '0.12)'); cx.lineWidth = 1;
+        M.out.forEach((m, a) => m.forEach((_, t) => { cx.beginPath(); cx.moveTo(sf.pos[a].x, sf.pos[a].y); cx.lineTo(sf.pos[t].x, sf.pos[t].y); cx.stroke(); }));
+      } else {
+        M.out[focus].forEach((_, t) => {
+          if (alive && !alive.has(t) && !(fading && fading.includes(t))) return;
+          const hov = t === sf.hover;
+          cx.strokeStyle = GOLD + (hov ? '0.95)' : '0.45)'); cx.lineWidth = hov ? 2 : 1.2;
+          cx.beginPath(); cx.moveTo(sf.pos[focus].x, sf.pos[focus].y); cx.lineTo(sf.pos[t].x, sf.pos[t].y); cx.stroke();
         });
       }
-      sfRunStart = performance.now();
-    }
-
-    function sfLoop(now) {
-      if (!sfLast) sfLast = now;
-      const dt = Math.min(0.05, (now - sfLast) / 1000); sfLast = now;
-      const c = sfCtx;
-      const cx = sfCanvas.width / 2, cy = sfCanvas.height / 2;
-      const spin = (parseInt(document.getElementById('sf-spin').value) || 0) / 100;
-      sfRot += dt * (0.1 + spin * 0.9);
-
-      c.clearRect(0, 0, sfCanvas.width, sfCanvas.height);
-
-      // run progress + how "charged" the core is
-      let prog = -1, charge = 0;
-      if (sfRunStart >= 0) {
-        prog = (now - sfRunStart) / SF_RUN_MS;
-        if (prog >= 1) { prog = -1; sfRunStart = -1; sfParticles = []; }
-        else charge = Math.min(1, prog * 1.3);
+      // nodes
+      const showLabels = M.cells.length <= 20;
+      M.cells.forEach(c => {
+        const p = sf.pos[c.i];
+        let a = 1;
+        if (alive && !alive.has(c.i)) a = fading && fading.includes(c.i) ? 1 - 0.85 * Math.min(1, fadeT) : 0.15;
+        cx.globalAlpha = a;
+        cx.beginPath(); cx.arc(p.x, p.y, sf.r, 0, Math.PI * 2); cx.fillStyle = SF_HUES[c.dim % SF_HUES.length]; cx.fill();
+        if (sf.chain.includes(c.i) && !sf.anim) { cx.strokeStyle = '#f6e29a'; cx.lineWidth = 2; cx.beginPath(); cx.arc(p.x, p.y, sf.r + 3.5, 0, Math.PI * 2); cx.stroke(); }
+        if (c.i === sf.hover) { cx.strokeStyle = 'rgba(226,221,216,0.9)'; cx.lineWidth = 1.5; cx.beginPath(); cx.arc(p.x, p.y, sf.r + 2, 0, Math.PI * 2); cx.stroke(); }
+        if (showLabels) { cx.fillStyle = GOLD + '0.75)'; cx.font = '9px Inter,sans-serif'; cx.textAlign = 'center'; cx.fillText(c.perm, p.x, p.y + sf.r + 11); }
+        cx.globalAlpha = 1;
+      });
+      if (ringB >= 0) {
+        const p = sf.pos[ringB], pulse = 1 + 0.15 * Math.sin(now / 160);
+        cx.strokeStyle = '#f6e29a'; cx.lineWidth = 2.5; cx.beginPath(); cx.arc(p.x, p.y, (sf.r + 6) * pulse, 0, Math.PI * 2); cx.stroke();
+        if (done) { const g = cx.createRadialGradient(p.x, p.y, 0, p.x, p.y, sf.r * 4); g.addColorStop(0, 'rgba(246,226,154,0.45)'); g.addColorStop(1, 'rgba(246,226,154,0)'); cx.fillStyle = g; cx.beginPath(); cx.arc(p.x, p.y, sf.r * 4, 0, 7); cx.fill(); }
       }
-
-      // concentric cell shells (skip the innermost -- that's drawn as the core)
-      for (let i = 0; i < sfShells.length - 1; i++) {
-        const sh = sfShells[i];
-        c.beginPath(); c.arc(cx, cy, sh.r, 0, Math.PI * 2);
-        if (sh.dashed) {
-          c.save();
-          c.setLineDash([5, 8]);
-          c.lineDashOffset = sfRot * 42 * ((i % 2) ? 1 : -1);
-          c.strokeStyle = `rgba(${(i % 2) ? SF_BLUE : SF_GOLD},0.4)`;
-          c.lineWidth = 1; c.stroke();
-          c.restore();
+      if (sf.anim) {
+        const steps = sf.route.steps, k = Math.min(sf.anim.step, steps.length);
+        const n = k === 0 ? sf.route.start.length : steps[Math.min(k, steps.length) - 1].to;
+        cx.fillStyle = GOLD + '0.9)'; cx.font = '12px Inter,sans-serif'; cx.textAlign = 'right';
+        cx.fillText(`${k < steps.length ? steps[k].from : n} cells${k < steps.length ? `  ÷${steps[k].d}  →  ${steps[k].to}` : '  →  done'}`, W - 14, 18);
+      }
+      requestAnimationFrame(sfDraw);
+    }
+    function sfPanel() {
+      const M = sf.M, el = document.getElementById('sf-panel');
+      const lab = sfTableau(M.key), cols = Math.max(...lab.map(r => r.length));
+      let tab = `<div class="sf-tableau" style="grid-template-columns:repeat(${cols},24px)">`;
+      lab.forEach(row => { for (let c = 0; c < cols; c++) tab += c < row.length ? `<div class="sf-box">${row[c]}</div>` : '<div></div>'; });
+      tab += '</div>';
+      const blocks = lab.map(r => '(' + r.join('') + ')').join('');
+      const arrows = []; lab.forEach(r => { for (let c = 1; c < r.length; c++) arrows.push(`e<sub>${r[c]}</sub>↦e<sub>${r[c - 1]}</sub>`); });
+      let html = `<div><div class="sf-h">Jordan type ${sfName(M.key)}</div>${tab}
+        <div class="sf-mono">blocks ${blocks}</div>
+        <div class="sf-mono sf-muted">X: ${arrows.join(', ') || '0'}</div>
+        <div class="sf-muted" style="font-size:0.72rem;margin-top:0.3rem">${M.cells.length} cells &middot; ${M.nEdges} relations &middot; top dim ${M.maxDim}</div></div>`;
+      const focus = sfFocus();
+      if (focus < 0) {
+        html += `<div class="sf-muted">Click any cell to see what its closure meets.</div>`;
+      } else {
+        const c0 = M.cells[sf.chain[0]], full = sfClosed(M, sf.chain[0]).size, cube = 1 << c0.dim;
+        html += `<div><div class="sf-h">${sf.chain.length > 1 ? 'Nested intersection' : 'Selected cell'}</div>
+          <div class="sf-chain">${sf.chain.map((i, k) => `${k ? '<span class="sf-muted">∩</span>' : ''}<span class="sf-chip">C<sub>${M.cells[i].perm}</sub></span>`).join('')}</div>
+          <div style="margin-top:0.4rem">${sf.chain.length > 1 ? `<strong>${sf.S.size}</strong> cells lie in all ${sf.chain.length} closures.` :
+            `dim ${c0.dim}, free parameters <span class="sf-mono">${c0.free.join(', ') || 'none'}</span>.<br>Its closure meets <strong>${full}</strong> cells (counting itself)${full === cube && c0.dim > 0 ? `, exactly 2<sup>${c0.dim}</sup>, so it can be drawn as a ${c0.dim}-cube.` : c0.dim > 0 ? ` vs. 2<sup>${c0.dim}</sup> = ${cube}.` : '.'}`}</div></div>`;
+      }
+      if (sf.route) {
+        const st = sf.route.steps, k = sf.anim ? sf.anim.step : st.length;
+        html += `<div><div class="sf-h">Halving route</div><div class="sf-log">` +
+          st.map((s, i) => `<div class="${i === k ? 'on' : ''}">${s.from} ÷ ${s.d} → ${s.to} &nbsp;<span class="sf-muted">pick C<sub>${M.cells[s.B].perm}</sub></span></div>`).join('') +
+          `<div class="${k >= st.length ? 'on' : ''}">ends at C<sub>${M.cells[st[st.length - 1].B].perm}</sub></div></div></div>`;
+      }
+      if (sf.hover >= 0 && !sf.anim) {
+        const hc = M.cells[sf.hover];
+        html += `<div><div class="sf-h">Hovering C<sub>${hc.perm}</sub> &middot; dim ${hc.dim}</div>`;
+        const w = focus >= 0 && focus !== sf.hover ? M.out[focus].get(sf.hover) : null;
+        if (w) {
+          html += `<div class="sf-mono">closure of C<sub>${M.cells[focus].perm}</sub> meets it<br>
+            source: ${w.srcSubs || '(no substitution)'}<br>target: ${w.tgtSubs || '(no substitution)'}<br>limit: ${w.limit} → ∞</div>`;
+        } else if (focus >= 0 && focus !== sf.hover) {
+          html += `<div class="sf-muted">No witness curve from the focused cell.</div>`;
         } else {
-          c.strokeStyle = `rgba(${SF_GOLD},0.4)`; c.lineWidth = 1.2; c.stroke();
-          c.fillStyle = `rgba(${SF_GOLD},0.03)`; c.fill();
+          html += `<div class="sf-muted">Its closure meets ${sfClosed(M, sf.hover).size} cells.</div>`;
         }
+        html += '</div>';
       }
-
-      // parameters imploding into the core during a run
-      if (prog >= 0) {
-        for (const p of sfParticles) {
-          const local = (prog - p.delay) / p.life;
-          if (local <= 0 || local >= 1) continue;
-          const e = local * local;
-          const r = p.r0 * (1 - e);
-          const th = p.ang + p.swirl * e;
-          c.beginPath();
-          c.arc(cx + r * Math.cos(th), cy + r * Math.sin(th), p.size, 0, Math.PI * 2);
-          c.fillStyle = `rgba(${SF_GOLD},${(0.85 * Math.sin(local * Math.PI)).toFixed(3)})`;
-          c.fill();
-        }
-      }
-
-      // glowing destination core
-      const baseR = Math.min(sfCanvas.width, sfCanvas.height) * 0.08;
-      const coreR = baseR * (1 + charge * 0.8) * (1 + 0.05 * Math.sin(now / 300));
-      const glow = c.createRadialGradient(cx, cy, 0, cx, cy, coreR * 2.6);
-      glow.addColorStop(0, `rgba(255,228,160,${(0.45 + 0.4 * charge).toFixed(3)})`);
-      glow.addColorStop(1, `rgba(${SF_GOLD},0)`);
-      c.beginPath(); c.arc(cx, cy, coreR * 2.6, 0, Math.PI * 2); c.fillStyle = glow; c.fill();
-      const cg = c.createRadialGradient(cx - coreR * 0.3, cy - coreR * 0.3, 0, cx, cy, coreR);
-      cg.addColorStop(0, '#f6e29a'); cg.addColorStop(1, `rgb(${SF_GOLD})`);
-      c.beginPath(); c.arc(cx, cy, coreR, 0, Math.PI * 2); c.fillStyle = cg; c.fill();
-
-      // labels
-      c.fillStyle = `rgba(${SF_GOLD},0.6)`; c.font = '10px Inter, sans-serif'; c.textAlign = 'center';
-      if (sfShells.length) c.fillText('start cell', cx, cy - sfShells[0].r - 8);
-      c.fillText('destination', cx, cy + coreR + 16);
-
-      requestAnimationFrame(sfLoop);
+      el.innerHTML = html;
+      const btn = document.getElementById('sf-route-btn');
+      btn.disabled = !(sf.chain.length === 1 && sf.S && sf.S.size > 1) || !!sf.anim;
     }
 
-    window.addEventListener('resize', () => { sfResize(); });
+    let resizeTimer = null;
+    window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { runBM(); runKernel(); }, 200); });
     window.addEventListener('load', () => {
       setTimeout(() => {
         runBM();
         runKernel();
-        sfResize();
-        requestAnimationFrame(sfLoop);
+        sfLoad(document.getElementById('sf-type').value);
+        requestAnimationFrame(sfDraw);
       }, 200);
     });
   </script>
