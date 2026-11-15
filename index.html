@@ -742,6 +742,17 @@
       color: var(--text);
     }
     .fact a { color: var(--accent); }
+    .fact-wide {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 2rem;
+      align-items: center;
+    }
+    .fact-shot { display: block; border: 1px solid var(--border); transition: border-color 0.3s; }
+    .fact-shot:hover { border-color: var(--accent); }
+    .fact-shot img { display: block; width: 100%; height: auto; }
+    .fact-link { display: inline-block; margin-top: 0.9rem; font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; }
     .section-intro {
       max-width: 560px;
       font-size: 0.92rem;
@@ -811,6 +822,7 @@
       .about-grid { grid-template-columns: 1fr; gap: 3rem; }
       .skills-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
       .facts-grid { grid-template-columns: 1fr; }
+      .fact-wide { grid-template-columns: 1fr; gap: 1.2rem; }
       .project-card { grid-template-columns: 2rem 1fr; }
       .project-arrow { display: none; }
       .hero-layout { grid-template-columns: 1fr; }
@@ -854,9 +866,10 @@
         <div class="hero-rule"></div>
         <p class="hero-title">Researcher · Engineer · Student</p>
         <p class="hero-desc">
-          I am a fourth-year Math-CS student at UCSD, and I like math best when it is actually
-          out doing something useful. These days that means data science and finance, and lately
-          I have been going down the NLP rabbit hole, trying to catch AI hallucinations before they spread.
+          I am a fourth-year Math-CS student at UC San Diego. For a long time, math only made sense
+          to me once I could watch it do something. These days, that something is data science and
+          finance, and more recently, natural language processing, where I am trying to figure out how
+          to catch an AI model when it starts making things up.
         </p>
         <div class="hero-cta">
           <a href="#projects" class="btn btn-primary">View Research</a>
@@ -881,32 +894,35 @@
     <div class="about-grid fade-in">
       <div class="about-text">
         <p>
-          I am <strong>Tristan Endo (遠藤俊治)</strong>, a fourth-year Math-CS student at <strong>UC San Diego</strong>.
-          To be honest, math never really clicked for me until I could watch it actually do something.
-          So I ended up chasing the parts that solve real problems instead of the ones that just sit on
-          paper, and that is pretty much how I drifted into data science and finance.
+          I am <strong>Tristan Endo (遠藤俊治)</strong>, a fourth-year Math-CS student at <strong>UC San Diego</strong>,
+          where I transferred as a second-year in 2024. In all honesty, math did not click for me right away. Proofs on paper felt distant until I could
+          watch an idea run, break, and get fixed. Since then, I have been drawn to the parts of math that
+          solve real problems, and that path is what led me into data science and finance.
         </p>
         <p>
-          In practice, that has meant a little bit of everything: writing code to poke at how neural
-          networks behave, simulating Brownian motion, and tearing audio tracks apart by frequency
-          to see what is actually inside them. From January to August 2026, I was a Quantitative
-          Research &amp; AI Engineering intern at Tekly Studio. There, I finished the full ML track and
-          built an XGBoost momentum strategy for crypto markets, tested with purged cross-validation
-          and walk-forward backtesting so the model never got to peek at the future. Right now, most of
-          my time goes to research with Prof. Raymond Chou on Springer fibers.
+          Over the past couple of years, that has looked like a little bit of everything. I have written
+          code to study how neural networks behave as they get wider, simulated Brownian motion, and pulled
+          songs apart to see what is hiding inside them. From January to August 2026, I was a Quantitative
+          Research &amp; AI Engineering intern at Tekly Studio. There, I finished the full ML track and built
+          an XGBoost momentum strategy for crypto markets, tested with purged cross-validation and
+          walk-forward backtesting so the model never got to see the future. Right now, most of my time
+          goes to research with Prof. Raymond Chou on Springer fibers.
         </p>
         <p>
-          The question I keep circling back to is how we can tell when a model is wrong. Lately, that
-          has pulled me toward NLP and AI hallucination. My hunch is that if you look closely enough at
-          the patterns and sentence structure in what a model says, you can start catching the
-          inconsistencies before they snowball. That feels like a problem actually worth chasing.
+          That research is also where my biggest question came from. For one Jordan type, (3,2,2), our search
+          results looked clean. When I ran an exact check, it confirmed every relation the search had found,
+          but it also turned up intersections the search had missed in 68 of 210 closures. Ever since, I have
+          been a little suspicious of results that look too complete, and I keep coming back to the same
+          question: how can we tell when a model is wrong? Lately, that question has pulled me toward NLP and
+          AI hallucination. My hunch is that if you look closely at the patterns and sentence structure in
+          what a model says, you can catch the inconsistencies before they snowball.
         </p>
       </div>
       <div class="about-stats">
         <div class="stat-item">
           <div class="stat-number">2024</div>
           <div class="stat-divider"></div>
-          <div class="stat-label">Started at UCSD</div>
+          <div class="stat-label">Transferred to UCSD</div>
         </div>
         <div class="stat-item">
           <div class="stat-number">2027</div>
@@ -936,7 +952,7 @@
       <p class="section-eyebrow">Research &amp; Projects</p>
       <h2 class="section-title">Selected <em>Research</em></h2>
       <p class="projects-desc">
-      Here are a handful of the research projects I have gotten to work on across math, machine learning, and audio engineering. Click into any of them for the full code and write-up on GitHub.</p>
+      These are a few of the research projects I have worked on across math, machine learning, and audio engineering. Each one links to its full code and write-up on GitHub.</p>
       <div class="section-rule"></div>
     </div>
     <div class="projects-list">
@@ -945,7 +961,7 @@
         <div class="project-num">01</div>
         <div>
           <div class="project-name">Springer Fibers: Algebraic Geometry &amp; Combinatorics</div>
-          <p class="project-desc">Ongoing research with Prof. Raymond Chou at UCSD, with Alexander Ryan. I built a Python/SymPy pipeline that takes a Jordan type, builds every cell of its Springer fiber with Pl&uuml;cker coordinates, and searches for witness curves showing which cells each closure meets. It now covers 99 Jordan types with two, three, and four rows (25,588 cells and 709,116 relations), well past the two-row cases where the existing theory gives answers. Along the way I found that a clean-looking result can still hide gaps: an exact check of (3,2,2) confirmed every relation the search found, and also turned up intersections it had missed in 68 of 210 closures. Try the explorer in the Simulation section below.</p>
+          <p class="project-desc">Ongoing research with Prof. Raymond Chou at UCSD, alongside Alexander Ryan. I built a Python/SymPy pipeline that takes a Jordan type, builds every cell of its Springer fiber using Pl&uuml;cker coordinates, and searches for witness curves showing which cells each closure meets. It now covers 99 Jordan types with two, three, and four rows (25,588 cells and 709,116 relations), well past the two-row cases where the existing theory gives answers. The result I think about most is (3,2,2). An exact check confirmed every relation the search found, and it also turned up intersections the search had missed in 68 of 210 closures. You can try the explorer in the Simulation section below.</p>
           <div class="project-tags">
             <span class="tag">Algebraic Geometry</span><span class="tag">Combinatorics</span><span class="tag">Interactive Visualization</span>
           </div>
@@ -957,7 +973,7 @@
         <div class="project-num">02</div>
         <div>
           <div class="project-name">Neural Network Gaussian Process &amp; Conjugate Kernels</div>
-          <p class="project-desc">Course project in Prof. Alexander Cloninger's MATH 216B at UCSD. In the infinite-width limit, a random network turns into a Gaussian process, and you can write down exactly how the correlation between two inputs changes layer by layer. I worked out how ReLU, erf, and tanh behave: with depth, ReLU drives every pair of inputs toward correlation 1 (degeneration), while erf and tanh push them toward a fixed point below 1 (decorrelation). Then I coded finite-width networks to test how well those predictions hold in practice. The live version is in the Simulation section below.</p>
+          <p class="project-desc">Course project in Prof. Alexander Cloninger's MATH 216B at UCSD. When a random network gets infinitely wide, it turns into a Gaussian process, and you can write down exactly how the correlation between two inputs changes from one layer to the next. I worked out what happens for ReLU, erf, and tanh. With depth, ReLU pushes every pair of inputs toward correlation 1 (degeneration), while erf and tanh push them toward a fixed point below 1 (decorrelation). Then I coded finite-width networks to see how well those predictions hold up in practice. The live version is in the Simulation section below.</p>
           <div class="project-tags">
             <span class="tag">Gaussian Processes</span><span class="tag">Theoretical Machine Learning</span>
           </div>
@@ -969,7 +985,7 @@
         <div class="project-num">03</div>
         <div>
           <div class="project-name">Brownian Motion &amp; Stochastic Processes</div>
-          <p class="project-desc">Course project in Prof. Robert Webber's MATH 216A at UCSD. I ran simulations of fractional Brownian motion across a whole range of Hurst parameters to watch how the distribution of peaks shifts around, and worked out the conditional distributions for the Brownian Bridge and the Ornstein-Uhlenbeck Bridge along the way.</p>
+          <p class="project-desc">Course project in Prof. Robert Webber's MATH 216A at UCSD. I simulated fractional Brownian motion across a range of Hurst parameters to see how the distribution of its maximum shifts as the paths go from rough to smooth. Along the way, I worked out the conditional distributions for the Brownian bridge and the Ornstein-Uhlenbeck bridge.</p>
           <div class="project-tags">
             <span class="tag">Probability Theory</span><span class="tag">Stochastic Processes</span>
           </div>
@@ -981,7 +997,7 @@
         <div class="project-num">04</div>
         <div>
           <div class="project-name">Demucs Source Separation: Audio Signal Processing</div>
-          <p class="project-desc">I took Meta Research's Demucs model and used it to break a full song down into its separate stems (vocals, drums, bass, guitar) by frequency, then visualized each one with spectrogram analysis to see what was going on underneath. This one came straight out of my audio engineering work at Think Twice Legal.</p>
+          <p class="project-desc">This project came straight out of my audio engineering work at Think Twice Legal. I used Meta Research's Demucs model to separate a full song into its stems (vocals, drums, bass, and guitar), then looked at each one through spectrogram analysis to see what was going on underneath.</p>
           <div class="project-tags">
             <span class="tag">Fourier Analysis</span><span class="tag">Signal Processing</span>
           </div>
@@ -1000,7 +1016,7 @@
       <p class="section-eyebrow">Skills</p>
       <h2 class="section-title">My <em>Toolkit</em></h2>
       <div class="section-rule"></div>
-      <p class="section-intro">These are the tools I actually reach for. Most of what I build starts in Python and ends with me checking whether the result is too good to be true.</p>
+      <p class="section-intro">These are the tools I actually reach for. Most of my work starts in Python and ends with me asking whether the result is too good to be true.</p>
     </div>
     <div class="skills-grid fade-in">
       <div class="skill-group">
@@ -1055,7 +1071,7 @@
           <div class="demo-title">Distribution of Maximals on [0,1], Fractional Brownian Motion</div>
           <button class="demo-btn" onclick="runBM()">Resample</button>
         </div>
-        <p class="demo-desc">This is a live take on my MATH 216A course project with Prof. Webber: the distribution of the maximum value of fractional Brownian motion on [0,1]. Play with the Hurst parameter H and watch what happens: lower values give you rougher, more jittery paths, and higher values smooth things out into something more persistent. Each bar tells you how often the maximum landed in that range across all the simulated paths.</p>
+        <p class="demo-desc">This is a live version of my MATH 216A course project with Prof. Webber. It shows the distribution of the maximum value of fractional Brownian motion on [0,1]. Try moving the Hurst parameter H. Lower values give rougher, more jittery paths, and higher values smooth them out into something more persistent. Each bar shows how often the maximum landed in that range across all the simulated paths.</p>
         <div class="demo-controls">
           <div class="demo-control">
             <label>Hurst Parameter (H)</label>
@@ -1088,7 +1104,7 @@
             <button class="demo-btn" id="sweep-btn" onclick="runSweep()">Run width sweep</button>
           </div>
         </div>
-        <p class="demo-desc">This is the experiment from my MATH 216B course project with Prof. Cloninger, rebuilt to run live. Two inputs with correlation &rho;<sub>0</sub> go through a random network. As the width goes to infinity, their correlation at every layer is given exactly by the NNGP kernel recursion (gold line). The blue line is the average over real, finite-width random networks, and the band shows how much individual networks scatter around it. At the default settings, ReLU drives the correlation toward 1 with depth, so every input starts to look the same (degeneration), while erf and tanh push it toward a fixed point below 1 (decorrelation).</p>
+        <p class="demo-desc">This is the experiment from my MATH 216B course project with Prof. Cloninger, rebuilt to run live. Two inputs with correlation &rho;<sub>0</sub> pass through a random network. As the width goes to infinity, their correlation at every layer is given exactly by the NNGP kernel recursion (gold line). The blue line is the average over real, finite-width random networks, and the band shows how much individual networks scatter around it. At the default settings, ReLU drives the correlation toward 1 with depth, so every input starts to look the same (degeneration). Meanwhile, erf and tanh push it toward a fixed point below 1 (decorrelation).</p>
         <div class="demo-controls">
           <div class="demo-control">
             <label>Activation</label>
@@ -1157,7 +1173,7 @@
             <button class="demo-btn" onclick="sfReset()">Reset</button>
           </div>
         </div>
-        <p class="demo-desc">A compact, flat version of the <a href="https://tristane028.github.io/Springer-Fibers/Visuals.html" target="_blank">full 3D viewer</a> from my research with Prof. Chou, running on real data from the project. Each dot is a cell of the Springer fiber, stacked by dimension. Click a cell to light up every cell its closure meets. Click one of those to look from inside both closures at once, and keep nesting. Hover a lit cell to see the witness curve that proves the relation. With one cell selected, play its halving route: pick a cell, keep only the part of the closure inside it, and land on a single cell, shrinking by a power of 2 each step.</p>
+        <p class="demo-desc">This is a compact, flat version of the <a href="https://tristane028.github.io/Springer-Fibers/Visuals.html" target="_blank">full 3D viewer</a> from my research with Prof. Chou, running on real data from the project. Each dot is a cell of the Springer fiber, stacked by dimension. Click a cell to light up every cell its closure meets. Click one of those to look from inside both closures at once, and keep going as deep as you like. Hover over a lit cell to see the witness curve that proves the relation. With one cell selected, you can also play its halving route. It picks a cell, keeps only the part of the closure inside it, and repeats until it lands on a single cell, shrinking by a power of 2 each step.</p>
         <div class="demo-controls">
           <div class="demo-control">
             <label>Jordan type</label>
@@ -1197,19 +1213,29 @@
     <div class="facts-grid fade-in">
       <div class="fact">
         <div class="fact-title">I coach <em>swim</em> and <em>volleyball</em></div>
-        <p>When I am not doing math, I am teaching kids how to swim and helping coach volleyball. In all honesty, it has made me a better researcher. If I cannot explain a flip turn simply, I probably do not understand it as well as I think I do.</p>
+        <p>When I am not doing math, I teach kids how to swim and help coach volleyball. In all honesty, it has made me a better researcher. If I cannot explain a flip turn to a kid in simple words, I probably do not understand it as well as I think I do.</p>
       </div>
       <div class="fact">
         <div class="fact-title">Over <em>1,000</em> paper cranes</div>
-        <p>I have folded over a thousand origami cranes, and lately I have moved on to folding figures out of dollar bills. Safe to say, it is the most hands-on geometry I do all week.</p>
+        <p>I have folded over a thousand origami cranes, and lately I have moved on to folding figures out of dollar bills. It is my go-to way to relax. There is something calming about feeling my hands work through each fold until a crane appears. Safe to say, it is the most hands-on geometry I do all week.</p>
       </div>
       <div class="fact">
         <div class="fact-title">Competitive <em>Pok&eacute;mon</em></div>
-        <p>I play competitive Pok&eacute;mon in the VGC format, and of course I turned it into a data project. <a href="https://tristane028.github.io/Starlight-Pokemon-Datasheet/" target="_blank">Project Astral</a> is a team builder I made that pulls insights out of my own match data.</p>
+        <p>I play competitive Pok&eacute;mon in the VGC format, and of course, I turned it into a data project. <a href="https://tristane028.github.io/Starlight-Pokemon-Datasheet/" target="_blank">Project Astral</a> is a team builder I made that pulls insights out of my own match data. It has also started a few great conversations with people who love the little creatures as much as I do.</p>
       </div>
       <div class="fact">
         <div class="fact-title">Conversations are <em>data</em> too</div>
-        <p>Lately, I have been listening my way into conversational science, neuroscience, and philosophy, with podcasts from people like Vanessa Van Edwards and Vinh Giang. It might sound far from math, but it is the same question I keep asking about models: why do people say what they say, and how can you tell when they mean it?</p>
+        <p>Lately, I have been listening my way into conversational science, neuroscience, and philosophy through podcasts from people like Vanessa Van Edwards and Vinh Giang. It might sound far from math, but it comes back to the same question I ask about models: why do people say what they say, and how can you tell when they mean it? I have also learned that a good conversation does not have to teach me something new. Sometimes, it is just about enjoying the company.</p>
+      </div>
+      <div class="fact fact-wide">
+        <a class="fact-shot" href="kestrel-kinematics.html" target="_blank" aria-label="Open Kestrel Kinematics">
+          <img src="kestrel-preview.jpg" alt="Kestrel Kinematics interface: a wireframe figure hovering on four turbojet thrusters, with force, thrust, and cost panels around it." loading="lazy" width="1200" height="750">
+        </a>
+        <div>
+          <div class="fact-title"><em>Kestrel</em> Kinematics</div>
+          <p>It started with a simple question: how do jetpacks actually lift a person? Kestrel Kinematics is my attempt at an answer, sketched as a sci-fi interface and named after the kestrel, a falcon that can hover in place. It compares thrusters and wing shapes for a rig that could carry one person, with live force readouts and rotating blueprints. Nothing flies yet, and every number on it is a rough estimate. In all honesty, it is the most fun I have had designing something, and it looks best on a laptop.</p>
+          <a class="fact-link" href="kestrel-kinematics.html" target="_blank">Open the concept &nearr;</a>
+        </div>
       </div>
     </div>
   </section>
@@ -1223,8 +1249,8 @@
       <h2 class="section-title">Get in <em>Touch</em></h2>
       <div class="section-rule"></div>
       <p class="contact-desc">
-        I am always open to internships, research opportunities, or honestly just an
-        interesting problem to chew on. Feel free to reach out. I would love to hear from you.
+        I am always open to internships, research opportunities, or simply an interesting
+        problem to think through. Feel free to reach out. I would love to hear from you.
       </p>
       <a href="mailto:ttendo@ucsd.edu" class="btn btn-primary">Say Hello →</a>
       <div class="contact-links">
