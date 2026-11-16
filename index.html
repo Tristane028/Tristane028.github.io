@@ -1,1965 +1,849 @@
-<!DOCTYPE html>
+<!doctype html>
+<!--
+    Tristan Endo, personal site.
+    One self-contained page: no build step, no JS. The gold background paths and the ReLU curves
+    were computed once and baked in as SVG, so swap in your live widgets where the demo panels are.
+    Still to fill in: the three [DATE] tags in Open questions. profile.jpg should sit next to this file.
+-->
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Tristan Endo</title>
-  <meta name="description" content="Math-CS student at UC San Diego working on machine learning, Springer fibers in algebraic geometry, and stochastic processes.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://tristane028.github.io/">
-  <meta property="og:title" content="Tristan Endo">
-  <meta property="og:description" content="Math-CS student at UC San Diego working on machine learning, Springer fibers in algebraic geometry, and stochastic processes.">
-  <meta property="og:site_name" content="Tristan Endo">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Tristan Endo">
-  <meta name="twitter:description" content="Math-CS student at UC San Diego working on machine learning, Springer fibers in algebraic geometry, and stochastic processes.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg: #0e0e0e;
-      --surface: #161616;
-      --border: #242424;
-      --accent: #c8a96e;
-      --text: #e2ddd8;
-      --muted: #7a7570;
-      --faint: #2a2a2a;
-      --font-serif: 'Cormorant Garamond', Georgia, serif;
-      --font-sans: 'Inter', system-ui, sans-serif;
-      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font-sans);
-      font-size: 15px;
-      font-weight: 300;
-      line-height: 1.8;
-      overflow-x: hidden;
-    }
-
-    /* CANVAS */
-    #nn-canvas {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0.5;
-    }
-
-    /* HERO PHOTO */
-    .hero-layout {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 4rem;
-      align-items: center;
-      width: 100%;
-    }
-    .hero-photo-wrap {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      animation: fadeUp 0.8s 0.3s ease both;
-    }
-    .hero-photo {
-      width: 220px;
-      height: 270px;
-      object-fit: cover;
-      object-position: center top;
-      filter: grayscale(20%) contrast(1.05);
-      border: 1px solid var(--border);
-    }
-
-    /* NAV */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.5rem 5rem;
-      background: rgba(14,14,14,0.92);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .nav-logo {
-      font-family: var(--font-serif);
-      font-weight: 400;
-      font-style: italic;
-      font-size: 1.3rem;
-      color: var(--accent);
-      letter-spacing: 0.02em;
-      text-decoration: none;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 3rem;
-      list-style: none;
-    }
-
-    .nav-links a {
-      color: var(--text);
-      text-decoration: none;
-      font-size: 0.72rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      font-weight: 400;
-      transition: color 0.3s;
-    }
-
-    .nav-links a:hover { color: var(--accent); }
-
-    /* SECTIONS */
-    section {
-      position: relative;
-      z-index: 1;
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 7rem 2rem;
-    }
-
-    /* HERO */
-    #hero {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding-top: 10rem;
-      padding-bottom: 4rem;
-    }
-
-    .hero-eyebrow {
-      font-family: var(--font-sans);
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 2.5rem;
-      animation: fadeUp 0.8s ease both;
-    }
-
-    .hero-name {
-      font-family: var(--font-serif);
-      font-size: clamp(4rem, 10vw, 8rem);
-      font-weight: 300;
-      line-height: 0.92;
-      letter-spacing: -0.01em;
-      margin-bottom: 1.5rem;
-      animation: fadeUp 0.8s 0.1s ease both;
-      color: var(--text);
-    }
-
-    .hero-name em {
-      font-style: italic;
-      color: var(--accent);
-    }
-
-    .hero-rule {
-      width: 3rem;
-      height: 1px;
-      background: var(--accent);
-      margin: 2rem 0;
-      animation: fadeUp 0.8s 0.2s ease both;
-    }
-
-    .hero-title {
-      font-family: var(--font-sans);
-      font-size: 0.85rem;
-      font-weight: 400;
-      color: var(--text);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-bottom: 1.5rem;
-      animation: fadeUp 0.8s 0.25s ease both;
-    }
-
-    .hero-desc {
-      max-width: 480px;
-      color: var(--text);
-      font-size: 0.95rem;
-      line-height: 1.9;
-      margin-bottom: 3.5rem;
-      animation: fadeUp 0.8s 0.3s ease both;
-    }
-
-    .hero-cta {
-      display: flex;
-      gap: 1.2rem;
-      flex-wrap: wrap;
-      animation: fadeUp 0.8s 0.4s ease both;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 0.7rem 1.8rem;
-      font-family: var(--font-sans);
-      font-size: 0.72rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      text-decoration: none;
-      transition: all 0.3s;
-      cursor: pointer;
-      font-weight: 400;
-    }
-
-    .btn-primary {
-      background: var(--accent);
-      color: var(--bg);
-      border: 1px solid var(--accent);
-    }
-
-    .btn-primary:hover {
-      background: transparent;
-      color: var(--accent);
-    }
-
-    .btn-ghost {
-      background: transparent;
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-
-    .btn-ghost:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    /* SECTION HEADERS */
-    .section-eyebrow {
-      font-size: 0.68rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 1rem;
-      font-weight: 400;
-    }
-
-    .section-title {
-      font-family: var(--font-serif);
-      font-size: clamp(2.2rem, 5vw, 3.8rem);
-      font-weight: 300;
-      letter-spacing: -0.01em;
-      margin-bottom: 0.5rem;
-      line-height: 1.1;
-      color: var(--text);
-    }
-
-    .section-title em {
-      font-style: italic;
-      color: var(--accent);
-    }
-
-    .section-rule {
-      width: 2.5rem;
-      height: 1px;
-      background: var(--border);
-      margin: 1.8rem 0 3.5rem;
-    }
-
-    /* DIVIDER */
-    .divider {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      height: 1px;
-      background: var(--border);
-      max-width: 960px;
-      margin: 0 auto;
-    }
-
-    /* ABOUT */
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 6rem;
-      align-items: start;
-    }
-
-    .about-text p {
-      color: var(--text);
-      margin-bottom: 1.4rem;
-      font-size: 0.95rem;
-      line-height: 1.9;
-    }
-
-    .about-text p strong {
-      color: var(--text);
-      font-weight: 500;
-    }
-
-    .about-stats {
-      display: flex;
-      flex-direction: column;
-      gap: 2.5rem;
-      padding-top: 0.5rem;
-    }
-
-    .stat-number {
-      font-family: var(--font-serif);
-      font-size: 2.8rem;
-      font-weight: 300;
-      color: var(--text);
-      line-height: 1;
-      letter-spacing: -0.02em;
-    }
-
-    .stat-divider {
-      width: 1.5rem;
-      height: 1px;
-      background: var(--accent);
-      margin: 0.6rem 0;
-    }
-
-    .stat-label {
-      font-size: 0.72rem;
-      color: var(--text);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-
-    /* PROJECTS */
-    .projects-list {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .project-card {
-      display: grid;
-      grid-template-columns: 3rem 1fr auto;
-      gap: 2rem;
-      align-items: start;
-      padding: 2.5rem 0;
-      border-bottom: 1px solid var(--border);
-      text-decoration: none;
-      color: inherit;
-      transition: all 0.3s;
-    }
-
-    .project-card:first-child { border-top: 1px solid var(--border); }
-    .project-card:hover .project-name { color: var(--accent); }
-    .project-card:hover .project-arrow { transform: translate(4px, -4px); color: var(--accent); }
-
-    .project-num {
-      font-family: var(--font-serif);
-      font-size: 0.85rem;
-      color: var(--text);
-      font-style: italic;
-      padding-top: 0.3rem;
-    }
-
-    .project-name {
-      font-family: var(--font-serif);
-      font-size: 1.5rem;
-      font-weight: 400;
-      color: var(--text);
-      margin-bottom: 0.6rem;
-      line-height: 1.2;
-      transition: color 0.3s;
-    }
-
-    .project-desc {
-      font-size: 0.88rem;
-      color: var(--text);
-      line-height: 1.8;
-      margin-bottom: 1.2rem;
-      max-width: 560px;
-    }
-
-    .project-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .tag {
-      font-size: 0.65rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 0.25rem 0.7rem;
-      border: 1px solid var(--faint);
-      color: var(--text);
-    }
-
-    .project-arrow {
-      font-size: 1.1rem;
-      color: var(--text);
-      padding-top: 0.3rem;
-      transition: all 0.3s;
-    }
-
-    /* SKILLS */
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 3rem;
-    }
-
-    .skill-group-title {
-      font-size: 0.68rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 1.5rem;
-      font-weight: 400;
-    }
-
-    .skill-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.7rem;
-    }
-
-    .skill-item {
-      font-size: 0.88rem;
-      color: var(--text);
-    }
-
-    /* SANDBOX */
-    .sandbox-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 4rem;
-    }
-
-    .demo-block {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 2rem;
-    }
-
-    .demo-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 0.5rem;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    .demo-title {
-      font-family: var(--font-serif);
-      font-size: 1.4rem;
-      font-weight: 400;
-      color: var(--text);
-    }
-
-    .demo-desc {
-      font-size: 0.82rem;
-      color: var(--text);
-      margin-bottom: 1.5rem;
-      line-height: 1.7;
-      max-width: 600px;
-    }
-
-    .demo-controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-      margin-bottom: 1.5rem;
-      align-items: center;
-    }
-
-    .demo-control {
-      display: flex;
-      flex-direction: column;
-      gap: 0.3rem;
-    }
-
-    .demo-control label {
-      font-size: 0.68rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--accent);
-    }
-
-    .demo-control input[type=range] {
-      -webkit-appearance: none;
-      width: 140px;
-      height: 2px;
-      background: var(--border);
-      outline: none;
-      cursor: pointer;
-    }
-
-    .demo-control input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 12px;
-      height: 12px;
-      background: var(--accent);
-      border-radius: 50%;
-      cursor: pointer;
-    }
-
-    .demo-control select {
-      background: var(--bg);
-      color: var(--text);
-      border: 1px solid var(--border);
-      padding: 0.3rem 0.6rem;
-      font-family: var(--font-sans);
-      font-size: 0.82rem;
-      outline: none;
-      cursor: pointer;
-    }
-
-    .demo-control select:focus { border-color: var(--accent); }
-
-    .demo-val {
-      font-size: 0.75rem;
-      color: var(--text);
-    }
-
-    .demo-canvas-wrap {
-      position: relative;
-      width: 100%;
-      border: 1px solid var(--border);
-      background: var(--bg);
-      overflow: hidden;
-    }
-
-    .demo-canvas {
-      display: block;
-      width: 100%;
-      height: 280px;
-    }
-
-    .demo-btn {
-      display: inline-block;
-      padding: 0.45rem 1.2rem;
-      font-family: var(--font-sans);
-      font-size: 0.68rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      background: transparent;
-      color: var(--text);
-      border: 1px solid var(--border);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .demo-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-    /* CONTACT */
-    #contact { text-align: center; }
-    #contact .section-eyebrow, #contact .section-title { text-align: center; }
-    #contact .section-rule { margin-left: auto; margin-right: auto; }
-
-    .contact-desc {
-      color: var(--text);
-      max-width: 400px;
-      margin: 0 auto 3rem;
-      font-size: 0.95rem;
-      line-height: 1.9;
-    }
-
-    .contact-links {
-      display: flex;
-      justify-content: center;
-      gap: 3rem;
-      margin-top: 3.5rem;
-    }
-
-    .contact-link {
-      color: var(--text);
-      text-decoration: none;
-      font-size: 0.72rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      transition: color 0.3s;
-      border-bottom: 1px solid transparent;
-      padding-bottom: 2px;
-    }
-
-    .contact-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
-
-    /* FOOTER */
-    footer {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      padding: 3rem 2rem;
-      color: var(--text);
-      font-size: 0.72rem;
-      letter-spacing: 0.08em;
-      border-top: 1px solid var(--border);
-    }
-
-    /* ANIMATIONS */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .fade-in {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-
-    .about-grid.fade-in { display: grid; }
-
-    .fade-in.visible { opacity: 1; transform: translateY(0); }
-
-
-    /* ---- NNGP + Springer demos ---- */
-    .demo-charts {
-      display: grid;
-      grid-template-columns: 1.4fr 1fr;
-      gap: 1rem;
-    }
-    .demo-canvas.tall { height: 300px; }
-    .demo-canvas.short { height: 230px; }
-    .chart-cap {
-      font-size: 0.68rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--accent);
-      padding: 0.55rem 0.8rem 0;
-    }
-    .demo-readout {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1px;
-      margin-top: 1rem;
-      background: var(--border);
-      border: 1px solid var(--border);
-    }
-    .readout-cell {
-      background: var(--bg);
-      padding: 0.7rem 0.9rem;
-    }
-    .readout-k {
-      font-size: 0.62rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    .readout-v {
-      font-family: var(--font-serif);
-      font-size: 1.35rem;
-      line-height: 1.2;
-      color: var(--text);
-    }
-    .readout-s { font-size: 0.72rem; color: var(--muted); line-height: 1.4; }
-    .demo-note {
-      font-size: 0.78rem;
-      color: var(--muted);
-      line-height: 1.7;
-      margin-top: 1rem;
-      max-width: 680px;
-    }
-    .demo-note a, .demo-desc a { color: var(--accent); }
-    .demo-btns { display: flex; gap: 0.6rem; flex-wrap: wrap; }
-    .demo-btn:disabled { opacity: 0.35; cursor: default; border-color: var(--border); color: var(--text); }
-    #sweep-wrap { display: none; margin-top: 1rem; }
-
-    .sf-layout {
-      display: grid;
-      grid-template-columns: 1fr 260px;
-      gap: 1rem;
-      align-items: stretch;
-    }
-    .sf-canvas { display: block; width: 100%; height: 400px; cursor: pointer; }
-    .sf-panel {
-      border: 1px solid var(--border);
-      background: var(--bg);
-      padding: 1rem;
-      font-size: 0.8rem;
-      line-height: 1.6;
-      display: flex;
-      flex-direction: column;
-      gap: 0.9rem;
-      min-width: 0;
-      height: 400px;
-      overflow-y: auto;
-    }
-    .sf-h {
-      font-size: 0.62rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 0.3rem;
-    }
-    .sf-tableau { display: inline-grid; gap: 2px; margin: 0.2rem 0 0.4rem; }
-    .sf-box {
-      width: 24px; height: 24px;
-      border: 1px solid rgba(200,169,110,0.5);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.72rem;
-    }
-    .sf-mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.74rem; overflow-wrap: anywhere; }
-    .sf-muted { color: var(--muted); }
-    .sf-chain { display: flex; flex-wrap: wrap; gap: 0.3rem; align-items: center; }
-    .sf-chip {
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 0.7rem;
-      padding: 0.1rem 0.45rem;
-      border: 1px solid var(--border);
-    }
-    .sf-legend { display: flex; flex-wrap: wrap; gap: 0.7rem; font-size: 0.7rem; color: var(--muted); margin-top: 0.6rem; }
-    .sf-legend i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 0.3rem; vertical-align: -1px; }
-    .sf-log { font-size: 0.74rem; display: flex; flex-direction: column; gap: 0.15rem; }
-    .sf-log .on { color: var(--accent); }
-
-    @media (max-width: 860px) {
-      .demo-charts { grid-template-columns: 1fr; }
-      .sf-layout { grid-template-columns: 1fr; }
-      .sf-panel { height: auto; overflow-y: visible; }
-      .demo-readout { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    /* FUN FACTS */
-    .facts-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-    }
-    .fact {
-      background: var(--bg);
-      padding: 1.8rem 1.6rem;
-    }
-    .fact-title {
-      font-family: var(--font-serif);
-      font-size: 1.35rem;
-      font-weight: 400;
-      color: var(--text);
-      margin-bottom: 0.5rem;
-    }
-    .fact-title em { color: var(--accent); }
-    .fact p {
-      font-size: 0.88rem;
-      line-height: 1.8;
-      color: var(--text);
-    }
-    .fact a { color: var(--accent); }
-    .fact-wide {
-      grid-column: 1 / -1;
-      display: grid;
-      grid-template-columns: 1.15fr 1fr;
-      gap: 2rem;
-      align-items: center;
-    }
-    .fact-shot { display: block; border: 1px solid var(--border); transition: border-color 0.3s; }
-    .fact-shot:hover { border-color: var(--accent); }
-    .fact-shot img { display: block; width: 100%; height: auto; }
-    .fact-link { display: inline-block; margin-top: 0.9rem; font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; }
-    .section-intro {
-      max-width: 560px;
-      font-size: 0.92rem;
-      line-height: 1.9;
-      color: var(--text);
-      margin-top: -1.5rem;
-      margin-bottom: 3rem;
-    }
-
-    /* ---- Simulation: instrument-panel accents (Option B) ---- */
-    #simulation .demo-block {
-      position: relative;
-      background:
-        linear-gradient(rgba(200,169,110,0.03) 1px, transparent 1px) 0 0 / 24px 24px,
-        linear-gradient(90deg, rgba(200,169,110,0.03) 1px, transparent 1px) 0 0 / 24px 24px,
-        var(--surface);
-    }
-    #simulation .demo-block::before {
-      content: "";
-      position: absolute;
-      inset: -1px;
-      pointer-events: none;
-      --b: linear-gradient(var(--accent), var(--accent));
-      background:
-        var(--b) 0 0 / 14px 1px no-repeat,      var(--b) 0 0 / 1px 14px no-repeat,
-        var(--b) 100% 0 / 14px 1px no-repeat,   var(--b) 100% 0 / 1px 14px no-repeat,
-        var(--b) 0 100% / 14px 1px no-repeat,   var(--b) 0 100% / 1px 14px no-repeat,
-        var(--b) 100% 100% / 14px 1px no-repeat, var(--b) 100% 100% / 1px 14px no-repeat;
-    }
-    .sim-tag {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem 1.2rem;
-      margin-bottom: 0.8rem;
-      font: 400 0.6rem var(--font-mono);
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    .sim-tag b { color: var(--accent); font-weight: 400; }
-    .sim-tag .live { color: #9fd49a; }
-    .sim-tag .live::before { content: "\25CF"; margin-right: 0.4em; }
-    #simulation .demo-control label,
-    #simulation .demo-val,
-    #simulation .chart-cap,
-    #simulation .readout-k,
-    #simulation .sf-h {
-      font-family: var(--font-mono);
-      font-size: 0.6rem;
-    }
-    #simulation .demo-val { font-size: 0.68rem; }
-    #simulation .readout-v { font-family: var(--font-mono); font-size: 1.05rem; color: var(--accent); }
-    #simulation .readout-cell { position: relative; padding-bottom: 1.1rem; }
-    #simulation .readout-cell::after {
-      content: "";
-      position: absolute;
-      left: 0.9rem; right: 0.9rem; bottom: 0.4rem;
-      height: 3px;
-      background: repeating-linear-gradient(90deg, var(--border) 0 1px, transparent 1px 6px);
-    }
-    #simulation .demo-canvas-wrap { border-color: rgba(200,169,110,0.25); }
-
-    /* RESPONSIVE */
-    @media (max-width: 768px) {
-      nav { padding: 1.2rem 1.5rem; }
-      .nav-links { gap: 1.5rem; }
-      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
-      .skills-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
-      .facts-grid { grid-template-columns: 1fr; }
-      .fact-wide { grid-template-columns: 1fr; gap: 1.2rem; }
-      .project-card { grid-template-columns: 2rem 1fr; }
-      .project-arrow { display: none; }
-      .hero-layout { grid-template-columns: 1fr; }
-      .hero-photo-wrap { justify-content: flex-start; }
-      .hero-photo { width: 160px; height: 200px; }
-    }
-
-    @media (max-width: 500px) {
-      nav { flex-direction: column; align-items: flex-start; gap: 0.6rem; padding: 0.9rem 1.2rem; }
-      .nav-links { width: 100%; gap: 1.2rem; overflow-x: auto; white-space: nowrap; scrollbar-width: none; padding-bottom: 0.2rem; }
-      .nav-links::-webkit-scrollbar { display: none; }
-      .nav-links a { font-size: 0.66rem; }
-      .skills-grid { grid-template-columns: 1fr; }
-    }
-  </style>
-</head>
-<body>
-
-  <!-- NEURAL NETWORK CANVAS -->
-  <canvas id="nn-canvas"></canvas>
-
-  <!-- NAV -->
-  <nav>
-    <a href="#hero" class="nav-logo">遠藤俊治</a>
-    <ul class="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#projects">Research</a></li>
-      <li><a href="#skills">Skills</a></li>
-      <li><a href="#simulation">Simulation</a></li>
-      <li><a href="#contact">Contact</a></li>
-      <li><a href="https://tristane028.github.io/Endo_Curriculum_Vitae_10_21_2026.pdf" target="_blank" style="color: var(--accent); border: 1px solid var(--accent); padding: 0.3rem 0.8rem;">Curriculum Vitaé ↗</a></li>
-    </ul>
-  </nav>
-
-  <!-- HERO -->
-  <section id="hero">
-    <div class="hero-layout">
-      <div class="hero-left">
-        <h1 class="hero-name">Tristan<br><em>Endo</em></h1>
-        <div class="hero-eyebrow">Math–Computer Science · UC San Diego</div>
-        <div class="hero-rule"></div>
-        <p class="hero-title">Researcher · Engineer · Student</p>
-        <p class="hero-desc">
-          I am a fourth-year Math-CS student at UC San Diego. For a long time, math only made sense
-          to me once I could watch it do something. These days, that something is data science and
-          finance, and more recently, natural language processing, where I am trying to figure out how
-          to catch an AI model when it starts making things up.
-        </p>
-        <div class="hero-cta">
-          <a href="#projects" class="btn btn-primary">View Research</a>
-          <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+    <head>
+        <meta charset="utf-8" />
+        <title>Tristan Endo: when models are wrong</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+            name="description"
+            content="Tristan Endo, Math-CS at UC San Diego. I build models and then go looking for the places they break."
+        />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&amp;family=Inter:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;family=Noto+Serif+JP:wght@600&amp;display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            body {
+                margin: 0;
+                background: #0e0e10;
+            }
+            a {
+                color: #c8a25a;
+            }
+            a:hover {
+                color: #e2c07e;
+            }
+        </style>
+    </head>
+    <body>
+        <div style="background: #0e0e10; color: #e8e4da; font-family: Inter, system-ui, sans-serif; min-height: 100vh">
+            <header
+                style="
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 28px 40px;
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 20px;
+                    align-items: center;
+                    justify-content: space-between;
+                "
+            >
+                <a
+                    href="#top"
+                    aria-label="Tristan Endo, home"
+                    style="display: flex; align-items: center; gap: 14px; text-decoration: none; color: #e8e4da"
+                >
+                    <span
+                        aria-hidden="true"
+                        style="
+                            width: 44px;
+                            height: 44px;
+                            border: 2px solid #c8a25a;
+                            border-radius: 6px;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;
+                            font-family: &quot;Noto Serif JP&quot;, serif;
+                            font-size: 15px;
+                            line-height: 17px;
+                            color: #c8a25a;
+                        "
+                        >遠<br />藤</span
+                    >
+                    <span style="font-family: &quot;Cormorant Garamond&quot;, serif; font-size: 24px; font-weight: 600"
+                        >Tristan Endo</span
+                    >
+                </a>
+                <nav aria-label="Main" style="display: flex; flex-wrap: wrap; gap: 28px; font-size: 14px">
+                    <a href="#findings" style="color: #cfcabf; text-decoration: none">Findings</a>
+                    <a href="#notebook" style="color: #cfcabf; text-decoration: none">Open questions</a>
+                    <a href="#outside" style="color: #cfcabf; text-decoration: none">Outside the Math</a>
+                    <a
+                        target="_blank"
+                        rel="noopener"
+                        href="https://tristane028.github.io/Endo_Curriculum_Vitae_10_21_2026.pdf"
+                        style="color: #cfcabf; text-decoration: none"
+                        >CV ↗</a
+                    >
+                </nav>
+            </header>
+
+            <section
+                id="top"
+                style="
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 72px 40px 96px;
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 48px;
+                    align-items: center;
+                "
+            >
+                <div style="flex: 1 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 28px">
+                    <p
+                        style="
+                            margin: 0;
+                            font-family: &quot;IBM Plex Mono&quot;, monospace;
+                            font-size: 13px;
+                            letter-spacing: 0.12em;
+                            text-transform: uppercase;
+                            color: #c8a25a;
+                        "
+                    >
+                        Math–CS · UC San Diego · Class of 2027
+                    </p>
+                    <h1
+                        style="
+                            margin: 0;
+                            font-family: &quot;Cormorant Garamond&quot;, serif;
+                            font-weight: 500;
+                            font-size: 76px;
+                            line-height: 1.02;
+                            letter-spacing: -0.01em;
+                        "
+                    >
+                        How do you know when a model is <em style="color: #c8a25a">wrong?</em>
+                    </h1>
+                    <div style="display: flex; gap: 20px; align-items: flex-start; max-width: 600px">
+                        <img
+                            src="profile.jpg"
+                            alt="Tristan Endo"
+                            width="72"
+                            height="72"
+                            style="
+                                flex: 0 0 72px;
+                                width: 72px;
+                                height: 72px;
+                                border-radius: 50%;
+                                object-fit: cover;
+                                border: 1px solid #3a3629;
+                            "
+                        />
+                        <p style="margin: 0; font-size: 18px; line-height: 1.65; color: #b9b4a9">
+                            I'm Tristan. I like math that does something, so I build models and then go looking for the
+                            places they break. Right now that means Springer fibers, infinite-width networks, and AI
+                            hallucination.
+                        </p>
+                    </div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 14px; padding-top: 8px">
+                        <a
+                            href="#findings"
+                            style="
+                                background: #c8a25a;
+                                color: #141210;
+                                text-decoration: none;
+                                font-weight: 600;
+                                font-size: 15px;
+                                padding: 14px 22px;
+                                border-radius: 4px;
+                            "
+                            >See the findings</a
+                        >
+                        <a
+                            href="#contact"
+                            style="
+                                border: 1px solid #5a5548;
+                                color: #e8e4da;
+                                text-decoration: none;
+                                font-weight: 500;
+                                font-size: 15px;
+                                padding: 14px 22px;
+                                border-radius: 4px;
+                            "
+                            >Email me about a problem</a
+                        >
+                    </div>
+                </div>
+                <div style="flex: 1 1 420px; min-width: 0">
+                    <svg viewBox="0 0 480 360" aria-hidden="true" style="width: 100%; height: auto; display: block">
+                        <line x1="0" y1="180" x2="480" y2="180" stroke="#2a2823" stroke-width="1"></line>
+                        <path
+                            d="M0.0 180.0 L3.0 204.6 L6.0 207.2 L9.1 216.5 L12.1 238.9 L15.1 221.2 L18.1 225.7 L21.1 224.8 L24.2 226.4 L27.2 227.8 L30.2 238.5 L33.2 252.4 L36.2 241.9 L39.2 259.6 L42.3 265.5 L45.3 261.2 L48.3 245.1 L51.3 250.8 L54.3 271.3 L57.4 285.2 L60.4 273.6 L63.4 269.1 L66.4 266.4 L69.4 267.4 L72.5 280.5 L75.5 290.0 L78.5 275.4 L81.5 299.4 L84.5 314.6 L87.5 310.8 L90.6 300.3 L93.6 324.3 L96.6 330.0 L99.6 310.9 L102.6 309.8 L105.7 329.7 L108.7 324.3 L111.7 301.6 L114.7 310.5 L117.7 290.7 L120.8 314.4 L123.8 303.7 L126.8 288.5 L129.8 266.4 L132.8 276.9 L135.8 293.3 L138.9 278.6 L141.9 256.5 L144.9 245.1 L147.9 220.4 L150.9 205.6 L154.0 209.0 L157.0 221.1 L160.0 215.4 L163.0 238.8 L166.0 216.6 L169.1 200.2 L172.1 207.5 L175.1 189.1 L178.1 213.7 L181.1 205.5 L184.2 183.3 L187.2 180.8 L190.2 172.0 L193.2 171.5 L196.2 154.1 L199.2 157.4 L202.3 136.3 L205.3 111.8 L208.3 115.4 L211.3 100.1 L214.3 99.7 L217.4 113.3 L220.4 135.5 L223.4 157.6 L226.4 141.5 L229.4 160.7 L232.5 168.1 L235.5 165.6 L238.5 171.7 L241.5 173.0 L244.5 192.4 L247.5 198.4 L250.6 214.4 L253.6 210.8 L256.6 208.4 L259.6 187.4 L262.6 207.2 L265.7 183.6 L268.7 159.2 L271.7 145.7 L274.7 142.5 L277.7 148.9 L280.8 131.1 L283.8 123.9 L286.8 123.8 L289.8 133.4 L292.8 131.8 L295.8 143.8 L298.9 121.0 L301.9 117.6 L304.9 97.3 L307.9 114.7 L310.9 131.5 L314.0 108.8 L317.0 99.4 L320.0 109.8 L323.0 93.7 L326.0 100.4 L329.1 81.8 L332.1 82.6 L335.1 82.2 L338.1 95.4 L341.1 115.1 L344.2 100.4 L347.2 82.0 L350.2 93.7 L353.2 81.0 L356.2 88.9 L359.2 71.1 L362.3 74.3 L365.3 98.9 L368.3 122.5 L371.3 145.5 L374.3 142.7 L377.4 152.8 L380.4 137.6 L383.4 146.6 L386.4 139.8 L389.4 115.6 L392.5 116.0 L395.5 103.3 L398.5 119.4 L401.5 111.9 L404.5 112.1 L407.5 124.7 L410.6 136.3 L413.6 136.5 L416.6 130.4 L419.6 132.4 L422.6 142.2 L425.7 142.6 L428.7 142.2 L431.7 161.0 L434.7 154.6 L437.7 139.0 L440.8 139.2 L443.8 136.3 L446.8 150.4 L449.8 136.9 L452.8 143.1 L455.8 162.6 L458.9 159.1 L461.9 164.7 L464.9 179.6 L467.9 179.0 L470.9 158.2 L474.0 163.4 L477.0 180.0 L480.0 163.3"
+                            fill="none"
+                            stroke="#c8a25a"
+                            stroke-width="1.2"
+                            opacity="0.18"
+                        ></path>
+                        <path
+                            d="M0.0 203.5 L3.0 210.7 L6.0 214.5 L9.1 226.9 L12.1 238.9 L15.1 250.4 L18.1 259.6 L21.1 268.1 L24.2 274.3 L27.2 272.9 L30.2 263.4 L33.2 258.6 L36.2 252.2 L39.2 248.3 L42.3 250.5 L45.3 257.6 L48.3 264.1 L51.3 270.4 L54.3 273.7 L57.4 273.0 L60.4 268.9 L63.4 261.2 L66.4 257.6 L69.4 254.7 L72.5 256.4 L75.5 264.5 L78.5 277.6 L81.5 289.0 L84.5 303.6 L87.5 310.4 L90.6 313.2 L93.6 316.1 L96.6 323.5 L99.6 323.3 L102.6 326.7 L105.7 330.0 L108.7 329.8 L111.7 322.9 L114.7 321.1 L117.7 318.0 L120.8 314.4 L123.8 308.7 L126.8 307.4 L129.8 300.6 L132.8 293.9 L135.8 287.8 L138.9 284.4 L141.9 281.5 L144.9 287.6 L147.9 294.1 L150.9 296.3 L154.0 297.3 L157.0 297.8 L160.0 296.2 L163.0 292.6 L166.0 296.7 L169.1 299.0 L172.1 295.8 L175.1 291.3 L178.1 287.0 L181.1 278.8 L184.2 268.4 L187.2 263.4 L190.2 255.6 L193.2 252.1 L196.2 253.2 L199.2 261.8 L202.3 266.0 L205.3 270.1 L208.3 272.8 L211.3 268.7 L214.3 261.8 L217.4 262.4 L220.4 267.9 L223.4 271.8 L226.4 277.5 L229.4 285.3 L232.5 288.4 L235.5 286.5 L238.5 290.6 L241.5 292.5 L244.5 292.3 L247.5 289.1 L250.6 283.4 L253.6 273.6 L256.6 263.2 L259.6 249.9 L262.6 235.0 L265.7 225.3 L268.7 216.6 L271.7 216.4 L274.7 222.1 L277.7 229.5 L280.8 235.4 L283.8 240.4 L286.8 241.3 L289.8 239.4 L292.8 243.4 L295.8 247.8 L298.9 253.2 L301.9 255.8 L304.9 256.1 L307.9 257.2 L310.9 258.5 L314.0 261.8 L317.0 268.1 L320.0 272.9 L323.0 275.8 L326.0 279.4 L329.1 275.2 L332.1 273.2 L335.1 271.4 L338.1 267.6 L341.1 264.8 L344.2 267.7 L347.2 266.2 L350.2 263.4 L353.2 261.1 L356.2 252.8 L359.2 247.0 L362.3 244.7 L365.3 250.3 L368.3 255.0 L371.3 263.4 L374.3 269.5 L377.4 273.2 L380.4 272.6 L383.4 275.6 L386.4 281.5 L389.4 286.7 L392.5 287.9 L395.5 289.6 L398.5 286.4 L401.5 277.8 L404.5 264.3 L407.5 255.5 L410.6 247.4 L413.6 240.9 L416.6 238.4 L419.6 239.3 L422.6 235.5 L425.7 227.9 L428.7 221.3 L431.7 213.1 L434.7 206.5 L437.7 206.7 L440.8 205.0 L443.8 199.5 L446.8 197.7 L449.8 193.3 L452.8 190.4 L455.8 188.3 L458.9 188.3 L461.9 187.2 L464.9 188.0 L467.9 181.1 L470.9 173.4 L474.0 168.6 L477.0 164.1 L480.0 156.1"
+                            fill="none"
+                            stroke="#c8a25a"
+                            stroke-width="1.2"
+                            opacity="0.28"
+                        ></path>
+                        <path
+                            d="M0.0 164.6 L3.0 161.4 L6.0 157.1 L9.1 156.4 L12.1 158.2 L15.1 159.1 L18.1 159.8 L21.1 159.3 L24.2 159.5 L27.2 163.4 L30.2 167.4 L33.2 172.0 L36.2 172.4 L39.2 175.5 L42.3 178.1 L45.3 178.8 L48.3 180.3 L51.3 180.6 L54.3 177.6 L57.4 176.4 L60.4 175.1 L63.4 176.5 L66.4 178.9 L69.4 185.0 L72.5 190.5 L75.5 191.7 L78.5 191.7 L81.5 193.1 L84.5 192.8 L87.5 192.8 L90.6 193.8 L93.6 195.7 L96.6 198.1 L99.6 197.2 L102.6 193.7 L105.7 189.4 L108.7 189.7 L111.7 191.8 L114.7 190.9 L117.7 189.1 L120.8 190.9 L123.8 190.2 L126.8 188.2 L129.8 184.4 L132.8 185.6 L135.8 189.7 L138.9 194.8 L141.9 196.8 L144.9 196.3 L147.9 199.0 L150.9 205.0 L154.0 210.7 L157.0 220.3 L160.0 230.8 L163.0 241.8 L166.0 251.9 L169.1 260.2 L172.1 266.8 L175.1 276.6 L178.1 286.4 L181.1 294.3 L184.2 302.2 L187.2 306.3 L190.2 308.4 L193.2 311.3 L196.2 313.8 L199.2 314.6 L202.3 316.8 L205.3 321.5 L208.3 322.1 L211.3 323.8 L214.3 327.4 L217.4 328.0 L220.4 328.5 L223.4 330.0 L226.4 329.1 L229.4 328.8 L232.5 327.8 L235.5 324.7 L238.5 320.4 L241.5 319.9 L244.5 321.2 L247.5 322.2 L250.6 323.0 L253.6 323.1 L256.6 319.3 L259.6 314.7 L262.6 311.8 L265.7 306.9 L268.7 299.7 L271.7 290.3 L274.7 279.9 L277.7 269.8 L280.8 260.2 L283.8 250.0 L286.8 243.2 L289.8 236.3 L292.8 231.3 L295.8 224.6 L298.9 220.1 L301.9 217.3 L304.9 218.5 L307.9 217.6 L310.9 216.8 L314.0 212.4 L317.0 211.0 L320.0 209.7 L323.0 209.4 L326.0 208.0 L329.1 204.7 L332.1 204.2 L335.1 206.6 L338.1 204.8 L341.1 201.9 L344.2 197.7 L347.2 193.3 L350.2 189.3 L353.2 186.4 L356.2 186.7 L359.2 188.1 L362.3 189.3 L365.3 189.7 L368.3 187.0 L371.3 184.5 L374.3 183.0 L377.4 179.8 L380.4 176.6 L383.4 174.8 L386.4 170.7 L389.4 166.0 L392.5 161.7 L395.5 161.0 L398.5 159.0 L401.5 158.4 L404.5 158.7 L407.5 161.2 L410.6 163.3 L413.6 168.0 L416.6 170.2 L419.6 172.8 L422.6 174.4 L425.7 176.9 L428.7 180.0 L431.7 180.7 L434.7 182.2 L437.7 187.3 L440.8 193.1 L443.8 200.5 L446.8 206.1 L449.8 212.7 L452.8 217.5 L455.8 222.8 L458.9 224.9 L461.9 227.9 L464.9 236.0 L467.9 239.6 L470.9 241.0 L474.0 240.2 L477.0 239.7 L480.0 240.7"
+                            fill="none"
+                            stroke="#c8a25a"
+                            stroke-width="1.2"
+                            opacity="0.4"
+                        ></path>
+                        <path
+                            d="M0.0 149.5 L3.0 143.0 L6.0 136.5 L9.1 131.9 L12.1 129.6 L15.1 127.9 L18.1 127.4 L21.1 126.3 L24.2 125.2 L27.2 124.8 L30.2 120.9 L33.2 114.9 L36.2 109.7 L39.2 106.8 L42.3 105.7 L45.3 106.6 L48.3 108.2 L51.3 110.8 L54.3 113.5 L57.4 116.4 L60.4 119.9 L63.4 123.4 L66.4 126.9 L69.4 129.8 L72.5 131.8 L75.5 131.7 L78.5 133.0 L81.5 134.6 L84.5 134.4 L87.5 136.2 L90.6 138.2 L93.6 137.9 L96.6 137.7 L99.6 137.1 L102.6 135.1 L105.7 132.6 L108.7 129.8 L111.7 126.4 L114.7 122.8 L117.7 118.5 L120.8 115.9 L123.8 111.6 L126.8 106.9 L129.8 102.7 L132.8 99.0 L135.8 95.0 L138.9 90.3 L141.9 85.9 L144.9 78.9 L147.9 71.4 L150.9 65.9 L154.0 59.4 L157.0 53.4 L160.0 47.3 L163.0 43.1 L166.0 40.8 L169.1 39.9 L172.1 40.8 L175.1 39.9 L178.1 37.5 L181.1 35.2 L184.2 34.0 L187.2 33.0 L190.2 32.0 L193.2 30.7 L196.2 30.2 L199.2 30.0 L202.3 32.3 L205.3 35.2 L208.3 38.8 L211.3 43.0 L214.3 45.9 L217.4 48.1 L220.4 50.4 L223.4 51.1 L226.4 52.4 L229.4 52.8 L232.5 53.4 L235.5 55.5 L238.5 58.0 L241.5 57.8 L244.5 57.9 L247.5 58.5 L250.6 58.5 L253.6 58.7 L256.6 60.9 L259.6 62.5 L262.6 63.8 L265.7 62.7 L268.7 60.9 L271.7 60.5 L274.7 62.7 L277.7 65.3 L280.8 69.1 L283.8 71.3 L286.8 74.4 L289.8 78.9 L292.8 82.7 L295.8 86.0 L298.9 91.1 L301.9 94.9 L304.9 99.0 L307.9 104.1 L310.9 108.5 L314.0 110.9 L317.0 112.6 L320.0 114.4 L323.0 117.3 L326.0 120.0 L329.1 120.9 L332.1 120.9 L335.1 120.1 L338.1 117.8 L341.1 116.9 L344.2 116.5 L347.2 114.3 L350.2 112.9 L353.2 113.8 L356.2 114.4 L359.2 115.3 L362.3 116.1 L365.3 117.4 L368.3 119.6 L371.3 121.8 L374.3 125.0 L377.4 127.3 L380.4 128.8 L383.4 129.3 L386.4 130.4 L389.4 132.3 L392.5 134.9 L395.5 137.7 L398.5 140.7 L401.5 143.5 L404.5 146.9 L407.5 150.3 L410.6 153.2 L413.6 155.2 L416.6 157.2 L419.6 160.0 L422.6 161.8 L425.7 164.7 L428.7 169.5 L431.7 173.6 L434.7 179.8 L437.7 187.8 L440.8 198.1 L443.8 207.5 L446.8 216.5 L449.8 223.7 L452.8 231.5 L455.8 235.1 L458.9 238.2 L461.9 242.7 L464.9 246.3 L467.9 249.7 L470.9 254.7 L474.0 261.8 L477.0 268.7 L480.0 276.1"
+                            fill="none"
+                            stroke="#c8a25a"
+                            stroke-width="1.4"
+                            opacity="0.6"
+                        ></path>
+                        <path
+                            d="M0.0 206.6 L3.0 210.4 L6.0 214.3 L9.1 217.5 L12.1 220.6 L15.1 223.0 L18.1 224.4 L21.1 225.5 L24.2 226.4 L27.2 226.8 L30.2 226.6 L33.2 225.7 L36.2 225.5 L39.2 225.5 L42.3 225.3 L45.3 226.6 L48.3 227.4 L51.3 228.3 L54.3 228.7 L57.4 228.4 L60.4 227.7 L63.4 227.7 L66.4 228.2 L69.4 228.3 L72.5 227.7 L75.5 226.6 L78.5 225.7 L81.5 224.8 L84.5 222.6 L87.5 219.7 L90.6 216.3 L93.6 212.6 L96.6 209.4 L99.6 206.5 L102.6 204.1 L105.7 202.9 L108.7 201.5 L111.7 200.6 L114.7 200.4 L117.7 201.4 L120.8 203.3 L123.8 205.2 L126.8 206.4 L129.8 207.5 L132.8 208.1 L135.8 208.2 L138.9 208.5 L141.9 209.7 L144.9 210.5 L147.9 211.7 L150.9 212.4 L154.0 213.3 L157.0 214.4 L160.0 215.5 L163.0 216.7 L166.0 217.4 L169.1 218.4 L172.1 220.0 L175.1 221.6 L178.1 223.3 L181.1 224.4 L184.2 225.5 L187.2 226.4 L190.2 226.9 L193.2 226.2 L196.2 225.2 L199.2 224.0 L202.3 221.8 L205.3 219.2 L208.3 215.5 L211.3 211.3 L214.3 207.9 L217.4 205.3 L220.4 203.4 L223.4 201.3 L226.4 198.6 L229.4 195.9 L232.5 193.2 L235.5 191.0 L238.5 189.0 L241.5 186.8 L244.5 183.7 L247.5 180.3 L250.6 176.9 L253.6 173.9 L256.6 170.2 L259.6 166.5 L262.6 162.8 L265.7 158.7 L268.7 154.6 L271.7 150.1 L274.7 146.0 L277.7 141.7 L280.8 138.2 L283.8 134.7 L286.8 131.1 L289.8 128.0 L292.8 125.0 L295.8 123.1 L298.9 121.0 L301.9 118.5 L304.9 115.0 L307.9 111.1 L310.9 107.8 L314.0 105.0 L317.0 102.6 L320.0 100.3 L323.0 97.6 L326.0 95.5 L329.1 93.7 L332.1 92.4 L335.1 91.5 L338.1 89.9 L341.1 88.7 L344.2 88.5 L347.2 88.1 L350.2 87.6 L353.2 87.6 L356.2 88.1 L359.2 88.2 L362.3 88.1 L365.3 88.0 L368.3 87.1 L371.3 86.9 L374.3 86.4 L377.4 85.6 L380.4 84.1 L383.4 81.7 L386.4 79.8 L389.4 77.5 L392.5 75.4 L395.5 74.2 L398.5 73.4 L401.5 72.8 L404.5 72.1 L407.5 71.1 L410.6 69.5 L413.6 67.6 L416.6 65.0 L419.6 62.5 L422.6 59.6 L425.7 56.8 L428.7 54.3 L431.7 51.4 L434.7 48.8 L437.7 46.3 L440.8 44.4 L443.8 42.4 L446.8 40.8 L449.8 38.6 L452.8 36.6 L455.8 35.2 L458.9 33.5 L461.9 32.1 L464.9 30.8 L467.9 30.2 L470.9 30.3 L474.0 30.0 L477.0 30.5 L480.0 31.7"
+                            fill="none"
+                            stroke="#e2c07e"
+                            stroke-width="1.6"
+                            opacity="0.9"
+                        ></path>
+                    </svg>
+                    <p
+                        style="
+                            margin: 8px 0 0;
+                            font-family: &quot;IBM Plex Mono&quot;, monospace;
+                            font-size: 12px;
+                            color: #8f8a7f;
+                        "
+                    >
+                        sample paths, rough to smooth · slowly redrawn in the live version
+                    </p>
+                </div>
+            </section>
+
+            <section
+                id="findings"
+                style="
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 0 40px 96px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 40px;
+                "
+            >
+                <div
+                    style="
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 16px;
+                        align-items: baseline;
+                        justify-content: space-between;
+                        border-top: 1px solid #2a2823;
+                        padding-top: 40px;
+                    "
+                >
+                    <h2
+                        style="
+                            margin: 0;
+                            font-family: &quot;Cormorant Garamond&quot;, serif;
+                            font-weight: 500;
+                            font-size: 48px;
+                        "
+                    >
+                        Findings
+                    </h2>
+                    <p style="margin: 0; font-size: 15px; color: #a39e93">
+                        Each one starts with what I found. The demo next to it lets you check.
+                    </p>
+                </div>
+
+                <article
+                    style="
+                        border: 1px solid #2a2823;
+                        border-radius: 8px;
+                        padding: 40px;
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 40px;
+                        background: #121214;
+                    "
+                >
+                    <div style="flex: 1 1 440px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
+                        <p
+                            style="
+                                margin: 0;
+                                font-family: &quot;IBM Plex Mono&quot;, monospace;
+                                font-size: 13px;
+                                color: #c8a25a;
+                            "
+                        >
+                            01 · Springer fibers · ongoing
+                        </p>
+                        <h3
+                            style="
+                                margin: 0;
+                                font-family: &quot;Cormorant Garamond&quot;, serif;
+                                font-weight: 500;
+                                font-size: 38px;
+                                line-height: 1.12;
+                            "
+                        >
+                            A simple rank test predicts 209 of 210 closures. The one it misses is the singular
+                            component.
+                        </h3>
+                        <p style="margin: 0; font-size: 16px; line-height: 1.65; color: #b9b4a9">
+                            We computed which cells each cell closure meets for 116 configurations with two, three and
+                            four rows, up to n = 11. Then we looked for a rule that explains them. A rank condition
+                            does. None of the 1,144,312 relations breaks it, it gives exactly 2<sup
+                                style="font-size: 0.75em"
+                                >dim</sup
+                            >
+                            cells for every two-row closure, and for (3,2,2) it agrees with an exact Gröbner basis check
+                            everywhere except the one singular component.
+                        </p>
+                        <p style="margin: 0; font-size: 16px; line-height: 1.65; color: #b9b4a9">
+                            Along the way we found that every cell can be read straight off its permutation, with
+                            nothing to solve. Cutting cells into smaller ones also turned up 64 relations the search had
+                            missed.
+                        </p>
+                        <div style="display: flex; flex-wrap: wrap; gap: 28px; padding: 6px 0">
+                            <div>
+                                <p
+                                    style="
+                                        margin: 0;
+                                        font-family: &quot;Cormorant Garamond&quot;, serif;
+                                        font-size: 34px;
+                                        color: #e8e4da;
+                                    "
+                                >
+                                    116
+                                </p>
+                                <p style="margin: 0; font-size: 13px; color: #a39e93">configurations</p>
+                            </div>
+                            <div>
+                                <p
+                                    style="
+                                        margin: 0;
+                                        font-family: &quot;Cormorant Garamond&quot;, serif;
+                                        font-size: 34px;
+                                        color: #e8e4da;
+                                    "
+                                >
+                                    35,614
+                                </p>
+                                <p style="margin: 0; font-size: 13px; color: #a39e93">cells</p>
+                            </div>
+                            <div>
+                                <p
+                                    style="
+                                        margin: 0;
+                                        font-family: &quot;Cormorant Garamond&quot;, serif;
+                                        font-size: 34px;
+                                        color: #e8e4da;
+                                    "
+                                >
+                                    1,144,312
+                                </p>
+                                <p style="margin: 0; font-size: 13px; color: #a39e93">closure relations</p>
+                            </div>
+                        </div>
+                        <p style="margin: 0; font-size: 14px; color: #a39e93">
+                            With Prof. Raymond Chou and Alexander Ryan · Python, SymPy, Gröbner bases · algebraic
+                            geometry, combinatorics
+                        </p>
+                        <div style="display: flex; flex-wrap: wrap; gap: 20px; font-size: 14px; font-weight: 500">
+                            <a href="https://tristane028.github.io/Springer-Fibers/Visuals.html"
+                                >Open the full viewer →</a
+                            >
+                            <a target="_blank" rel="noopener" href="https://github.com/Tristane028/Springer-Fibers"
+                                >Code on GitHub ↗</a
+                            >
+                        </div>
+                    </div>
+                    <figure
+                        style="
+                            flex: 1 1 440px;
+                            min-width: 0;
+                            margin: 0;
+                            position: relative;
+                            border: 1px solid #3a3629;
+                            border-radius: 4px;
+                            background: #0b0b0c;
+                            padding: 20px;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 12px;
+                        "
+                    >
+                        <span
+                            aria-hidden="true"
+                            style="
+                                position: absolute;
+                                top: -1px;
+                                left: -1px;
+                                width: 14px;
+                                height: 14px;
+                                border-top: 2px solid #c8a25a;
+                                border-left: 2px solid #c8a25a;
+                            "
+                        ></span>
+                        <span
+                            aria-hidden="true"
+                            style="
+                                position: absolute;
+                                bottom: -1px;
+                                right: -1px;
+                                width: 14px;
+                                height: 14px;
+                                border-bottom: 2px solid #c8a25a;
+                                border-right: 2px solid #c8a25a;
+                            "
+                        ></span>
+                        <div
+                            style="
+                                display: flex;
+                                justify-content: space-between;
+                                font-family: &quot;IBM Plex Mono&quot;, monospace;
+                                font-size: 12px;
+                                color: #a39e93;
+                            "
+                        >
+                            <span>CLOSURE EXPLORER</span><span>type (3,2,1)</span>
+                        </div>
+                        <svg
+                            viewBox="0 0 440 260"
+                            role="img"
+                            aria-label="Closure graph sketch: one selected cell with its closure cells highlighted in gold below it"
+                            style="width: 100%; height: auto; display: block"
+                        >
+                            <g stroke="#3a3629" stroke-width="1.2">
+                                <line x1="220" y1="30" x2="120" y2="100"></line>
+                                <line x1="220" y1="30" x2="220" y2="100"></line>
+                                <line x1="220" y1="30" x2="320" y2="100"></line>
+                                <line x1="120" y1="100" x2="70" y2="170"></line>
+                                <line x1="220" y1="100" x2="270" y2="170"></line>
+                                <line x1="320" y1="100" x2="370" y2="170"></line>
+                                <line x1="70" y1="170" x2="220" y2="235"></line>
+                                <line x1="370" y1="170" x2="220" y2="235"></line>
+                            </g>
+                            <g stroke="#c8a25a" stroke-width="2">
+                                <line x1="220" y1="100" x2="170" y2="170"></line>
+                                <line x1="120" y1="100" x2="170" y2="170"></line>
+                                <line x1="170" y1="170" x2="220" y2="235"></line>
+                                <line x1="270" y1="170" x2="220" y2="235"></line>
+                                <line x1="220" y1="100" x2="270" y2="170" stroke-dasharray="4 4"></line>
+                            </g>
+                            <g fill="#1c1b18" stroke="#5a5548" stroke-width="1.2">
+                                <circle cx="220" cy="30" r="9"></circle>
+                                <circle cx="120" cy="100" r="9"></circle>
+                                <circle cx="320" cy="100" r="9"></circle>
+                                <circle cx="70" cy="170" r="9"></circle>
+                                <circle cx="370" cy="170" r="9"></circle>
+                            </g>
+                            <g fill="#c8a25a">
+                                <circle cx="170" cy="170" r="9"></circle>
+                                <circle cx="270" cy="170" r="9"></circle>
+                                <circle cx="220" cy="235" r="9"></circle>
+                            </g>
+                            <circle cx="220" cy="100" r="12" fill="#0b0b0c" stroke="#e2c07e" stroke-width="3"></circle>
+                        </svg>
+                        <figcaption style="font-size: 13px; line-height: 1.5; color: #a39e93">
+                            Click a cell to light up its closure. Dashed edges are witness curves. The full viewer adds
+                            the closure matrix, halving routes, and each cell's matrix read off its permutation.
+                        </figcaption>
+                    </figure>
+                </article>
+
+                <article
+                    style="
+                        border: 1px solid #2a2823;
+                        border-radius: 8px;
+                        padding: 40px;
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 40px;
+                        background: #121214;
+                    "
+                >
+                    <div style="flex: 1 1 440px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
+                        <p
+                            style="
+                                margin: 0;
+                                font-family: &quot;IBM Plex Mono&quot;, monospace;
+                                font-size: 13px;
+                                color: #c8a25a;
+                            "
+                        >
+                            02 · Neural network Gaussian processes · MATH 216B
+                        </p>
+                        <h3
+                            style="
+                                margin: 0;
+                                font-family: &quot;Cormorant Garamond&quot;, serif;
+                                font-weight: 500;
+                                font-size: 38px;
+                                line-height: 1.12;
+                            "
+                        >
+                            Deep ReLU networks forget the difference between inputs. erf and tanh hold on to some of it.
+                        </h3>
+                        <p style="margin: 0; font-size: 16px; line-height: 1.65; color: #b9b4a9">
+                            In the infinite-width limit, ReLU pushes the correlation between any two inputs toward 1 as
+                            depth grows. erf and tanh settle at a fixed point below 1 instead. I tested how well real
+                            finite-width networks follow those predictions.
+                        </p>
+                        <p style="margin: 0; font-size: 14px; color: #a39e93">
+                            With Prof. Alexander Cloninger · PyTorch, NumPy · Gaussian processes, theoretical ML
+                        </p>
+                        <div style="display: flex; flex-wrap: wrap; gap: 20px; font-size: 14px; font-weight: 500">
+                            <a href="#nngp-widget">Try other activations →</a>
+                            <a href="#nngp-code">Code on GitHub ↗</a>
+                        </div>
+                    </div>
+                    <figure
+                        style="
+                            flex: 1 1 440px;
+                            min-width: 0;
+                            margin: 0;
+                            position: relative;
+                            border: 1px solid #3a3629;
+                            border-radius: 4px;
+                            background: #0b0b0c;
+                            padding: 20px;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 12px;
+                        "
+                    >
+                        <span
+                            aria-hidden="true"
+                            style="
+                                position: absolute;
+                                top: -1px;
+                                left: -1px;
+                                width: 14px;
+                                height: 14px;
+                                border-top: 2px solid #c8a25a;
+                                border-left: 2px solid #c8a25a;
+                            "
+                        ></span>
+                        <span
+                            aria-hidden="true"
+                            style="
+                                position: absolute;
+                                bottom: -1px;
+                                right: -1px;
+                                width: 14px;
+                                height: 14px;
+                                border-bottom: 2px solid #c8a25a;
+                                border-right: 2px solid #c8a25a;
+                            "
+                        ></span>
+                        <div
+                            style="
+                                display: flex;
+                                justify-content: space-between;
+                                font-family: &quot;IBM Plex Mono&quot;, monospace;
+                                font-size: 12px;
+                                color: #a39e93;
+                            "
+                        >
+                            <span>CORRELATION VS DEPTH</span><span>ReLU · infinite width</span>
+                        </div>
+                        <svg
+                            viewBox="0 0 440 240"
+                            role="img"
+                            aria-label="Line chart: three starting correlations, 0, 0.3 and 0.6, all rise toward 1 over 12 ReLU layers"
+                            style="width: 100%; height: auto; display: block"
+                        >
+                            <line x1="40" y1="20" x2="420" y2="20" stroke="#3a3629" stroke-dasharray="3 4"></line>
+                            <line x1="40" y1="200" x2="420" y2="200" stroke="#5a5548"></line>
+                            <line x1="40" y1="20" x2="40" y2="200" stroke="#5a5548"></line>
+                            <text
+                                x="32"
+                                y="24"
+                                fill="#a39e93"
+                                font-size="11"
+                                text-anchor="end"
+                                font-family="IBM Plex Mono, monospace"
+                            >
+                                1
+                            </text>
+                            <text
+                                x="32"
+                                y="204"
+                                fill="#a39e93"
+                                font-size="11"
+                                text-anchor="end"
+                                font-family="IBM Plex Mono, monospace"
+                            >
+                                0
+                            </text>
+                            <text
+                                x="420"
+                                y="222"
+                                fill="#a39e93"
+                                font-size="11"
+                                text-anchor="end"
+                                font-family="IBM Plex Mono, monospace"
+                            >
+                                depth 12
+                            </text>
+                            <text x="40" y="222" fill="#a39e93" font-size="11" font-family="IBM Plex Mono, monospace">
+                                0
+                            </text>
+                            <polyline
+                                points="40.0,200.0 71.7,142.7 103.3,111.1 135.0,91.1 166.7,77.4 198.3,67.5 230.0,60.1 261.7,54.4 293.3,49.8 325.0,46.1 356.7,43.1 388.3,40.6 420.0,38.5"
+                                fill="none"
+                                stroke="#7a6a45"
+                                stroke-width="2"
+                            ></polyline>
+                            <polyline
+                                points="40.0,146.0 71.7,113.1 103.3,92.4 135.0,78.4 166.7,68.2 198.3,60.6 230.0,54.8 261.7,50.1 293.3,46.4 325.0,43.3 356.7,40.8 388.3,38.7 420.0,36.9"
+                                fill="none"
+                                stroke="#a88a4e"
+                                stroke-width="2"
+                            ></polyline>
+                            <polyline
+                                points="40.0,92.0 71.7,78.0 103.3,68.0 135.0,60.4 166.7,54.6 198.3,50.0 230.0,46.3 261.7,43.3 293.3,40.7 325.0,38.6 356.7,36.8 388.3,35.3 420.0,33.9"
+                                fill="none"
+                                stroke="#e2c07e"
+                                stroke-width="2"
+                            ></polyline>
+                        </svg>
+                        <figcaption style="font-size: 13px; line-height: 1.5; color: #a39e93">
+                            ReLU correlation map iterated from 0, 0.3 and 0.6. The live widget adds erf, tanh and real
+                            finite-width runs.
+                        </figcaption>
+                    </figure>
+                </article>
+            </section>
+
+            <section
+                id="notebook"
+                style="
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 0 40px 120px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 32px;
+                "
+            >
+                <div
+                    style="
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 16px;
+                        align-items: baseline;
+                        justify-content: space-between;
+                        border-top: 1px solid #2a2823;
+                        padding-top: 40px;
+                    "
+                >
+                    <h2
+                        style="
+                            margin: 0;
+                            font-family: &quot;Cormorant Garamond&quot;, serif;
+                            font-weight: 500;
+                            font-size: 48px;
+                        "
+                    >
+                        Open questions
+                    </h2>
+                    <p style="margin: 0; font-size: 15px; color: #a39e93">
+                        Things I haven't figured out yet. Updated when something moves.
+                    </p>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px">
+                    <div
+                        style="
+                            border-left: 2px solid #c8a25a;
+                            padding: 4px 0 4px 20px;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 10px;
+                        "
+                    >
+                        <p
+                            style="
+                                margin: 0;
+                                font-family: &quot;IBM Plex Mono&quot;, monospace;
+                                font-size: 12px;
+                                color: #c8a25a;
+                            "
+                        >
+                            [DATE] · Springer fibers
+                        </p>
+                        <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #e8e4da">
+                            The rank test only fails on the singular component of (3,2,2). Is that a coincidence, or
+                            does singularity always break it? I want a bigger exact check to find out.
+                        </p>
+                    </div>
+                    <div
+                        style="
+                            border-left: 2px solid #c8a25a;
+                            padding: 4px 0 4px 20px;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 10px;
+                        "
+                    >
+                        <p
+                            style="
+                                margin: 0;
+                                font-family: &quot;IBM Plex Mono&quot;, monospace;
+                                font-size: 12px;
+                                color: #c8a25a;
+                            "
+                        >
+                            [DATE] · Hallucination
+                        </p>
+                        <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #e8e4da">
+                            Can a model tell when it's making something up? Everything above is about catching a model
+                            being wrong, and this is where I want to take it next.
+                        </p>
+                    </div>
+                    <div
+                        style="
+                            border-left: 2px solid #c8a25a;
+                            padding: 4px 0 4px 20px;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 10px;
+                        "
+                    >
+                        <p
+                            style="
+                                margin: 0;
+                                font-family: &quot;IBM Plex Mono&quot;, monospace;
+                                font-size: 12px;
+                                color: #c8a25a;
+                            "
+                        >
+                            [DATE] · Conversations
+                        </p>
+                        <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #e8e4da">
+                            Does talking an equal amount actually make a conversation feel good? I'm testing it on the
+                            CANDOR corpus, and checking whether timing and matching language predict connection better
+                            than talk-time balance does.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <footer id="contact" style="border-top: 1px solid #2a2823; background: #0b0b0c">
+                <div
+                    style="
+                        max-width: 1200px;
+                        margin: 0 auto;
+                        padding: 72px 40px 40px;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 48px;
+                    "
+                >
+                    <div
+                        style="
+                            display: flex;
+                            flex-wrap: wrap;
+                            gap: 40px;
+                            align-items: flex-end;
+                            justify-content: space-between;
+                        "
+                    >
+                        <div style="flex: 1 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+                            <h2
+                                style="
+                                    margin: 0;
+                                    font-family: &quot;Cormorant Garamond&quot;, serif;
+                                    font-weight: 500;
+                                    font-size: 48px;
+                                    line-height: 1.1;
+                                "
+                            >
+                                Got a model that might be wrong?
+                            </h2>
+                            <p style="margin: 0; font-size: 17px; line-height: 1.65; color: #b9b4a9; max-width: 560px">
+                                I'm open to research collaborations, grad programs, and roles in data science, finance
+                                and ML. The fastest way to reach me is email.
+                            </p>
+                        </div>
+                        <a
+                            href="mailto:ttendo@ucsd.edu"
+                            style="
+                                background: #c8a25a;
+                                color: #141210;
+                                text-decoration: none;
+                                font-weight: 600;
+                                font-size: 15px;
+                                padding: 14px 22px;
+                                border-radius: 4px;
+                            "
+                            >ttendo@ucsd.edu</a
+                        >
+                    </div>
+                    <div
+                        style="
+                            display: flex;
+                            flex-wrap: wrap;
+                            gap: 20px;
+                            align-items: center;
+                            justify-content: space-between;
+                            border-top: 1px solid #2a2823;
+                            padding-top: 24px;
+                        "
+                    >
+                        <nav aria-label="Elsewhere" style="display: flex; flex-wrap: wrap; gap: 28px; font-size: 14px">
+                            <a
+                                target="_blank"
+                                rel="noopener"
+                                href="https://github.com/Tristane028"
+                                style="color: #cfcabf; text-decoration: none"
+                                >GitHub ↗</a
+                            >
+                            <a
+                                target="_blank"
+                                rel="noopener"
+                                href="https://www.linkedin.com/in/tristan-endo-35339532a/"
+                                style="color: #cfcabf; text-decoration: none"
+                                >LinkedIn ↗</a
+                            >
+                            <a
+                                target="_blank"
+                                rel="noopener"
+                                href="https://tristane028.github.io/Endo_Curriculum_Vitae_10_21_2026.pdf"
+                                style="color: #cfcabf; text-decoration: none"
+                                >CV ↗</a
+                            >
+                        </nav>
+                        <p
+                            style="
+                                margin: 0;
+                                display: flex;
+                                align-items: center;
+                                gap: 10px;
+                                font-size: 13px;
+                                color: #a39e93;
+                            "
+                        >
+                            <span
+                                aria-hidden="true"
+                                style="font-family: &quot;Noto Serif JP&quot;, serif; color: #c8a25a"
+                                >遠藤俊治</span
+                            >
+                            © 2026 Tristan Endo
+                        </p>
+                    </div>
+                </div>
+            </footer>
         </div>
-      </div>
-      <div class="hero-photo-wrap">
-        <img class="hero-photo" src="profile.jpg" alt="Tristan Endo">
-      </div>
-    </div>
-  </section>
-
-  <div class="divider"></div>
-
-  <!-- ABOUT -->
-  <section id="about">
-    <div class="fade-in">
-      <p class="section-eyebrow">About</p>
-      <h2 class="section-title">Who I <em>Am</em></h2>
-      <div class="section-rule"></div>
-    </div>
-    <div class="about-grid fade-in">
-      <div class="about-text">
-        <p>
-          I am <strong>Tristan Endo (遠藤俊治)</strong>, a fourth-year Math-CS student at <strong>UC San Diego</strong>,
-          where I transferred as a second-year in 2024. In all honesty, math did not click for me right away. Proofs on paper felt distant until I could
-          watch an idea run, break, and get fixed. Since then, I have been drawn to the parts of math that
-          solve real problems, and that path is what led me into data science and finance.
-        </p>
-        <p>
-          Over the past couple of years, that has looked like a little bit of everything. I have written
-          code to study how neural networks behave as they get wider, simulated Brownian motion, and pulled
-          songs apart to see what is hiding inside them. From January to August 2026, I was a Quantitative
-          Research &amp; AI Engineering intern at Tekly Studio. There, I finished the full ML track and built
-          an XGBoost momentum strategy for crypto markets, tested with purged cross-validation and
-          walk-forward backtesting so the model never got to see the future. Right now, most of my time
-          goes to research with Prof. Raymond Chou on Springer fibers.
-        </p>
-        <p>
-          That research is also where my biggest question came from. For one Jordan type, (3,2,2), our search
-          results looked clean. When I ran an exact check, it confirmed every relation the search had found,
-          but it also turned up intersections the search had missed in 68 of 210 closures. Ever since, I have
-          been a little suspicious of results that look too complete, and I keep coming back to the same
-          question: how can we tell when a model is wrong? Lately, that question has pulled me toward NLP and
-          AI hallucination. My hunch is that if you look closely at the patterns and sentence structure in
-          what a model says, you can catch the inconsistencies before they snowball.
-        </p>
-      </div>
-      <div class="about-stats">
-        <div class="stat-item">
-          <div class="stat-number">2024</div>
-          <div class="stat-divider"></div>
-          <div class="stat-label">Transferred to UCSD</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number">2027</div>
-          <div class="stat-divider"></div>
-          <div class="stat-label">Expected graduation</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number" style="font-size:1.1rem; line-height:1.3;">Industry Roles</div>
-          <div class="stat-divider"></div>
-          <div class="stat-label">Tekly Studio</div>
-          <div class="stat-label">Think Twice Legal</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number" style="font-size:1.1rem; line-height:1.3;">Natural Language Processing</div>
-          <div class="stat-divider"></div>
-          <div class="stat-label">Current focus: AI hallucination detection</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="divider"></div>
-
-  <!-- PROJECTS -->
-  <section id="projects">
-    <div class="fade-in">
-      <p class="section-eyebrow">Research &amp; Projects</p>
-      <h2 class="section-title">Selected <em>Research</em></h2>
-      <p class="projects-desc">
-      These are a few of the research projects I have worked on across math, machine learning, and audio engineering. Each one links to its full code and write-up on GitHub.</p>
-      <div class="section-rule"></div>
-    </div>
-    <div class="projects-list">
-
-      <a href="https://github.com/Tristane028/Springer-Fibers" target="_blank" class="project-card fade-in">
-        <div class="project-num">01</div>
-        <div>
-          <div class="project-name">Springer Fibers: Algebraic Geometry &amp; Combinatorics</div>
-          <p class="project-desc">Ongoing research with Prof. Raymond Chou at UCSD, alongside Alexander Ryan. I built a Python/SymPy pipeline that takes a Jordan type, builds every cell of its Springer fiber using Pl&uuml;cker coordinates, and searches for witness curves showing which cells each closure meets. It now covers 99 Jordan types with two, three, and four rows (25,588 cells and 709,116 relations), well past the two-row cases where the existing theory gives answers. The result I think about most is (3,2,2). An exact check confirmed every relation the search found, and it also turned up intersections the search had missed in 68 of 210 closures. You can try the explorer in the Simulation section below.</p>
-          <div class="project-tags">
-            <span class="tag">Algebraic Geometry</span><span class="tag">Combinatorics</span><span class="tag">Interactive Visualization</span>
-          </div>
-        </div>
-        <div class="project-arrow">&nearr;</div>
-      </a>
-
-      <a href="https://github.com/Tristane028/Neural-Network-Gaussian-Process-and-Conjugate-Kernels" target="_blank" class="project-card fade-in">
-        <div class="project-num">02</div>
-        <div>
-          <div class="project-name">Neural Network Gaussian Process &amp; Conjugate Kernels</div>
-          <p class="project-desc">Course project in Prof. Alexander Cloninger's MATH 216B at UCSD. When a random network gets infinitely wide, it turns into a Gaussian process, and you can write down exactly how the correlation between two inputs changes from one layer to the next. I worked out what happens for ReLU, erf, and tanh. With depth, ReLU pushes every pair of inputs toward correlation 1 (degeneration), while erf and tanh push them toward a fixed point below 1 (decorrelation). Then I coded finite-width networks to see how well those predictions hold up in practice. The live version is in the Simulation section below.</p>
-          <div class="project-tags">
-            <span class="tag">Gaussian Processes</span><span class="tag">Theoretical Machine Learning</span>
-          </div>
-        </div>
-        <div class="project-arrow">&nearr;</div>
-      </a>
-
-      <a href="https://github.com/Tristane028/Brownian-Motion-Distributions-Simulation" target="_blank" class="project-card fade-in">
-        <div class="project-num">03</div>
-        <div>
-          <div class="project-name">Brownian Motion &amp; Stochastic Processes</div>
-          <p class="project-desc">Course project in Prof. Robert Webber's MATH 216A at UCSD. I simulated fractional Brownian motion across a range of Hurst parameters to see how the distribution of its maximum shifts as the paths go from rough to smooth. Along the way, I worked out the conditional distributions for the Brownian bridge and the Ornstein-Uhlenbeck bridge.</p>
-          <div class="project-tags">
-            <span class="tag">Probability Theory</span><span class="tag">Stochastic Processes</span>
-          </div>
-        </div>
-        <div class="project-arrow">↗</div>
-      </a>
-
-      <a href="https://github.com/Tristane028/Audio-Signal-Processing-Demucs-Project" target="_blank" class="project-card fade-in">
-        <div class="project-num">04</div>
-        <div>
-          <div class="project-name">Demucs Source Separation: Audio Signal Processing</div>
-          <p class="project-desc">This project came straight out of my audio engineering work at Think Twice Legal. I used Meta Research's Demucs model to separate a full song into its stems (vocals, drums, bass, and guitar), then looked at each one through spectrogram analysis to see what was going on underneath.</p>
-          <div class="project-tags">
-            <span class="tag">Fourier Analysis</span><span class="tag">Signal Processing</span>
-          </div>
-        </div>
-        <div class="project-arrow">↗</div>
-      </a>
-
-    </div>
-  </section>
-
-  <div class="divider"></div>
-
-  <!-- SKILLS -->
-  <section id="skills">
-    <div class="fade-in">
-      <p class="section-eyebrow">Skills</p>
-      <h2 class="section-title">My <em>Toolkit</em></h2>
-      <div class="section-rule"></div>
-      <p class="section-intro">These are the tools I actually reach for. Most of my work starts in Python and ends with me asking whether the result is too good to be true.</p>
-    </div>
-    <div class="skills-grid fade-in">
-      <div class="skill-group">
-        <div class="skill-group-title">Languages</div>
-        <div class="skill-list">
-          <span class="skill-item">Python</span>
-          <span class="skill-item">C / C++</span>
-          <span class="skill-item">Java / JavaScript</span>
-          <span class="skill-item">R</span>
-          <span class="skill-item">SQL</span>
-          <span class="skill-item">MATLAB</span>
-        </div>
-      </div>
-      <div class="skill-group">
-        <div class="skill-group-title">ML &amp; Data</div>
-        <div class="skill-list">
-          <span class="skill-item">PyTorch</span>
-          <span class="skill-item">scikit-learn</span>
-          <span class="skill-item">XGBoost</span>
-          <span class="skill-item">pandas / NumPy</span>
-          <span class="skill-item">SymPy</span>
-        </div>
-      </div>
-      <div class="skill-group">
-        <div class="skill-group-title">Methods</div>
-        <div class="skill-list">
-          <span class="skill-item">Model evaluation &amp; validation</span>
-          <span class="skill-item">Kernel methods</span>
-          <span class="skill-item">Monte Carlo simulation</span>
-          <span class="skill-item">Time-series modeling</span>
-          <span class="skill-item">Spectral analysis</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="divider"></div>
-
-  <!-- SIMULATION -->
-  <section id="simulation">
-    <div class="fade-in">
-      <p class="section-eyebrow">Interactive</p>
-      <h2 class="section-title"><em>Simulation</em></h2>
-      <div class="section-rule"></div>
-    </div>
-    <div class="sandbox-grid">
-
-      <!-- DEMO 1: Brownian Motion Histogram -->
-      <div class="demo-block fade-in">
-        <div class="sim-tag"><span><b>SIM-01</b> // FBM-MAX</span><span class="live">Live</span><span>Runs in your browser</span></div>
-        <div class="demo-header">
-          <div class="demo-title">Distribution of Maximals on [0,1], Fractional Brownian Motion</div>
-          <button class="demo-btn" onclick="runBM()">Resample</button>
-        </div>
-        <p class="demo-desc">This is a live version of my MATH 216A course project with Prof. Webber. It shows the distribution of the maximum value of fractional Brownian motion on [0,1]. Try moving the Hurst parameter H. Lower values give rougher, more jittery paths, and higher values smooth them out into something more persistent. Each bar shows how often the maximum landed in that range across all the simulated paths.</p>
-        <div class="demo-controls">
-          <div class="demo-control">
-            <label>Hurst Parameter (H)</label>
-            <input type="range" id="bm-hurst" min="0.05" max="0.95" step="0.05" value="0.25" oninput="document.getElementById('bm-hval').textContent=parseFloat(this.value).toFixed(2); runBM()">
-            <span class="demo-val">H = <span id="bm-hval">0.25</span></span>
-          </div>
-          <div class="demo-control">
-            <label>Simulations</label>
-            <input type="range" id="bm-paths" min="200" max="2000" step="200" value="800" oninput="document.getElementById('bm-pval').textContent=this.value; runBM()">
-            <span class="demo-val"><span id="bm-pval">800</span> samples</span>
-          </div>
-          <div class="demo-control">
-            <label>Bins</label>
-            <input type="range" id="bm-bins" min="10" max="60" step="5" value="30" oninput="document.getElementById('bm-bval').textContent=this.value; runBM()">
-            <span class="demo-val"><span id="bm-bval">30</span> bins</span>
-          </div>
-        </div>
-        <div class="demo-canvas-wrap">
-          <canvas class="demo-canvas" id="bm-canvas"></canvas>
-        </div>
-      </div>
-
-      <!-- DEMO 2: NNGP theory vs finite-width networks -->
-      <div class="demo-block fade-in">
-        <div class="sim-tag"><span><b>SIM-02</b> // NNGP-KERNEL</span><span class="live">Live</span><span>Runs in your browser</span></div>
-        <div class="demo-header">
-          <div class="demo-title">Neural Network Gaussian Processes: Theory vs. Real Networks</div>
-          <div class="demo-btns">
-            <button class="demo-btn" onclick="runKernel()">Resample networks</button>
-            <button class="demo-btn" id="sweep-btn" onclick="runSweep()">Run width sweep</button>
-          </div>
-        </div>
-        <p class="demo-desc">This is the experiment from my MATH 216B course project with Prof. Cloninger, rebuilt to run live. Two inputs with correlation &rho;<sub>0</sub> pass through a random network. As the width goes to infinity, their correlation at every layer is given exactly by the NNGP kernel recursion (gold line). The blue line is the average over real, finite-width random networks, and the band shows how much individual networks scatter around it. At the default settings, ReLU drives the correlation toward 1 with depth, so every input starts to look the same (degeneration). Meanwhile, erf and tanh push it toward a fixed point below 1 (decorrelation).</p>
-        <div class="demo-controls">
-          <div class="demo-control">
-            <label>Activation</label>
-            <select id="kernel-act" onchange="scheduleKernel()">
-              <option value="relu">ReLU</option>
-              <option value="erf">erf</option>
-              <option value="tanh">tanh</option>
-            </select>
-          </div>
-          <div class="demo-control">
-            <label>Weight variance &sigma;<sub>w</sub>&sup2;</label>
-            <input type="range" id="kernel-sw" min="0.5" max="4" step="0.1" value="2" oninput="document.getElementById('kernel-swval').textContent=parseFloat(this.value).toFixed(1); scheduleKernel()">
-            <span class="demo-val">&sigma;<sub>w</sub>&sup2; = <span id="kernel-swval">2.0</span></span>
-          </div>
-          <div class="demo-control">
-            <label>Bias variance &sigma;<sub>b</sub>&sup2;</label>
-            <input type="range" id="kernel-sb" min="0" max="0.5" step="0.05" value="0" oninput="document.getElementById('kernel-sbval').textContent=parseFloat(this.value).toFixed(2); scheduleKernel()">
-            <span class="demo-val">&sigma;<sub>b</sub>&sup2; = <span id="kernel-sbval">0.00</span></span>
-          </div>
-          <div class="demo-control">
-            <label>Input correlation &rho;<sub>0</sub></label>
-            <input type="range" id="kernel-rho" min="-0.9" max="0.95" step="0.05" value="0.3" oninput="document.getElementById('kernel-rval').textContent=parseFloat(this.value).toFixed(2); scheduleKernel()">
-            <span class="demo-val">&rho;<sub>0</sub> = <span id="kernel-rval">0.30</span></span>
-          </div>
-          <div class="demo-control">
-            <label>Network width</label>
-            <input type="range" id="kernel-width" min="4" max="512" step="4" value="64" oninput="document.getElementById('kernel-wval').textContent=this.value; scheduleKernel()">
-            <span class="demo-val">width = <span id="kernel-wval">64</span></span>
-          </div>
-          <div class="demo-control">
-            <label>Depth</label>
-            <input type="range" id="kernel-depth" min="5" max="40" step="1" value="20" oninput="document.getElementById('kernel-dval').textContent=this.value; scheduleKernel()">
-            <span class="demo-val">depth = <span id="kernel-dval">20</span></span>
-          </div>
-        </div>
-        <div class="demo-charts">
-          <div class="demo-canvas-wrap">
-            <div class="chart-cap">Correlation vs. depth</div>
-            <canvas class="demo-canvas tall" id="kernel-canvas"></canvas>
-          </div>
-          <div class="demo-canvas-wrap">
-            <div class="chart-cap">Why: the correlation map</div>
-            <canvas class="demo-canvas tall" id="map-canvas"></canvas>
-          </div>
-        </div>
-        <div class="demo-readout">
-          <div class="readout-cell"><div class="readout-k">Theory at final depth</div><div class="readout-v" id="ro-theory">&ndash;</div><div class="readout-s">infinite width</div></div>
-          <div class="readout-cell"><div class="readout-k">Networks at final depth</div><div class="readout-v" id="ro-sim">&ndash;</div><div class="readout-s" id="ro-sim-s">mean &plusmn; sd</div></div>
-          <div class="readout-cell"><div class="readout-k">&chi;<sub>1</sub> at q*</div><div class="readout-v" id="ro-chi">&ndash;</div><div class="readout-s" id="ro-phase">&nbsp;</div></div>
-          <div class="readout-cell"><div class="readout-k">Fixed point c*</div><div class="readout-v" id="ro-cstar">&ndash;</div><div class="readout-s">where correlations end up</div></div>
-        </div>
-        <div id="sweep-wrap" class="demo-canvas-wrap">
-          <div class="chart-cap">Width sweep: how far real networks sit from the theory</div>
-          <canvas class="demo-canvas short" id="sweep-canvas"></canvas>
-        </div>
-        <p class="demo-note">The right panel shows one step of the recursion, c<sub>l+1</sub> = f(c<sub>l</sub>), at the limiting variance q*, with the staircase tracing where the correlation goes layer by layer. Its slope at c = 1 is &chi;<sub>1</sub>: below 1 the network is in the ordered phase and inputs collapse together, above 1 it is chaotic and they spread apart. ReLU with &sigma;<sub>w</sub>&sup2; = 2 sits exactly at &chi;<sub>1</sub> = 1, which is why its correlation creeps toward 1 so slowly. The width sweep measures the RMS gap between real networks and the theory across all layers, against a dashed 1/&radic;width reference.</p>
-      </div>
-
-      <!-- DEMO 3: Springer fiber closure explorer -->
-      <div class="demo-block fade-in">
-        <div class="sim-tag"><span><b>SIM-03</b> // SPRINGER-CLOSURE</span><span class="live">Live</span><span>Runs in your browser</span></div>
-        <div class="demo-header">
-          <div class="demo-title">Springer Fiber Closure Explorer</div>
-          <div class="demo-btns">
-            <button class="demo-btn" id="sf-route-btn" onclick="sfStartRoute()" disabled>Play halving route</button>
-            <button class="demo-btn" onclick="sfReset()">Reset</button>
-          </div>
-        </div>
-        <p class="demo-desc">This is a compact, flat version of the <a href="https://tristane028.github.io/Springer-Fibers/Visuals.html" target="_blank">full 3D viewer</a> from my research with Prof. Chou, running on real data from the project. Each dot is a cell of the Springer fiber, stacked by dimension. Click a cell to light up every cell its closure meets. Click one of those to look from inside both closures at once, and keep going as deep as you like. Hover over a lit cell to see the witness curve that proves the relation. With one cell selected, you can also play its halving route. It picks a cell, keeps only the part of the closure inside it, and repeats until it lands on a single cell, shrinking by a power of 2 each step.</p>
-        <div class="demo-controls">
-          <div class="demo-control">
-            <label>Jordan type</label>
-            <select id="sf-type" onchange="sfLoad(this.value)">
-              <option value="22">(2,2) &middot; 6 cells</option>
-              <option value="32" selected>(3,2) &middot; 10 cells</option>
-              <option value="42">(4,2) &middot; 15 cells</option>
-              <option value="33">(3,3) &middot; 20 cells</option>
-              <option value="211">(2,1,1) &middot; 12 cells</option>
-              <option value="221">(2,2,1) &middot; 30 cells</option>
-              <option value="321">(3,2,1) &middot; 60 cells</option>
-            </select>
-          </div>
-        </div>
-        <div class="sf-layout">
-          <div class="demo-canvas-wrap">
-            <canvas class="sf-canvas" id="sf-canvas"></canvas>
-          </div>
-          <div class="sf-panel" id="sf-panel"></div>
-        </div>
-        <p class="demo-note">An arrow from A to B means the closure of cell A meets cell B. The witness is a one-parameter family of points in A whose limit lands in B. These relations do not compose: if A's closure meets B and B's closure meets C, A's closure need not meet C. Across the whole project the search has found closure data for 99 Jordan types (25,588 cells and 709,116 relations), and every cell with more than one cell in its closure has a halving route.</p>
-      </div>
-
-    </div>
-  </section>
-
-  <div class="divider"></div>
-
-  <!-- FUN FACTS -->
-  <section id="fun">
-    <div class="fade-in">
-      <p class="section-eyebrow">Fun Facts</p>
-      <h2 class="section-title">Outside the <em>Math</em></h2>
-      <div class="section-rule"></div>
-      <p class="section-intro">I may love math, computers, and data, but I am human after all, not a machine. Here are a few of the things I do when I step away from the screen.</p>
-    </div>
-    <div class="facts-grid fade-in">
-      <div class="fact">
-        <div class="fact-title">I coach <em>swim</em> and <em>volleyball</em></div>
-        <p>When I am not doing math, I teach kids how to swim and help coach volleyball. In all honesty, it has made me a better researcher. If I cannot explain a flip turn to a kid in simple words, I probably do not understand it as well as I think I do.</p>
-      </div>
-      <div class="fact">
-        <div class="fact-title">Over <em>1,000</em> paper cranes</div>
-        <p>I have folded over a thousand origami cranes, and lately I have moved on to folding figures out of dollar bills. It is my go-to way to relax. There is something calming about feeling my hands work through each fold until a crane appears. Safe to say, it is the most hands-on geometry I do all week.</p>
-      </div>
-      <div class="fact">
-        <div class="fact-title">Competitive <em>Pok&eacute;mon</em></div>
-        <p>I play competitive Pok&eacute;mon in the VGC format, and of course, I turned it into a data project. <a href="https://tristane028.github.io/Starlight-Pokemon-Datasheet/" target="_blank">Project Astral</a> is a team builder I made that pulls insights out of my own match data. It has also started a few great conversations with people who love the little creatures as much as I do.</p>
-      </div>
-      <div class="fact">
-        <div class="fact-title">Conversations are <em>data</em> too</div>
-        <p>Lately, I have been listening my way into conversational science, neuroscience, and philosophy through podcasts from people like Vanessa Van Edwards and Vinh Giang. It might sound far from math, but it comes back to the same question I ask about models: why do people say what they say, and how can you tell when they mean it? I have also learned that a good conversation does not have to teach me something new. Sometimes, it is just about enjoying the company.</p>
-      </div>
-      <div class="fact fact-wide">
-        <a class="fact-shot" href="kestrel-kinematics.html" target="_blank" aria-label="Open Kestrel Kinematics">
-          <img src="kestrel-preview.jpg" alt="Kestrel Kinematics interface: a wireframe figure hovering on four turbojet thrusters, with force, thrust, and cost panels around it." loading="lazy" width="1200" height="750">
-        </a>
-        <div>
-          <div class="fact-title"><em>Kestrel</em> Kinematics</div>
-          <p>It started with a simple question: how do jetpacks actually lift a person? Kestrel Kinematics is my attempt at an answer, sketched as a sci-fi interface and named after the kestrel, a falcon that can hover in place. It compares thrusters and wing shapes for a rig that could carry one person, with live force readouts and rotating blueprints. Nothing flies yet, and every number on it is a rough estimate. In all honesty, it is the most fun I have had designing something, and it looks best on a laptop.</p>
-          <a class="fact-link" href="kestrel-kinematics.html" target="_blank">Open the concept &nearr;</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="divider"></div>
-
-  <!-- CONTACT -->
-  <section id="contact">
-    <div class="fade-in">
-      <p class="section-eyebrow">Contact</p>
-      <h2 class="section-title">Get in <em>Touch</em></h2>
-      <div class="section-rule"></div>
-      <p class="contact-desc">
-        I am always open to internships, research opportunities, or simply an interesting
-        problem to think through. Feel free to reach out. I would love to hear from you.
-      </p>
-      <a href="mailto:ttendo@ucsd.edu" class="btn btn-primary">Say Hello →</a>
-      <div class="contact-links">
-        <a href="https://github.com/Tristane028" class="contact-link" target="_blank">GitHub</a>
-        <a href="https://www.linkedin.com/in/tristan-endo-35339532a/" class="contact-link" target="_blank">LinkedIn</a>
-        <a href="mailto:ttendo@ucsd.edu" class="contact-link">Email</a>
-      </div>
-    </div>
-  </section>
-
-  <footer>
-    <p>© 2026 Tristan Endo </p>
-  </footer>
-
-  <script>
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.08 });
-    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
-    // ---- Background: a slowly turning Springer fiber closure lattice ----
-    // Real data for the Jordan type (3,3): cells stacked in rings by dimension,
-    // faint lines for closure relations, small pulses travelling down them.
-    const bgCanvas = document.getElementById('nn-canvas');
-    const bgCtx = bgCanvas.getContext('2d');
-    const bgReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const bg = { W: 0, H: 0, pts: [], rings: [], edges: [], pulses: [], rot: 0, last: 0, spawn: 0, running: false };
-    function bgInit() {
-      const raw = SF_DATA['33'];
-      const maxDim = Math.max(...raw.cells.map(c => c[1]));
-      const layers = Array.from({ length: maxDim + 1 }, () => []);
-      raw.cells.forEach((c, i) => layers[c[1]].push(i));
-      bg.pts = new Array(raw.cells.length);
-      bg.rings = [];
-      layers.forEach((ids, d) => {
-        const y = (maxDim / 2 - d) / (maxDim / 2) * 0.62;            // top ring = highest dimension
-        const r = ids.length === 1 ? 0 : 0.28 + 0.16 * Math.sqrt(ids.length / 8);
-        bg.rings.push({ y, r });
-        ids.forEach((id, k) => {
-          const a = 2 * Math.PI * k / ids.length + d * 0.45;
-          bg.pts[id] = { x: r * Math.cos(a), y, z: r * Math.sin(a), d };
-        });
-      });
-      bg.edges = raw.edges.map(e => [e[0], e[1]]);
-      bg.maxDim = maxDim;
-    }
-    function bgResize() {
-      const dpr = window.devicePixelRatio || 1;
-      bg.W = window.innerWidth; bg.H = window.innerHeight;
-      bgCanvas.width = Math.round(bg.W * dpr); bgCanvas.height = Math.round(bg.H * dpr);
-      bgCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      if (bgReduce.matches) bgFrame(performance.now());
-    }
-    function bgProject(p) {
-      const R = Math.min(bg.W, bg.H) * 0.62, tilt = 0.38;
-      const cr = Math.cos(bg.rot), sr = Math.sin(bg.rot);
-      const x1 = p.x * cr - p.z * sr, z1 = p.x * sr + p.z * cr;
-      const y2 = p.y * Math.cos(tilt) - z1 * Math.sin(tilt), z2 = p.y * Math.sin(tilt) + z1 * Math.cos(tilt);
-      const f = 2.6 / (2.6 + z2);
-      return { X: bg.W * (bg.W > 900 ? 0.62 : 0.5) + x1 * f * R, Y: bg.H * 0.52 - y2 * f * R, depth: (1 - z2) / 2, f };
-    }
-    function bgFrame(now) {
-      const dt = bg.last ? Math.min(0.05, (now - bg.last) / 1000) : 0; bg.last = now;
-      if (!bgReduce.matches) bg.rot += dt * 0.06;
-      const c = bgCtx; c.clearRect(0, 0, bg.W, bg.H);
-      // dimension rings
-      bg.rings.forEach(ring => {
-        if (ring.r === 0) return;
-        c.beginPath();
-        for (let i = 0; i <= 72; i++) {
-          const a = 2 * Math.PI * i / 72, q = bgProject({ x: ring.r * Math.cos(a), y: ring.y, z: ring.r * Math.sin(a) });
-          i ? c.lineTo(q.X, q.Y) : c.moveTo(q.X, q.Y);
-        }
-        c.strokeStyle = 'rgba(200,169,110,0.07)'; c.lineWidth = 1; c.stroke();
-      });
-      const P = bg.pts.map(bgProject);
-      // closure relations
-      bg.edges.forEach(([a, b]) => {
-        const pa = P[a], pb = P[b], al = 0.04 + 0.08 * (pa.depth + pb.depth) / 2;
-        c.beginPath(); c.moveTo(pa.X, pa.Y); c.lineTo(pb.X, pb.Y);
-        c.strokeStyle = `rgba(200,169,110,${al.toFixed(3)})`; c.lineWidth = 0.8; c.stroke();
-      });
-      // pulses travelling from a cell to a cell its closure meets
-      if (!bgReduce.matches) {
-        bg.spawn -= dt;
-        if (bg.spawn <= 0 && bg.pulses.length < 6) { bg.pulses.push({ e: bg.edges[Math.floor(Math.random() * bg.edges.length)], t: 0 }); bg.spawn = 0.9 + Math.random() * 0.8; }
-        bg.pulses = bg.pulses.filter(pl => (pl.t += dt / 2.4) < 1);
-        bg.pulses.forEach(pl => {
-          const pa = P[pl.e[0]], pb = P[pl.e[1]], t = pl.t * pl.t * (3 - 2 * pl.t);
-          const x = pa.X + (pb.X - pa.X) * t, y = pa.Y + (pb.Y - pa.Y) * t, al = Math.sin(pl.t * Math.PI) * 0.7;
-          const g = c.createRadialGradient(x, y, 0, x, y, 6);
-          g.addColorStop(0, `rgba(246,226,154,${al.toFixed(3)})`); g.addColorStop(1, 'rgba(246,226,154,0)');
-          c.beginPath(); c.arc(x, y, 6, 0, Math.PI * 2); c.fillStyle = g; c.fill();
-        });
-      }
-      // cells, far ones first
-      bg.pts.map((p, i) => i).sort((i, j) => P[i].depth - P[j].depth).forEach(i => {
-        const q = P[i], hue = SF_HUES[bg.pts[i].d % SF_HUES.length];
-        const r = (1.6 + 1.4 * q.depth) * q.f, glow = r * 4;
-        const g = c.createRadialGradient(q.X, q.Y, 0, q.X, q.Y, glow);
-        g.addColorStop(0, `rgba(200,169,110,${(0.25 + 0.35 * q.depth).toFixed(3)})`); g.addColorStop(1, 'rgba(200,169,110,0)');
-        c.beginPath(); c.arc(q.X, q.Y, glow, 0, Math.PI * 2); c.fillStyle = g; c.fill();
-        c.globalAlpha = 0.45 + 0.45 * q.depth;
-        c.beginPath(); c.arc(q.X, q.Y, r, 0, Math.PI * 2); c.fillStyle = hue; c.fill();
-        c.globalAlpha = 1;
-      });
-      if (bg.running && !bgReduce.matches && !document.hidden) requestAnimationFrame(bgFrame);
-      else bg.running = false;
-    }
-    function bgStart() {
-      if (bg.running || bgReduce.matches || document.hidden) { if (bgReduce.matches) bgFrame(performance.now()); return; }
-      bg.running = true; bg.last = 0; requestAnimationFrame(bgFrame);
-    }
-    window.addEventListener('resize', bgResize);
-    document.addEventListener('visibilitychange', bgStart);
-    bgReduce.addEventListener && bgReduce.addEventListener('change', () => { bg.running = false; bgStart(); });
-
-    function singleFBMMax(steps, H) {
-      let prev = 0, maxVal = 0;
-      for (let i = 1; i < steps; i++) {
-        const z = (Math.random()+Math.random()+Math.random()+Math.random()+Math.random()+Math.random()-3)/3;
-        prev += z * Math.pow(1/steps, H);
-        if (prev > maxVal) maxVal = prev;
-      }
-      return maxVal;
-    }
-
-    function runBM() {
-      const c = document.getElementById('bm-canvas');
-      const cx = c.getContext('2d');
-      const CW = c.offsetWidth, CH = c.offsetHeight;
-      c.width = CW; c.height = CH;
-      const H = parseFloat(document.getElementById('bm-hurst').value);
-      const nSim = parseInt(document.getElementById('bm-paths').value);
-      const nBins = parseInt(document.getElementById('bm-bins').value);
-      const steps = 200;
-      const maxVals = [];
-      for (let i = 0; i < nSim; i++) maxVals.push(singleFBMMax(steps, H));
-      const lo = 0, hi = Math.max(...maxVals) * 1.05;
-      const binW = (hi - lo) / nBins;
-      const counts = new Array(nBins).fill(0);
-      maxVals.forEach(v => { const b = Math.min(Math.floor((v - lo) / binW), nBins - 1); counts[b]++; });
-      const densities = counts.map(c => c / (nSim * binW));
-      const maxD = Math.max(...densities) || 1;
-      cx.clearRect(0, 0, CW, CH);
-      const PAD = { top: 30, right: 20, bottom: 40, left: 52 };
-      const plotW = CW - PAD.left - PAD.right;
-      const plotH = CH - PAD.top - PAD.bottom;
-      const yTicks = 5;
-      cx.strokeStyle = 'rgba(200,169,110,0.08)'; cx.lineWidth = 1;
-      for (let i = 0; i <= yTicks; i++) {
-        const y = PAD.top + plotH - (i / yTicks) * plotH;
-        cx.beginPath(); cx.moveTo(PAD.left, y); cx.lineTo(PAD.left + plotW, y); cx.stroke();
-        cx.fillStyle = 'rgba(200,169,110,0.45)'; cx.font = '10px Inter,sans-serif'; cx.textAlign = 'right';
-        cx.fillText((maxD * i / yTicks).toFixed(2), PAD.left - 6, y + 3);
-      }
-      cx.strokeStyle = 'rgba(200,169,110,0.3)'; cx.lineWidth = 1;
-      cx.beginPath(); cx.moveTo(PAD.left, PAD.top); cx.lineTo(PAD.left, PAD.top + plotH); cx.stroke();
-      cx.beginPath(); cx.moveTo(PAD.left, PAD.top + plotH); cx.lineTo(PAD.left + plotW, PAD.top + plotH); cx.stroke();
-      const barW = plotW / nBins;
-      densities.forEach((d, i) => {
-        const x = PAD.left + i * barW; const bH = (d / maxD) * plotH; const y = PAD.top + plotH - bH;
-        cx.fillStyle = 'rgba(100,149,200,0.65)'; cx.fillRect(x + 1, y, barW - 2, bH);
-        cx.strokeStyle = 'rgba(100,149,200,0.9)'; cx.lineWidth = 0.5; cx.strokeRect(x + 1, y, barW - 2, bH);
-      });
-      cx.fillStyle = 'rgba(200,169,110,0.45)'; cx.font = '10px Inter,sans-serif'; cx.textAlign = 'center';
-      const xTicks = 6;
-      for (let i = 0; i <= xTicks; i++) { const val = lo + (hi - lo) * i / xTicks; const x = PAD.left + (i / xTicks) * plotW; cx.fillText(val.toFixed(1), x, PAD.top + plotH + 14); }
-      cx.fillStyle = 'rgba(200,169,110,0.6)'; cx.font = '11px Inter,sans-serif'; cx.textAlign = 'center';
-      cx.fillText('Maximum value', PAD.left + plotW / 2, CH - 4);
-      cx.save(); cx.translate(12, PAD.top + plotH / 2); cx.rotate(-Math.PI/2); cx.fillText('Empirical density', 0, 0); cx.restore();
-      cx.font = '11px Inter,sans-serif'; cx.textAlign = 'center'; cx.fillStyle = 'rgba(200,169,110,0.7)';
-      cx.fillText(`Distribution of max fBM on [0,1]  (H = ${H.toFixed(2)})`, PAD.left + plotW/2, PAD.top - 10);
-    }
-
-    const SF_DATA = {"22":{"cells":[["1234",0,[]],["1243",1,["a1"]],["1324",1,["a1"]],["2134",1,["a1"]],["2143",2,["a1","a2"]],["2413",2,["a2","a3"]]],"edges":[[1,0,"a1","",""],[2,0,"a1","",""],[3,0,"a1","",""],[4,0,"a1","a2 = a1",""],[4,1,"a1","a2 = 0","a1 = 0"],[4,3,"a2","a1 = 0","a1 = 0"],[5,0,"a3","a2 = a3^3",""],[5,2,"a2","a3 = a2","a1 = 0"],[5,4,"a2","a3 = 0","a1 = 0, a2 = 0"]]},"32":{"cells":[["12345",0,[]],["12354",1,["a1"]],["12435",1,["a1"]],["13245",1,["a1"]],["13254",2,["a1","a2"]],["13524",2,["a2","a3"]],["21345",1,["a1"]],["21354",2,["a1","a2"]],["21435",2,["a1","a2"]],["24135",2,["a2","a3"]]],"edges":[[1,0,"a1","",""],[2,0,"a1","",""],[3,0,"a1","",""],[4,0,"a1","a2 = a1",""],[4,1,"a1","a2 = 0","a1 = 0"],[4,3,"a2","a1 = 0","a1 = 0"],[5,0,"a3","a2 = a3^3",""],[5,2,"a2","a3 = a2","a1 = 0"],[5,4,"a2","a3 = 0","a1 = 0, a2 = 0"],[6,0,"a1","",""],[7,0,"a1","a2 = a1",""],[7,1,"a1","a2 = 0","a1 = 0"],[7,6,"a2","a1 = 0","a1 = 0"],[8,0,"a1","a2 = a1",""],[8,2,"a1","a2 = 0","a1 = 0"],[8,6,"a2","a1 = 0","a1 = 0"],[9,0,"a3","a2 = a3^3",""],[9,3,"a2","a3 = a2","a1 = 0"],[9,8,"a2","a3 = 0","a1 = 0, a2 = 0"]]},"42":{"cells":[["123456",0,[]],["123546",1,["a1"]],["123564",1,["a2"]],["124356",1,["a1"]],["132456",1,["a1"]],["132546",2,["a1","a2"]],["132564",2,["a1","a3"]],["135246",2,["a2","a3"]],["135264",2,["a2","a4"]],["135624",2,["a3","a5"]],["213456",1,["a1"]],["213546",2,["a1","a2"]],["213564",2,["a1","a3"]],["214356",2,["a1","a2"]],["241356",2,["a2","a3"]]],"edges":[[1,0,"a1","",""],[2,1,"a2","","a1 = 0"],[3,0,"a1","",""],[4,0,"a1","",""],[5,0,"a1","a2 = a1",""],[5,1,"a1","a2 = 0","a1 = 0"],[5,4,"a2","a1 = 0","a1 = 0"],[6,1,"a1","a3 = a1","a1 = 0"],[6,2,"a1","a3 = 0","a2 = 0"],[6,5,"a3","a1 = 0","a1 = 0, a2 = 0"],[7,0,"a3","a2 = a3^3",""],[7,3,"a2","a3 = a2","a1 = 0"],[7,5,"a2","a3 = 0","a1 = 0, a2 = 0"],[8,5,"a2","a4 = a2","a1 = 0, a2 = 0"],[8,6,"a2","a4 = 0","a1 = 0, a3 = 0"],[8,7,"a4","a2 = 0","a2 = 0, a3 = 0"],[9,4,"a3","a5 = a3","a1 = 0"],[9,5,"a5","a3 = a5^2","a1 = 0, a2 = -1"],[9,8,"a3","a5 = 0","a2 = 0, a4 = 0"],[10,0,"a1","",""],[11,0,"a1","a2 = a1",""],[11,1,"a1","a2 = 0","a1 = 0"],[11,10,"a2","a1 = 0","a1 = 0"],[12,1,"a1","a3 = a1","a1 = 0"],[12,2,"a1","a3 = 0","a2 = 0"],[12,11,"a3","a1 = 0","a1 = 0, a2 = 0"],[13,0,"a1","a2 = a1",""],[13,3,"a1","a2 = 0","a1 = 0"],[13,10,"a2","a1 = 0","a1 = 0"],[14,0,"a3","a2 = a3^3",""],[14,4,"a2","a3 = a2","a1 = 0"],[14,13,"a2","a3 = 0","a1 = 0, a2 = 0"]]},"33":{"cells":[["123456",0,[]],["123465",1,["a1"]],["123546",1,["a1"]],["124356",1,["a1"]],["124365",2,["a1","a2"]],["124635",2,["a2","a3"]],["132456",1,["a1"]],["132465",2,["a1","a2"]],["132546",2,["a1","a2"]],["135246",2,["a2","a3"]],["213456",1,["a1"]],["213465",2,["a1","a2"]],["213546",2,["a1","a2"]],["214356",2,["a1","a2"]],["214365",3,["a1","a2","a3"]],["214635",3,["a1","a3","a4"]],["241356",2,["a2","a3"]],["241365",3,["a2","a3","a4"]],["241635",3,["a2","a4","a5"]],["246135",3,["a3","a5","a6"]]],"edges":[[1,0,"a1","",""],[2,0,"a1","",""],[3,0,"a1","",""],[4,0,"a1","a2 = a1",""],[4,1,"a1","a2 = 0","a1 = 0"],[4,3,"a2","a1 = 0","a1 = 0"],[5,0,"a3","a2 = a3^3",""],[5,2,"a2","a3 = a2","a1 = 0"],[5,4,"a2","a3 = 0","a1 = 0, a2 = 0"],[6,0,"a1","",""],[7,0,"a1","a2 = a1",""],[7,1,"a1","a2 = 0","a1 = 0"],[7,6,"a2","a1 = 0","a1 = 0"],[8,0,"a1","a2 = a1",""],[8,2,"a1","a2 = 0","a1 = 0"],[8,6,"a2","a1 = 0","a1 = 0"],[9,0,"a3","a2 = a3^3",""],[9,3,"a2","a3 = a2","a1 = 0"],[9,8,"a2","a3 = 0","a1 = 0, a2 = 0"],[10,0,"a1","",""],[11,0,"a1","a2 = a1",""],[11,1,"a1","a2 = 0","a1 = 0"],[11,10,"a2","a1 = 0","a1 = 0"],[12,0,"a1","a2 = a1",""],[12,2,"a1","a2 = 0","a1 = 0"],[12,10,"a2","a1 = 0","a1 = 0"],[13,0,"a1","a2 = a1",""],[13,3,"a1","a2 = 0","a1 = 0"],[13,10,"a2","a1 = 0","a1 = 0"],[14,0,"a1","a2 = a1, a3 = a1",""],[14,1,"a1","a2 = a1, a3 = 0","a1 = 0"],[14,3,"a1","a2 = 0, a3 = a1","a1 = 0"],[14,4,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[14,10,"a2","a1 = 0, a3 = a2","a1 = 0"],[14,11,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[14,13,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[15,0,"a1","a3 = a1^3, a4 = a1",""],[15,2,"a1","a3 = 0, a4 = a1","a1 = 0"],[15,4,"a1","a3 = a1, a4 = 0","a1 = 0, a2 = 0"],[15,5,"a1","a3 = 0, a4 = 0","a2 = 0, a3 = 0"],[15,10,"a4","a1 = 0, a3 = a4^3","a1 = 0"],[15,12,"a3","a1 = 0, a4 = a3","a1 = 0, a2 = 0"],[15,14,"a3","a1 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[16,0,"a3","a2 = a3^3",""],[16,6,"a2","a3 = a2","a1 = 0"],[16,13,"a2","a3 = 0","a1 = 0, a2 = 0"],[17,0,"a3","a2 = a3^3, a4 = a3",""],[17,1,"a3","a2 = a3^3, a4 = 0","a1 = 0"],[17,6,"a2","a3 = a2, a4 = a2","a1 = 0"],[17,7,"a2","a3 = a2, a4 = 0","a1 = 0, a2 = 0"],[17,13,"a2","a3 = 0, a4 = a2","a1 = 0, a2 = 0"],[17,14,"a2","a3 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[17,16,"a4","a2 = 0, a3 = 0","a2 = 0, a3 = 0"],[18,0,"a5","a2 = a5^3, a4 = a5^3",""],[18,2,"a4","a2 = a4^3, a5 = a4","a1 = 0"],[18,6,"a2","a4 = a2^3, a5 = a2","a1 = 0"],[18,8,"a2","a4 = 0, a5 = a2","a1 = 0, a2 = 0"],[18,14,"a2","a4 = a2, a5 = 0","a1 = 0, a2 = 0, a3 = 0"],[18,15,"a2","a4 = 0, a5 = 0","a1 = 0, a3 = 0, a4 = 0"],[18,17,"a4","a2 = 0, a5 = 0","a2 = 0, a3 = 0, a4 = 0"],[19,0,"a3","a5 = a3^3, a6 = a3",""],[19,8,"a3","a5 = a3^2, a6 = a3","a1 = -1, a2 = -1"],[19,9,"a3","a5 = 0, a6 = a3","a2 = 0, a3 = 0"],[19,11,"a3","a5 = a3, a6 = 0","a1 = 0, a2 = 0"],[19,14,"a5","a3 = a5^2, a6 = 0","a1 = 0, a2 = -1, a3 = 0"],[19,18,"a3","a5 = 0, a6 = 0","a2 = 0, a4 = 0, a5 = 0"]]},"211":{"cells":[["1234",0,[]],["1243",1,["a1"]],["1324",1,["a1"]],["1342",2,["a1","a2"]],["1423",2,["a1","a2"]],["1432",3,["a1","a2","a3"]],["2134",1,["a1"]],["2143",2,["a1","a2"]],["2314",2,["a1","a2"]],["3124",2,["a1","a2"]],["3142",3,["a1","a2","a3"]],["3214",3,["a1","a2","a3"]]],"edges":[[1,0,"a1","",""],[2,0,"a1","",""],[3,0,"a1","a2 = a1^2",""],[3,1,"a1","a2 = 0","a1 = 0"],[3,2,"a2","a1 = 0","a1 = 0"],[4,0,"a2","a1 = a2^2",""],[4,1,"a1","a2 = 0","a1 = 0"],[4,2,"a1","a2 = a1","a1 = 1"],[5,0,"a1","a2 = 0, a3 = 0",""],[5,1,"a1","a2 = a1, a3 = 0","a1 = -1"],[5,2,"a1","a2 = 0, a3 = a1","a1 = 1"],[5,3,"a1","a2 = 1, a3 = a1","a1 = 1, a2 = 0"],[5,4,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[6,0,"a1","",""],[7,0,"a1","a2 = a1",""],[7,1,"a1","a2 = 0","a1 = 0"],[7,6,"a2","a1 = 0","a1 = 0"],[8,0,"a1","a2 = a1^2",""],[8,2,"a1","a2 = 0","a1 = 0"],[8,6,"a2","a1 = 0","a1 = 0"],[9,0,"a2","a1 = a2^2",""],[9,2,"a1","a2 = 0","a1 = 0"],[9,6,"a1","a2 = a1","a1 = 1"],[10,0,"a2","a1 = a2^2, a3 = a2^2",""],[10,1,"a2","a1 = a2^2, a3 = 0","a1 = 0"],[10,2,"a1","a2 = 0, a3 = a1","a1 = 0"],[10,3,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[10,6,"a1","a2 = a1, a3 = a1^2","a1 = 1"],[10,7,"a1","a2 = a1, a3 = 0","a1 = 1, a2 = 0"],[10,9,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[11,0,"a1","a2 = 0, a3 = 0",""],[11,2,"a1","a2 = a1, a3 = 0","a1 = -1"],[11,6,"a1","a2 = 0, a3 = a1","a1 = 1"],[11,8,"a1","a2 = 1, a3 = a1","a1 = 1, a2 = 0"],[11,9,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"]]},"221":{"cells":[["12345",0,[]],["12354",1,["a1"]],["12435",1,["a1"]],["12453",2,["a1","a2"]],["12534",2,["a1","a2"]],["12543",3,["a1","a2","a3"]],["13245",1,["a1"]],["13254",2,["a1","a2"]],["13425",2,["a1","a2"]],["14235",2,["a1","a2"]],["14253",3,["a1","a2","a3"]],["14325",3,["a1","a2","a3"]],["21345",1,["a1"]],["21354",2,["a1","a2"]],["21435",2,["a1","a2"]],["21453",3,["a1","a2","a3"]],["21534",3,["a1","a2","a3"]],["21543",4,["a1","a2","a3","a4"]],["23145",2,["a1","a2"]],["23154",3,["a1","a2","a3"]],["23514",3,["a2","a3","a4"]],["25134",3,["a2","a3","a4"]],["25143",4,["a2","a3","a4","a5"]],["25314",4,["a2","a3","a4","a5"]],["31245",2,["a1","a2"]],["31254",3,["a1","a2","a3"]],["31425",3,["a1","a2","a3"]],["32145",3,["a1","a2","a3"]],["32154",4,["a1","a2","a3","a4"]],["32514",4,["a1","a3","a4","a5"]]],"edges":[[1,0,"a1","",""],[2,0,"a1","",""],[3,0,"a1","a2 = a1^2",""],[3,1,"a1","a2 = 0","a1 = 0"],[3,2,"a2","a1 = 0","a1 = 0"],[4,0,"a2","a1 = a2^2",""],[4,1,"a1","a2 = 0","a1 = 0"],[4,2,"a1","a2 = a1","a1 = 1"],[5,0,"a1","a2 = 0, a3 = 0",""],[5,1,"a1","a2 = a1, a3 = 0","a1 = -1"],[5,2,"a1","a2 = 0, a3 = a1","a1 = 1"],[5,3,"a1","a2 = 1, a3 = a1","a1 = 1, a2 = 0"],[5,4,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[6,0,"a1","",""],[7,0,"a1","a2 = a1",""],[7,1,"a1","a2 = 0","a1 = 0"],[7,6,"a2","a1 = 0","a1 = 0"],[8,0,"a1","a2 = a1^2",""],[8,2,"a1","a2 = 0","a1 = 0"],[8,6,"a2","a1 = 0","a1 = 0"],[9,0,"a2","a1 = a2^2",""],[9,2,"a1","a2 = 0","a1 = 0"],[9,6,"a1","a2 = a1","a1 = 1"],[10,0,"a2","a1 = a2^2, a3 = a2^2",""],[10,1,"a2","a1 = a2^2, a3 = 0","a1 = 0"],[10,2,"a1","a2 = 0, a3 = a1","a1 = 0"],[10,3,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[10,6,"a1","a2 = a1, a3 = a1^2","a1 = 1"],[10,7,"a1","a2 = a1, a3 = 0","a1 = 1, a2 = 0"],[10,9,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[11,0,"a1","a2 = 0, a3 = 0",""],[11,2,"a1","a2 = a1, a3 = 0","a1 = -1"],[11,6,"a1","a2 = 0, a3 = a1","a1 = 1"],[11,8,"a1","a2 = 1, a3 = a1","a1 = 1, a2 = 0"],[11,9,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[12,0,"a1","",""],[13,0,"a1","a2 = a1",""],[13,1,"a1","a2 = 0","a1 = 0"],[13,12,"a2","a1 = 0","a1 = 0"],[14,0,"a1","a2 = a1",""],[14,2,"a1","a2 = 0","a1 = 0"],[14,12,"a2","a1 = 0","a1 = 0"],[15,0,"a1","a2 = a1, a3 = a1^2",""],[15,1,"a1","a2 = a1, a3 = 0","a1 = 0"],[15,2,"a1","a2 = 0, a3 = a1","a1 = 0"],[15,3,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[15,12,"a2","a1 = 0, a3 = a2^2","a1 = 0"],[15,13,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[15,14,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[16,0,"a1","a2 = a1^2, a3 = a1",""],[16,1,"a1","a2 = a1, a3 = 0","a1 = 0"],[16,2,"a1","a2 = 0, a3 = a1","a1 = 0"],[16,4,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[16,12,"a3","a1 = 0, a2 = a3^2","a1 = 0"],[16,13,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[16,14,"a2","a1 = 0, a3 = a2","a1 = 0, a2 = 1"],[17,0,"a1","a2 = a1, a3 = 0, a4 = 0",""],[17,1,"a1","a2 = a1, a3 = a1, a4 = 0","a1 = -1"],[17,2,"a1","a2 = 0, a3 = 1, a4 = a1","a1 = 0"],[17,3,"a1","a2 = 0, a3 = 0, a4 = a1","a1 = 0, a2 = 0"],[17,4,"a1","a2 = 0, a3 = a1, a4 = 0","a1 = 0, a2 = 0"],[17,5,"a1","a2 = 0, a3 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[17,12,"a2","a1 = 0, a3 = 0, a4 = 0","a1 = 0"],[17,13,"a2","a1 = 0, a3 = a2, a4 = 0","a1 = 0, a2 = -1"],[17,14,"a2","a1 = 0, a3 = 0, a4 = a2","a1 = 0, a2 = 1"],[17,15,"a2","a1 = 0, a3 = 1, a4 = a2","a1 = 0, a2 = 1, a3 = 0"],[17,16,"a3","a1 = 0, a2 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[18,0,"a1","a2 = a1^2",""],[18,6,"a1","a2 = 0","a1 = 0"],[18,12,"a2","a1 = 0","a1 = 0"],[19,0,"a1","a2 = a1^2, a3 = a1",""],[19,1,"a1","a2 = a1^2, a3 = 0","a1 = 0"],[19,6,"a1","a2 = 0, a3 = a1","a1 = 0"],[19,7,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[19,12,"a2","a1 = 0, a3 = a2","a1 = 0"],[19,13,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[19,18,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[20,2,"a3","a2 = a3^2, a4 = a3","a1 = 0"],[20,6,"a2","a3 = a2^3, a4 = a2","a1 = -1"],[20,8,"a2","a3 = 0, a4 = a2","a1 = -1, a2 = 0"],[20,13,"a2","a3 = a2^2, a4 = 0","a1 = 0, a2 = 0"],[20,16,"a2","a3 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[20,19,"a3","a2 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[21,2,"a3","a2 = a3^3, a4 = a3","a1 = 1"],[21,6,"a2","a3 = a2^2, a4 = a2","a1 = 0"],[21,9,"a2","a3 = 0, a4 = a2","a1 = 0, a2 = 0"],[21,13,"a3","a2 = a3^2, a4 = 0","a1 = 0, a2 = 0"],[21,16,"a2","a3 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[21,19,"a2","a3 = a2, a4 = 0","a1 = 0, a2 = 1, a3 = 0"],[22,2,"a3","a2 = a3^3, a4 = 0, a5 = a3","a1 = 1"],[22,3,"a3","a2 = a3^3, a4 = 1, a5 = a3","a1 = 1, a2 = 0"],[22,6,"a2","a3 = a2^2, a4 = 0, a5 = a2","a1 = 0"],[22,7,"a2","a3 = a2^2, a4 = a2, a5 = a2","a1 = 0, a2 = 0"],[22,9,"a2","a3 = 0, a4 = 1, a5 = a2","a1 = 0, a2 = 0"],[22,10,"a2","a3 = 0, a4 = 0, a5 = a2","a1 = 0, a2 = 0, a3 = 0"],[22,12,"a3","a2 = a3^2, a4 = 0, a5 = 0","a1 = 0"],[22,13,"a3","a2 = a3^2, a4 = a3, a5 = 0","a1 = 0, a2 = -1"],[22,16,"a2","a3 = 0, a4 = a2, a5 = 0","a1 = 0, a2 = 0, a3 = 0"],[22,17,"a2","a3 = 0, a4 = 0, a5 = 0","a1 = 0, a2 = 0, a3 = 0, a4 = 0"],[22,18,"a2","a3 = a2, a4 = 0, a5 = 0","a1 = 0, a2 = 1"],[22,19,"a2","a3 = a2, a4 = a2, a5 = 0","a1 = 0, a2 = 1, a3 = -1"],[22,21,"a4","a2 = 0, a3 = 0, a5 = 0","a2 = 0, a3 = 0, a4 = 0"],[23,0,"a3","a2 = a3^3, a4 = 0, a5 = a3",""],[23,2,"a4","a2 = a4^3, a3 = a4^2, a5 = a4","a1 = 0"],[23,6,"a2","a3 = 1, a4 = a2^3, a5 = a2","a1 = 0"],[23,8,"a2","a3 = 0, a4 = a2^2, a5 = a2","a1 = 0, a2 = 0"],[23,9,"a2","a3 = a2^2, a4 = 0, a5 = a2","a1 = 0, a2 = 0"],[23,11,"a2","a3 = 0, a4 = 0, a5 = a2","a1 = 0, a2 = 0, a3 = 0"],[23,13,"a2","a3 = 0, a4 = 0, a5 = 0","a1 = 0, a2 = 0"],[23,16,"a2","a3 = a2, a4 = 0, a5 = 0","a1 = 0, a2 = -1, a3 = 0"],[23,19,"a2","a3 = 0, a4 = a2, a5 = 0","a1 = 0, a2 = 1, a3 = 0"],[23,20,"a2","a3 = 1, a4 = a2, a5 = 0","a2 = 1, a3 = 0, a4 = 0"],[23,21,"a3","a2 = 0, a4 = 0, a5 = 0","a2 = 0, a3 = 0, a4 = 0"],[24,0,"a2","a1 = a2^2",""],[24,6,"a1","a2 = 0","a1 = 0"],[24,12,"a1","a2 = a1","a1 = 1"],[25,0,"a2","a1 = a2^2, a3 = a2",""],[25,1,"a2","a1 = a2^2, a3 = 0","a1 = 0"],[25,6,"a1","a2 = 0, a3 = a1","a1 = 0"],[25,7,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[25,12,"a1","a2 = a1, a3 = a1","a1 = 1"],[25,13,"a1","a2 = a1, a3 = 0","a1 = 1, a2 = 0"],[25,24,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[26,0,"a2","a1 = a2^2, a3 = a2^2",""],[26,2,"a2","a1 = a2^2, a3 = 0","a1 = 0"],[26,6,"a1","a2 = 0, a3 = a1","a1 = 0"],[26,8,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[26,12,"a1","a2 = a1, a3 = a1^2","a1 = 1"],[26,14,"a1","a2 = a1, a3 = 0","a1 = 1, a2 = 0"],[26,24,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[27,0,"a1","a2 = 0, a3 = 0",""],[27,6,"a1","a2 = a1, a3 = 0","a1 = -1"],[27,12,"a1","a2 = 0, a3 = a1","a1 = 1"],[27,18,"a1","a2 = 1, a3 = a1","a1 = 1, a2 = 0"],[27,24,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[28,0,"a1","a2 = 0, a3 = 0, a4 = a1",""],[28,1,"a1","a2 = 0, a3 = 0, a4 = 0","a1 = 0"],[28,6,"a1","a2 = a1, a3 = 0, a4 = a1","a1 = -1"],[28,7,"a1","a2 = a1, a3 = 0, a4 = 0","a1 = -1, a2 = 0"],[28,12,"a1","a2 = 0, a3 = a1, a4 = a1","a1 = 1"],[28,13,"a1","a2 = 0, a3 = a1, a4 = 0","a1 = 1, a2 = 0"],[28,18,"a1","a2 = 1, a3 = a1, a4 = a1","a1 = 1, a2 = 0"],[28,19,"a1","a2 = 1, a3 = a1, a4 = 0","a1 = 1, a2 = 0, a3 = 0"],[28,24,"a2","a1 = 0, a3 = 0, a4 = a2","a1 = 0, a2 = 0"],[28,25,"a2","a1 = 0, a3 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[28,27,"a4","a1 = 0, a2 = 0, a3 = 0","a1 = 0, a2 = 0, a3 = 0"],[29,1,"a1","a3 = a1^2, a4 = 0, a5 = 0","a1 = 0"],[29,2,"a3","a1 = a3^2, a4 = 0, a5 = a3","a1 = 0"],[29,4,"a1","a3 = 0, a4 = 0, a5 = 0","a1 = 0, a2 = 0"],[29,6,"a1","a3 = a1^3, a4 = 0, a5 = a1","a1 = -1"],[29,8,"a1","a3 = 0, a4 = 0, a5 = a1","a1 = -1, a2 = 0"],[29,13,"a1","a3 = a1^2, a4 = a1, a5 = 0","a1 = 1, a2 = 0"],[29,14,"a1","a3 = 0, a4 = a1, a5 = a1","a1 = 1, a2 = 0"],[29,16,"a1","a3 = 0, a4 = a1, a5 = 0","a1 = 1, a2 = 0, a3 = 0"],[29,19,"a1","a3 = a1, a4 = a1, a5 = 1","a1 = 1, a2 = 0, a3 = 1"],[29,20,"a1","a3 = 0, a4 = a1, a5 = 1","a2 = 0, a3 = 0, a4 = 1"],[29,24,"a5","a1 = 0, a3 = a5^3, a4 = 0","a1 = 0, a2 = 0"],[29,26,"a3","a1 = 0, a4 = 0, a5 = a3","a1 = 0, a2 = 0, a3 = 0"],[29,28,"a3","a1 = 0, a4 = 0, a5 = 0","a1 = 0, a2 = 0, a3 = 0, a4 = 0"]]},"321":{"cells":[["123456",0,[]],["123465",1,["a1"]],["123546",1,["a1"]],["124356",1,["a1"]],["124365",2,["a1","a2"]],["124536",2,["a1","a2"]],["124563",2,["a2","a3"]],["124635",2,["a2","a3"]],["124653",3,["a2","a3","a4"]],["125346",2,["a1","a2"]],["125436",3,["a1","a2","a3"]],["125463",3,["a1","a3","a4"]],["132456",1,["a1"]],["132465",2,["a1","a2"]],["132546",2,["a1","a2"]],["134256",2,["a1","a2"]],["134265",3,["a1","a2","a3"]],["134625",3,["a1","a3","a4"]],["142356",2,["a1","a2"]],["142365",3,["a1","a2","a3"]],["142536",3,["a1","a2","a3"]],["142563",3,["a1","a3","a4"]],["142635",3,["a1","a3","a4"]],["142653",4,["a1","a3","a4","a5"]],["143256",3,["a1","a2","a3"]],["143265",4,["a1","a2","a3","a4"]],["143625",4,["a2","a3","a4","a5"]],["146235",3,["a2","a4","a5"]],["146253",4,["a2","a4","a5","a6"]],["146325",4,["a2","a3","a5","a6"]],["213456",1,["a1"]],["213465",2,["a1","a2"]],["213546",2,["a1","a2"]],["214356",2,["a1","a2"]],["214365",3,["a1","a2","a3"]],["214536",3,["a1","a2","a3"]],["214563",3,["a1","a3","a4"]],["214635",3,["a1","a3","a4"]],["214653",4,["a1","a3","a4","a5"]],["215346",3,["a1","a2","a3"]],["215436",4,["a1","a2","a3","a4"]],["215463",4,["a1","a2","a4","a5"]],["231456",2,["a1","a2"]],["231465",3,["a1","a2","a3"]],["231546",3,["a1","a2","a3"]],["235146",3,["a2","a3","a4"]],["251346",3,["a2","a3","a4"]],["251436",4,["a2","a3","a4","a5"]],["251463",4,["a2","a3","a5","a6"]],["253146",4,["a2","a3","a4","a5"]],["312456",2,["a1","a2"]],["312465",3,["a1","a2","a3"]],["312546",3,["a1","a2","a3"]],["314256",3,["a1","a2","a3"]],["314265",4,["a1","a2","a3","a4"]],["314625",4,["a1","a2","a4","a5"]],["321456",3,["a1","a2","a3"]],["321465",4,["a1","a2","a3","a4"]],["321546",4,["a1","a2","a3","a4"]],["325146",4,["a1","a3","a4","a5"]]],"edges":[[1,0,"a1","",""],[2,0,"a1","",""],[3,0,"a1","",""],[4,0,"a1","a2 = a1",""],[4,1,"a1","a2 = 0","a1 = 0"],[4,3,"a2","a1 = 0","a1 = 0"],[5,0,"a1","a2 = a1^2",""],[5,2,"a1","a2 = 0","a1 = 0"],[5,3,"a2","a1 = 0","a1 = 0"],[6,3,"a2","a3 = a2^2","a1 = 0"],[6,4,"a2","a3 = 0","a1 = 0, a2 = 0"],[6,5,"a3","a2 = 0","a1 = 0, a2 = 0"],[7,3,"a3","a2 = a3^2","a1 = 0"],[7,4,"a2","a3 = 0","a1 = 0, a2 = 0"],[7,5,"a2","a3 = a2","a1 = 0, a2 = 1"],[8,3,"a2","a3 = 0, a4 = 0","a1 = 0"],[8,4,"a2","a3 = a2, a4 = 0","a1 = 0, a2 = -1"],[8,5,"a2","a3 = 0, a4 = a2","a1 = 0, a2 = 1"],[8,6,"a2","a3 = 1, a4 = a2","a2 = 1, a3 = 0"],[8,7,"a3","a2 = 0, a4 = 0","a2 = 0, a3 = 0"],[9,0,"a2","a1 = a2^2",""],[9,2,"a1","a2 = 0","a1 = 0"],[9,3,"a1","a2 = a1","a1 = 1"],[10,0,"a1","a2 = 0, a3 = 0",""],[10,2,"a1","a2 = a1, a3 = 0","a1 = -1"],[10,3,"a1","a2 = 0, a3 = a1","a1 = 1"],[10,5,"a1","a2 = 1, a3 = a1","a1 = 1, a2 = 0"],[10,9,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[11,0,"a1","a3 = a1^2, a4 = 0",""],[11,1,"a1","a3 = 0, a4 = 0","a1 = 0"],[11,3,"a1","a3 = a1^2, a4 = a1","a1 = 1"],[11,4,"a1","a3 = 0, a4 = a1","a1 = 1, a2 = 0"],[11,5,"a3","a1 = 0, a4 = a3","a1 = 0, a2 = 0"],[11,6,"a4","a1 = 0, a3 = 0","a2 = 0, a3 = 0"],[11,10,"a3","a1 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[12,0,"a1","",""],[13,0,"a1","a2 = a1",""],[13,1,"a1","a2 = 0","a1 = 0"],[13,12,"a2","a1 = 0","a1 = 0"],[14,0,"a1","a2 = a1",""],[14,2,"a1","a2 = 0","a1 = 0"],[14,12,"a2","a1 = 0","a1 = 0"],[15,0,"a1","a2 = a1^2",""],[15,3,"a1","a2 = 0","a1 = 0"],[15,12,"a2","a1 = 0","a1 = 0"],[16,0,"a1","a2 = a1^2, a3 = a1",""],[16,1,"a1","a2 = a1^2, a3 = 0","a1 = 0"],[16,3,"a1","a2 = 0, a3 = a1","a1 = 0"],[16,4,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[16,12,"a2","a1 = 0, a3 = a2","a1 = 0"],[16,13,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[16,15,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[17,2,"a1","a3 = 0, a4 = a1^2","a1 = 0"],[17,3,"a1","a3 = a1^3, a4 = a1","a1 = -1"],[17,4,"a1","a3 = a1^2, a4 = 0","a1 = 0, a2 = 0"],[17,5,"a1","a3 = 0, a4 = a1","a1 = -1, a2 = 0"],[17,7,"a1","a3 = 0, a4 = 0","a2 = 0, a3 = 0"],[17,12,"a4","a1 = 0, a3 = a4^3","a1 = 0"],[17,14,"a3","a1 = 0, a4 = a3","a1 = 0, a2 = 0"],[17,16,"a3","a1 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[18,0,"a2","a1 = a2^2",""],[18,3,"a1","a2 = 0","a1 = 0"],[18,12,"a1","a2 = a1","a1 = 1"],[19,0,"a2","a1 = a2^2, a3 = a2",""],[19,1,"a2","a1 = a2^2, a3 = 0","a1 = 0"],[19,3,"a1","a2 = 0, a3 = a1","a1 = 0"],[19,4,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[19,12,"a1","a2 = a1, a3 = a1","a1 = 1"],[19,13,"a1","a2 = a1, a3 = 0","a1 = 1, a2 = 0"],[19,18,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[20,0,"a2","a1 = a2^2, a3 = a2^2",""],[20,2,"a2","a1 = a2^2, a3 = 0","a1 = 0"],[20,3,"a1","a2 = 0, a3 = a1","a1 = 0"],[20,5,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[20,12,"a1","a2 = a1, a3 = a1^2","a1 = 1"],[20,14,"a1","a2 = a1, a3 = 0","a1 = 1, a2 = 0"],[20,18,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[21,3,"a1","a3 = a1, a4 = a1^2","a1 = 0"],[21,4,"a1","a3 = a1, a4 = 0","a1 = 0, a2 = 0"],[21,5,"a1","a3 = 0, a4 = a1","a1 = 0, a2 = 0"],[21,6,"a1","a3 = 0, a4 = 0","a2 = 0, a3 = 0"],[21,18,"a3","a1 = 0, a4 = a3^2","a1 = 0, a2 = 0"],[21,19,"a3","a1 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[21,20,"a4","a1 = 0, a3 = 0","a1 = 0, a2 = 0, a3 = 0"],[22,3,"a1","a3 = a1^2, a4 = a1","a1 = 0"],[22,4,"a1","a3 = a1, a4 = 0","a1 = 0, a2 = 0"],[22,5,"a1","a3 = 0, a4 = a1","a1 = 0, a2 = 0"],[22,7,"a1","a3 = 0, a4 = 0","a2 = 0, a3 = 0"],[22,18,"a4","a1 = 0, a3 = a4^2","a1 = 0, a2 = 0"],[22,19,"a3","a1 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[22,20,"a3","a1 = 0, a4 = a3","a1 = 0, a2 = 0, a3 = 1"],[23,3,"a1","a3 = a1, a4 = 0, a5 = 0","a1 = 0"],[23,4,"a1","a3 = a1, a4 = a1, a5 = 0","a1 = 0, a2 = -1"],[23,5,"a1","a3 = 0, a4 = 1, a5 = a1","a1 = 0, a2 = 0"],[23,6,"a1","a3 = 0, a4 = 0, a5 = a1","a2 = 0, a3 = 0"],[23,7,"a1","a3 = 0, a4 = a1, a5 = 0","a2 = 0, a3 = 0"],[23,8,"a1","a3 = 0, a4 = 0, a5 = 0","a2 = 0, a3 = 0, a4 = 0"],[23,18,"a3","a1 = 0, a4 = 0, a5 = 0","a1 = 0, a2 = 0"],[23,19,"a3","a1 = 0, a4 = a3, a5 = 0","a1 = 0, a2 = 0, a3 = -1"],[23,20,"a3","a1 = 0, a4 = 0, a5 = a3","a1 = 0, a2 = 0, a3 = 1"],[23,21,"a3","a1 = 0, a4 = 1, a5 = a3","a1 = 0, a3 = 1, a4 = 0"],[23,22,"a4","a1 = 0, a3 = 0, a5 = 0","a1 = 0, a3 = 0, a4 = 0"],[24,0,"a1","a2 = 0, a3 = 0",""],[24,3,"a1","a2 = a1, a3 = 0","a1 = -1"],[24,12,"a1","a2 = 0, a3 = a1","a1 = 1"],[24,15,"a1","a2 = 1, a3 = a1","a1 = 1, a2 = 0"],[24,18,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[25,0,"a1","a2 = 0, a3 = 0, a4 = a1",""],[25,1,"a1","a2 = 0, a3 = 0, a4 = 0","a1 = 0"],[25,3,"a1","a2 = a1, a3 = 0, a4 = a1","a1 = -1"],[25,4,"a1","a2 = a1, a3 = 0, a4 = 0","a1 = -1, a2 = 0"],[25,12,"a1","a2 = 0, a3 = a1, a4 = a1","a1 = 1"],[25,13,"a1","a2 = 0, a3 = a1, a4 = 0","a1 = 1, a2 = 0"],[25,15,"a1","a2 = 1, a3 = a1, a4 = a1","a1 = 1, a2 = 0"],[25,16,"a1","a2 = 1, a3 = a1, a4 = 0","a1 = 1, a2 = 0, a3 = 0"],[25,18,"a2","a1 = 0, a3 = 0, a4 = a2","a1 = 0, a2 = 0"],[25,19,"a2","a1 = 0, a3 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[25,24,"a4","a1 = 0, a2 = 0, a3 = 0","a1 = 0, a2 = 0, a3 = 0"],[26,0,"a5","a2 = 0, a3 = a5^3, a4 = 0",""],[26,2,"a2","a3 = 0, a4 = 0, a5 = a2^2","a1 = 0"],[26,3,"a2","a3 = a2^3, a4 = 0, a5 = a2","a1 = -1"],[26,4,"a2","a3 = a2^2, a4 = 1, a5 = 0","a1 = 0, a2 = 0"],[26,5,"a2","a3 = 0, a4 = 0, a5 = a2","a1 = -1, a2 = 0"],[26,7,"a2","a3 = 0, a4 = 1, a5 = 0","a2 = 0, a3 = 0"],[26,12,"a4","a2 = 0, a3 = a4^3, a5 = a4","a1 = 1"],[26,14,"a2","a3 = 0, a4 = a2, a5 = -a2^2","a1 = 0, a2 = 0"],[26,16,"a3","a2 = 0, a4 = a3, a5 = 0","a1 = 0, a2 = 0, a3 = 0"],[26,17,"a4","a2 = 0, a3 = 0, a5 = 0","a1 = 0, a3 = 0, a4 = 0"],[26,18,"a2","a3 = a2^3, a4 = 1, a5 = -a2","a1 = 0, a2 = 1"],[26,19,"a2","a3 = a2^2, a4 = 0, a5 = 0","a1 = 0, a2 = 0, a3 = 0"],[26,20,"a2","a3 = 0, a4 = 1, a5 = -a2","a1 = 0, a2 = 1, a3 = 0"],[26,22,"a2","a3 = 0, a4 = 0, a5 = 0","a1 = 0, a3 = 0, a4 = 0"],[26,25,"a3","a2 = 0, a4 = 0, a5 = 0","a1 = 0, a2 = 0, a3 = 0, a4 = 0"],[27,0,"a2","a4 = a2^2, a5 = a2",""],[27,3,"a5","a2 = a5^3, a4 = a5^2","a1 = -1"],[27,5,"a4","a2 = a4^3, a5 = a4","a1 = 0, a2 = 1"],[27,10,"a2","a4 = 0, a5 = a2","a1 = 0, a2 = 0, a3 = 0"],[27,19,"a4","a2 = a4^2, a5 = 0","a1 = 0, a2 = 0, a3 = 0"],[27,22,"a2","a4 = 0, a5 = 0","a1 = 0, a3 = 0, a4 = 0"],[28,0,"a2","a4 = a2^2, a5 = 0, a6 = a2",""],[28,1,"a2","a4 = a2^2, a5 = a2, a6 = a2","a1 = 0"],[28,3,"a5","a2 = a5^3, a4 = a5^2, a6 = -a5","a1 = 1"],[28,4,"a5","a2 = a5^3, a4 = a5^2, a6 = a5","a1 = -1, a2 = 0"],[28,5,"a4","a2 = a4^3, a5 = 0, a6 = a4","a1 = 0, a2 = 1"],[28,6,"a4","a2 = a4^3, a5 = 1, a6 = a4","a2 = 1, a3 = 0"],[28,10,"a2","a4 = 0, a5 = 1, a6 = a2","a1 = 0, a2 = 0, a3 = 0"],[28,11,"a2","a4 = 0, a5 = 0, a6 = a2","a1 = 0, a3 = 0, a4 = 0"],[28,18,"a4","a2 = a4^2, a5 = 0, a6 = 0","a1 = 0, a2 = 0"],[28,19,"a4","a2 = a4^2, a5 = a4, a6 = 0","a1 = 0, a2 = 0, a3 = -1"],[28,22,"a2","a4 = 0, a5 = a2, a6 = 0","a1 = 0, a3 = 0, a4 = 0"],[28,23,"a2","a4 = 0, a5 = 0, a6 = 0","a1 = 0, a3 = 0, a4 = 0, a5 = 0"],[28,24,"a2","a4 = a2, a5 = 0, a6 = 0","a1 = 0, a2 = 1, a3 = 0"],[28,25,"a2","a4 = a2, a5 = a2, a6 = 0","a1 = 0, a2 = 1, a3 = 0, a4 = -1"],[28,27,"a5","a2 = 0, a4 = 0, a6 = 0","a2 = 0, a4 = 0, a5 = 0"],[29,0,"a2","a3 = 1, a5 = a2^3, a6 = a2",""],[29,2,"a2","a3 = 0, a5 = a2^2, a6 = a2","a1 = 0"],[29,3,"a3","a2 = a3^3, a5 = 0, a6 = a3","a1 = 0"],[29,5,"a3","a2 = a3^3, a5 = a3^2, a6 = a3","a1 = -1, a2 = 0"],[29,9,"a2","a3 = 0, a5 = 0, a6 = a2","a1 = 0, a2 = 0"],[29,10,"a2","a3 = a2, a5 = 0, a6 = a2","a1 = 0, a2 = -1, a3 = 0"],[29,19,"a2","a3 = 0, a5 = 0, a6 = 0","a1 = 0, a2 = 0, a3 = 0"],[29,22,"a2","a3 = a2, a5 = 0, a6 = 0","a1 = 0, a3 = -1, a4 = 0"],[29,25,"a2","a3 = 0, a5 = a2, a6 = 0","a1 = 0, a2 = 1, a3 = 0, a4 = 0"],[29,26,"a2","a3 = 1, a5 = a2, a6 = 0","a2 = 1, a3 = 0, a4 = 0, a5 = 0"],[29,27,"a3","a2 = 0, a5 = 0, a6 = 0","a2 = 0, a4 = 0, a5 = 0"],[30,0,"a1","",""],[31,0,"a1","a2 = a1",""],[31,1,"a1","a2 = 0","a1 = 0"],[31,30,"a2","a1 = 0","a1 = 0"],[32,0,"a1","a2 = a1",""],[32,2,"a1","a2 = 0","a1 = 0"],[32,30,"a2","a1 = 0","a1 = 0"],[33,0,"a1","a2 = a1",""],[33,3,"a1","a2 = 0","a1 = 0"],[33,30,"a2","a1 = 0","a1 = 0"],[34,0,"a1","a2 = a1, a3 = a1",""],[34,1,"a1","a2 = a1, a3 = 0","a1 = 0"],[34,3,"a1","a2 = 0, a3 = a1","a1 = 0"],[34,4,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[34,30,"a2","a1 = 0, a3 = a2","a1 = 0"],[34,31,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[34,33,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[35,0,"a1","a2 = a1, a3 = a1^2",""],[35,2,"a1","a2 = a1, a3 = 0","a1 = 0"],[35,3,"a1","a2 = 0, a3 = a1","a1 = 0"],[35,5,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[35,30,"a2","a1 = 0, a3 = a2^2","a1 = 0"],[35,32,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[35,33,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[36,3,"a1","a3 = a1, a4 = a1^2","a1 = 0"],[36,4,"a1","a3 = a1, a4 = 0","a1 = 0, a2 = 0"],[36,5,"a1","a3 = 0, a4 = a1","a1 = 0, a2 = 0"],[36,6,"a1","a3 = 0, a4 = 0","a2 = 0, a3 = 0"],[36,33,"a3","a1 = 0, a4 = a3^2","a1 = 0, a2 = 0"],[36,34,"a3","a1 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[36,35,"a4","a1 = 0, a3 = 0","a1 = 0, a2 = 0, a3 = 0"],[37,3,"a1","a3 = a1^2, a4 = a1","a1 = 0"],[37,4,"a1","a3 = a1, a4 = 0","a1 = 0, a2 = 0"],[37,5,"a1","a3 = 0, a4 = a1","a1 = 0, a2 = 0"],[37,7,"a1","a3 = 0, a4 = 0","a2 = 0, a3 = 0"],[37,33,"a4","a1 = 0, a3 = a4^2","a1 = 0, a2 = 0"],[37,34,"a3","a1 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[37,35,"a3","a1 = 0, a4 = a3","a1 = 0, a2 = 0, a3 = 1"],[38,3,"a1","a3 = a1, a4 = 0, a5 = 0","a1 = 0"],[38,4,"a1","a3 = a1, a4 = a1, a5 = 0","a1 = 0, a2 = -1"],[38,5,"a1","a3 = 0, a4 = 1, a5 = a1","a1 = 0, a2 = 0"],[38,6,"a1","a3 = 0, a4 = 0, a5 = a1","a2 = 0, a3 = 0"],[38,7,"a1","a3 = 0, a4 = a1, a5 = 0","a2 = 0, a3 = 0"],[38,8,"a1","a3 = 0, a4 = 0, a5 = 0","a2 = 0, a3 = 0, a4 = 0"],[38,33,"a3","a1 = 0, a4 = 0, a5 = 0","a1 = 0, a2 = 0"],[38,34,"a3","a1 = 0, a4 = a3, a5 = 0","a1 = 0, a2 = 0, a3 = -1"],[38,35,"a3","a1 = 0, a4 = 0, a5 = a3","a1 = 0, a2 = 0, a3 = 1"],[38,36,"a3","a1 = 0, a4 = 1, a5 = a3","a1 = 0, a3 = 1, a4 = 0"],[38,37,"a4","a1 = 0, a3 = 0, a5 = 0","a1 = 0, a3 = 0, a4 = 0"],[39,0,"a1","a2 = a1^2, a3 = a1",""],[39,2,"a1","a2 = a1, a3 = 0","a1 = 0"],[39,3,"a1","a2 = 0, a3 = a1","a1 = 0"],[39,9,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[39,30,"a3","a1 = 0, a2 = a3^2","a1 = 0"],[39,32,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[39,33,"a2","a1 = 0, a3 = a2","a1 = 0, a2 = 1"],[40,0,"a1","a2 = a1, a3 = 0, a4 = 0",""],[40,2,"a1","a2 = a1, a3 = a1, a4 = 0","a1 = -1"],[40,3,"a1","a2 = 0, a3 = 1, a4 = a1","a1 = 0"],[40,5,"a1","a2 = 0, a3 = 0, a4 = a1","a1 = 0, a2 = 0"],[40,9,"a1","a2 = 0, a3 = a1, a4 = 0","a1 = 0, a2 = 0"],[40,10,"a1","a2 = 0, a3 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[40,30,"a2","a1 = 0, a3 = 0, a4 = 0","a1 = 0"],[40,32,"a2","a1 = 0, a3 = a2, a4 = 0","a1 = 0, a2 = -1"],[40,33,"a2","a1 = 0, a3 = 0, a4 = a2","a1 = 0, a2 = 1"],[40,35,"a2","a1 = 0, a3 = 1, a4 = a2","a1 = 0, a2 = 1, a3 = 0"],[40,39,"a3","a1 = 0, a2 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[41,0,"a1","a2 = a1, a4 = a1^2, a5 = 0",""],[41,1,"a1","a2 = a1, a4 = 0, a5 = 0","a1 = 0"],[41,3,"a1","a2 = a1, a4 = a1^2, a5 = a1","a1 = 1"],[41,4,"a1","a2 = a1, a4 = 0, a5 = a1","a1 = 1, a2 = 0"],[41,5,"a1","a2 = 0, a4 = a1, a5 = a1","a1 = 0, a2 = 0"],[41,6,"a1","a2 = 0, a4 = 0, a5 = a1","a2 = 0, a3 = 0"],[41,10,"a1","a2 = 0, a4 = a1, a5 = 0","a1 = 0, a2 = 0, a3 = 0"],[41,11,"a1","a2 = 0, a4 = 0, a5 = 0","a1 = 0, a3 = 0, a4 = 0"],[41,30,"a2","a1 = 0, a4 = a2^2, a5 = 0","a1 = 0"],[41,31,"a2","a1 = 0, a4 = 0, a5 = 0","a1 = 0, a2 = 0"],[41,33,"a2","a1 = 0, a4 = a2^2, a5 = a2","a1 = 0, a2 = 1"],[41,34,"a2","a1 = 0, a4 = 0, a5 = a2","a1 = 0, a2 = 1, a3 = 0"],[41,35,"a4","a1 = 0, a2 = 0, a5 = a4","a1 = 0, a2 = 0, a3 = 0"],[41,36,"a5","a1 = 0, a2 = 0, a4 = 0","a1 = 0, a3 = 0, a4 = 0"],[41,40,"a4","a1 = 0, a2 = 0, a5 = 0","a1 = 0, a2 = 0, a3 = 0, a4 = 0"],[42,0,"a1","a2 = a1^2",""],[42,12,"a1","a2 = 0","a1 = 0"],[42,30,"a2","a1 = 0","a1 = 0"],[43,0,"a1","a2 = a1^2, a3 = a1",""],[43,1,"a1","a2 = a1^2, a3 = 0","a1 = 0"],[43,12,"a1","a2 = 0, a3 = a1","a1 = 0"],[43,13,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[43,30,"a2","a1 = 0, a3 = a2","a1 = 0"],[43,31,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[43,42,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[44,0,"a1","a2 = a1^2, a3 = a1",""],[44,2,"a1","a2 = a1^2, a3 = 0","a1 = 0"],[44,12,"a1","a2 = 0, a3 = a1","a1 = 0"],[44,14,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[44,30,"a2","a1 = 0, a3 = a2","a1 = 0"],[44,32,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[44,42,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[45,3,"a3","a2 = a3^2, a4 = a3","a1 = 0"],[45,12,"a2","a3 = a2^3, a4 = a2","a1 = -1"],[45,15,"a2","a3 = 0, a4 = a2","a1 = -1, a2 = 0"],[45,32,"a2","a3 = a2^2, a4 = 0","a1 = 0, a2 = 0"],[45,39,"a2","a3 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[45,44,"a3","a2 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[46,3,"a3","a2 = a3^3, a4 = a3","a1 = 1"],[46,12,"a2","a3 = a2^2, a4 = a2","a1 = 0"],[46,18,"a2","a3 = 0, a4 = a2","a1 = 0, a2 = 0"],[46,32,"a3","a2 = a3^2, a4 = 0","a1 = 0, a2 = 0"],[46,39,"a2","a3 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[46,44,"a2","a3 = a2, a4 = 0","a1 = 0, a2 = 1, a3 = 0"],[47,3,"a3","a2 = a3^3, a4 = 0, a5 = a3","a1 = 1"],[47,5,"a3","a2 = a3^3, a4 = 1, a5 = a3","a1 = 1, a2 = 0"],[47,12,"a2","a3 = a2^2, a4 = 0, a5 = a2","a1 = 0"],[47,14,"a2","a3 = a2^2, a4 = a2, a5 = a2","a1 = 0, a2 = 0"],[47,18,"a2","a3 = 0, a4 = 1, a5 = a2","a1 = 0, a2 = 0"],[47,20,"a2","a3 = 0, a4 = 0, a5 = a2","a1 = 0, a2 = 0, a3 = 0"],[47,30,"a3","a2 = a3^2, a4 = 0, a5 = 0","a1 = 0"],[47,32,"a3","a2 = a3^2, a4 = a3, a5 = 0","a1 = 0, a2 = -1"],[47,39,"a2","a3 = 0, a4 = a2, a5 = 0","a1 = 0, a2 = 0, a3 = 0"],[47,40,"a2","a3 = 0, a4 = 0, a5 = 0","a1 = 0, a2 = 0, a3 = 0, a4 = 0"],[47,42,"a2","a3 = a2, a4 = 0, a5 = 0","a1 = 0, a2 = 1"],[47,44,"a2","a3 = a2, a4 = a2, a5 = 0","a1 = 0, a2 = 1, a3 = -1"],[47,46,"a4","a2 = 0, a3 = 0, a5 = 0","a2 = 0, a3 = 0, a4 = 0"],[48,3,"a3","a2 = a3^3, a5 = a3^2, a6 = a3","a1 = 1"],[48,4,"a3","a2 = a3^3, a5 = 0, a6 = a3","a1 = 1, a2 = 0"],[48,5,"a5","a2 = a5^3, a3 = 0, a6 = a5","a1 = 0, a2 = 0"],[48,6,"a6","a2 = a6^3, a3 = 0, a5 = 0","a2 = 0, a3 = 0"],[48,12,"a2","a3 = a2^2, a5 = a2^3, a6 = a2","a1 = 0"],[48,13,"a2","a3 = a2^2, a5 = 0, a6 = a2","a1 = 0, a2 = 0"],[48,18,"a2","a3 = a2, a5 = a2^2, a6 = a2","a1 = 0, a2 = 1"],[48,19,"a2","a3 = a2, a5 = 0, a6 = a2","a1 = 0, a2 = 1, a3 = 0"],[48,20,"a2","a3 = 0, a5 = a2, a6 = a2","a1 = 0, a2 = 0, a3 = 0"],[48,21,"a2","a3 = 0, a5 = 0, a6 = a2","a1 = 0, a3 = 0, a4 = 0"],[48,30,"a3","a2 = a3^2, a5 = a3^2, a6 = 0","a1 = 0"],[48,31,"a3","a2 = a3^2, a5 = 0, a6 = 0","a1 = 0, a2 = 0"],[48,40,"a2","a3 = 0, a5 = a2, a6 = 0","a1 = 0, a2 = 0, a3 = 0, a4 = 0"],[48,41,"a2","a3 = 0, a5 = 0, a6 = 0","a1 = 0, a2 = 0, a4 = 0, a5 = 0"],[48,42,"a2","a3 = a2, a5 = a2^2, a6 = 0","a1 = 0, a2 = 1"],[48,43,"a2","a3 = a2, a5 = 0, a6 = 0","a1 = 0, a2 = 1, a3 = 0"],[48,47,"a5","a2 = 0, a3 = 0, a6 = 0","a2 = 0, a3 = 0, a4 = 0, a5 = 0"],[49,0,"a3","a2 = a3^3, a4 = 0, a5 = a3",""],[49,3,"a4","a2 = a4^3, a3 = a4^2, a5 = a4","a1 = 0"],[49,12,"a2","a3 = 1, a4 = a2^3, a5 = a2","a1 = 0"],[49,15,"a2","a3 = 0, a4 = a2^2, a5 = a2","a1 = 0, a2 = 0"],[49,18,"a2","a3 = a2^2, a4 = 0, a5 = a2","a1 = 0, a2 = 0"],[49,24,"a2","a3 = 0, a4 = 0, a5 = a2","a1 = 0, a2 = 0, a3 = 0"],[49,32,"a2","a3 = 0, a4 = 0, a5 = 0","a1 = 0, a2 = 0"],[49,39,"a2","a3 = a2, a4 = 0, a5 = 0","a1 = 0, a2 = -1, a3 = 0"],[49,44,"a2","a3 = 0, a4 = a2, a5 = 0","a1 = 0, a2 = 1, a3 = 0"],[49,45,"a2","a3 = 1, a4 = a2, a5 = 0","a2 = 1, a3 = 0, a4 = 0"],[49,46,"a3","a2 = 0, a4 = 0, a5 = 0","a2 = 0, a3 = 0, a4 = 0"],[50,0,"a2","a1 = a2^2",""],[50,12,"a1","a2 = 0","a1 = 0"],[50,30,"a1","a2 = a1","a1 = 1"],[51,0,"a2","a1 = a2^2, a3 = a2",""],[51,1,"a2","a1 = a2^2, a3 = 0","a1 = 0"],[51,12,"a1","a2 = 0, a3 = a1","a1 = 0"],[51,13,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[51,30,"a1","a2 = a1, a3 = a1","a1 = 1"],[51,31,"a1","a2 = a1, a3 = 0","a1 = 1, a2 = 0"],[51,50,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[52,0,"a2","a1 = a2^2, a3 = a2",""],[52,2,"a2","a1 = a2^2, a3 = 0","a1 = 0"],[52,12,"a1","a2 = 0, a3 = a1","a1 = 0"],[52,14,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[52,30,"a1","a2 = a1, a3 = a1","a1 = 1"],[52,32,"a1","a2 = a1, a3 = 0","a1 = 1, a2 = 0"],[52,50,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[53,0,"a2","a1 = a2^2, a3 = a2^2",""],[53,3,"a2","a1 = a2^2, a3 = 0","a1 = 0"],[53,12,"a1","a2 = 0, a3 = a1","a1 = 0"],[53,15,"a1","a2 = 0, a3 = 0","a1 = 0, a2 = 0"],[53,30,"a1","a2 = a1, a3 = a1^2","a1 = 1"],[53,33,"a1","a2 = a1, a3 = 0","a1 = 1, a2 = 0"],[53,50,"a3","a1 = 0, a2 = 0","a1 = 0, a2 = 0"],[54,0,"a2","a1 = a2^2, a3 = a2^2, a4 = a2",""],[54,1,"a2","a1 = a2^2, a3 = a2^2, a4 = 0","a1 = 0"],[54,3,"a2","a1 = a2^2, a3 = 0, a4 = a2","a1 = 0"],[54,4,"a2","a1 = a2^2, a3 = 0, a4 = 0","a1 = 0, a2 = 0"],[54,12,"a1","a2 = 0, a3 = a1, a4 = a1","a1 = 0"],[54,13,"a1","a2 = 0, a3 = a1, a4 = 0","a1 = 0, a2 = 0"],[54,15,"a1","a2 = 0, a3 = 0, a4 = a1","a1 = 0, a2 = 0"],[54,16,"a1","a2 = 0, a3 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[54,30,"a1","a2 = a1, a3 = a1^2, a4 = a1","a1 = 1"],[54,31,"a1","a2 = a1, a3 = a1^2, a4 = 0","a1 = 1, a2 = 0"],[54,33,"a1","a2 = a1, a3 = 0, a4 = a1","a1 = 1, a2 = 0"],[54,34,"a1","a2 = a1, a3 = 0, a4 = 0","a1 = 1, a2 = 0, a3 = 0"],[54,50,"a3","a1 = 0, a2 = 0, a4 = a3","a1 = 0, a2 = 0"],[54,51,"a3","a1 = 0, a2 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[54,53,"a4","a1 = 0, a2 = 0, a3 = 0","a1 = 0, a2 = 0, a3 = 0"],[55,2,"a2","a1 = a2^2, a4 = 0, a5 = a2^2","a1 = 0"],[55,3,"a2","a1 = a2^2, a4 = a2^3, a5 = a2","a1 = -1"],[55,4,"a2","a1 = a2^2, a4 = a2^2, a5 = 0","a1 = 0, a2 = 0"],[55,5,"a2","a1 = a2^2, a4 = 0, a5 = a2","a1 = -1, a2 = 0"],[55,7,"a2","a1 = a2^2, a4 = 0, a5 = 0","a2 = 0, a3 = 0"],[55,12,"a1","a2 = 0, a4 = a1^3, a5 = a1","a1 = 0"],[55,14,"a1","a2 = 0, a4 = 0, a5 = a1","a1 = 0, a2 = 0"],[55,16,"a1","a2 = 0, a4 = a1, a5 = 0","a1 = 0, a2 = 0, a3 = 0"],[55,17,"a1","a2 = 0, a4 = 0, a5 = 0","a1 = 0, a3 = 0, a4 = 0"],[55,32,"a1","a2 = a1, a4 = 0, a5 = a1^2","a1 = 1, a2 = 0"],[55,33,"a1","a2 = a1, a4 = a1^3, a5 = a1","a1 = 1, a2 = -1"],[55,34,"a1","a2 = a1, a4 = a1^2, a5 = 0","a1 = 1, a2 = 0, a3 = 0"],[55,35,"a1","a2 = a1, a4 = 0, a5 = a1","a1 = 1, a2 = -1, a3 = 0"],[55,37,"a1","a2 = a1, a4 = 0, a5 = 0","a1 = 1, a3 = 0, a4 = 0"],[55,50,"a5","a1 = 0, a2 = 0, a4 = a5^3","a1 = 0, a2 = 0"],[55,52,"a4","a1 = 0, a2 = 0, a5 = a4","a1 = 0, a2 = 0, a3 = 0"],[55,54,"a4","a1 = 0, a2 = 0, a5 = 0","a1 = 0, a2 = 0, a3 = 0, a4 = 0"],[56,0,"a1","a2 = 0, a3 = 0",""],[56,12,"a1","a2 = a1, a3 = 0","a1 = -1"],[56,30,"a1","a2 = 0, a3 = a1","a1 = 1"],[56,42,"a1","a2 = 1, a3 = a1","a1 = 1, a2 = 0"],[56,50,"a2","a1 = 0, a3 = 0","a1 = 0, a2 = 0"],[57,0,"a1","a2 = 0, a3 = 0, a4 = a1",""],[57,1,"a1","a2 = 0, a3 = 0, a4 = 0","a1 = 0"],[57,12,"a1","a2 = a1, a3 = 0, a4 = a1","a1 = -1"],[57,13,"a1","a2 = a1, a3 = 0, a4 = 0","a1 = -1, a2 = 0"],[57,30,"a1","a2 = 0, a3 = a1, a4 = a1","a1 = 1"],[57,31,"a1","a2 = 0, a3 = a1, a4 = 0","a1 = 1, a2 = 0"],[57,42,"a1","a2 = 1, a3 = a1, a4 = a1","a1 = 1, a2 = 0"],[57,43,"a1","a2 = 1, a3 = a1, a4 = 0","a1 = 1, a2 = 0, a3 = 0"],[57,50,"a2","a1 = 0, a3 = 0, a4 = a2","a1 = 0, a2 = 0"],[57,51,"a2","a1 = 0, a3 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[57,56,"a4","a1 = 0, a2 = 0, a3 = 0","a1 = 0, a2 = 0, a3 = 0"],[58,0,"a1","a2 = 0, a3 = 0, a4 = a1",""],[58,2,"a1","a2 = 0, a3 = 0, a4 = 0","a1 = 0"],[58,12,"a1","a2 = a1, a3 = 0, a4 = a1","a1 = -1"],[58,14,"a1","a2 = a1, a3 = 0, a4 = 0","a1 = -1, a2 = 0"],[58,30,"a1","a2 = 0, a3 = a1, a4 = a1","a1 = 1"],[58,32,"a1","a2 = 0, a3 = a1, a4 = 0","a1 = 1, a2 = 0"],[58,42,"a1","a2 = 1, a3 = a1, a4 = a1","a1 = 1, a2 = 0"],[58,44,"a1","a2 = 1, a3 = a1, a4 = 0","a1 = 1, a2 = 0, a3 = 0"],[58,50,"a2","a1 = 0, a3 = 0, a4 = a2","a1 = 0, a2 = 0"],[58,52,"a2","a1 = 0, a3 = 0, a4 = 0","a1 = 0, a2 = 0, a3 = 0"],[58,56,"a4","a1 = 0, a2 = 0, a3 = 0","a1 = 0, a2 = 0, a3 = 0"],[59,2,"a1","a3 = a1^2, a4 = 0, a5 = 0","a1 = 0"],[59,3,"a3","a1 = a3^2, a4 = 0, a5 = a3","a1 = 0"],[59,9,"a1","a3 = 0, a4 = 0, a5 = 0","a1 = 0, a2 = 0"],[59,12,"a1","a3 = a1^3, a4 = 0, a5 = a1","a1 = -1"],[59,15,"a1","a3 = 0, a4 = 0, a5 = a1","a1 = -1, a2 = 0"],[59,32,"a1","a3 = a1^2, a4 = a1, a5 = 0","a1 = 1, a2 = 0"],[59,33,"a1","a3 = 0, a4 = a1, a5 = a1","a1 = 1, a2 = 0"],[59,39,"a1","a3 = 0, a4 = a1, a5 = 0","a1 = 1, a2 = 0, a3 = 0"],[59,44,"a1","a3 = a1, a4 = a1, a5 = 1","a1 = 1, a2 = 0, a3 = 1"],[59,45,"a1","a3 = 0, a4 = a1, a5 = 1","a2 = 0, a3 = 0, a4 = 1"],[59,50,"a5","a1 = 0, a3 = a5^3, a4 = 0","a1 = 0, a2 = 0"],[59,53,"a3","a1 = 0, a4 = 0, a5 = a3","a1 = 0, a2 = 0, a3 = 0"],[59,58,"a3","a1 = 0, a4 = 0, a5 = 0","a1 = 0, a2 = 0, a3 = 0, a4 = 0"]]}};
-    // ---- NNGP theory: infinite-width kernel recursion ----
-    // Gauss-Hermite nodes/weights for integrals against exp(-x^2) (Numerical Recipes gauher).
-    function gaussHermite(n) {
-      const x = new Array(n), w = new Array(n);
-      const PIM4 = 0.7511255444649425, EPS = 1e-14;
-      let z = 0, z1, pp;
-      const m = Math.floor((n + 1) / 2);
-      for (let i = 0; i < m; i++) {
-        if (i === 0) z = Math.sqrt(2 * n + 1) - 1.85575 * Math.pow(2 * n + 1, -0.16667);
-        else if (i === 1) z -= 1.14 * Math.pow(n, 0.426) / z;
-        else if (i === 2) z = 1.86 * z - 0.86 * x[0];
-        else if (i === 3) z = 1.91 * z - 0.91 * x[1];
-        else z = 2 * z - x[i - 2];
-        for (let it = 0; it < 100; it++) {
-          let p1 = PIM4, p2 = 0;
-          for (let j = 0; j < n; j++) {
-            const p3 = p2; p2 = p1;
-            p1 = z * Math.sqrt(2 / (j + 1)) * p2 - Math.sqrt(j / (j + 1)) * p3;
-          }
-          pp = Math.sqrt(2 * n) * p2;
-          z1 = z; z = z1 - p1 / pp;
-          if (Math.abs(z - z1) <= EPS) break;
-        }
-        x[i] = z; x[n - 1 - i] = -z;
-        w[i] = 2 / (pp * pp); w[n - 1 - i] = w[i];
-      }
-      return { x, w };
-    }
-    const GH = gaussHermite(48);
-    const SQRT_PI = Math.sqrt(Math.PI);
-
-    function erfApprox(x) { const sign = x >= 0 ? 1 : -1; x = Math.abs(x); const t = 1 / (1 + 0.3275911 * x); const y = 1 - (((((1.061405429*t - 1.453152027)*t) + 1.421413741)*t - 0.284496736)*t + 0.254829592)*t * Math.exp(-x*x); return sign * y; }
-    const ACT = { relu: x => (x > 0 ? x : 0), erf: erfApprox, tanh: Math.tanh };
-
-    // E[phi(u) phi(v)] for (u, v) ~ N(0, [[k11, k12], [k12, k22]])
-    function gaussPair(act, k11, k12, k22) {
-      if (act === 'relu') {
-        const s = Math.sqrt(k11 * k22);
-        if (s === 0) return 0;
-        const c = Math.max(-1, Math.min(1, k12 / s)), th = Math.acos(c);
-        return s / (2 * Math.PI) * (Math.sin(th) + (Math.PI - th) * c);
-      }
-      if (act === 'erf') {
-        const d = Math.sqrt((1 + 2 * k11) * (1 + 2 * k22));
-        return (2 / Math.PI) * Math.asin(Math.max(-1, Math.min(1, 2 * k12 / d)));
-      }
-      // tanh: 2-D Gauss-Hermite with u = a z1, v = b z1 + c z2
-      const f = ACT[act];
-      const a = Math.sqrt(Math.max(k11, 0));
-      const b = a > 0 ? k12 / a : 0;
-      const c = Math.sqrt(Math.max(k22 - b * b, 0));
-      let sum = 0;
-      for (let i = 0; i < GH.x.length; i++) {
-        const z1 = Math.SQRT2 * GH.x[i], fu = f(a * z1), wi = GH.w[i];
-        for (let j = 0; j < GH.x.length; j++) {
-          sum += wi * GH.w[j] * fu * f(b * z1 + c * Math.SQRT2 * GH.x[j]);
-        }
-      }
-      return sum / Math.PI;
-    }
-
-    // Pre-activation kernel through depth. Inputs have |x|^2 = d0 and correlation rho0;
-    // weights ~ N(0, sw2 / fan_in), biases ~ N(0, sb2).
-    function theoryKernel(act, sw2, sb2, rho0, depth) {
-      let k11 = sb2 + sw2, k22 = k11, k12 = sb2 + sw2 * rho0;
-      const rhos = [], qs = [];
-      for (let l = 1; l <= depth; l++) {
-        rhos.push(k12 / Math.sqrt(k11 * k22)); qs.push(k11);
-        if (l === depth) break;
-        const n11 = sb2 + sw2 * gaussPair(act, k11, k11, k11);
-        const n12 = sb2 + sw2 * gaussPair(act, k11, k12, k22);
-        k11 = n11; k22 = n11; k12 = n12;
-        if (!isFinite(k11) || k11 > 1e12) { k11 = k22 = 1e12; }
-      }
-      return { rhos, qs };
-    }
-
-    // Correlation map c -> c' at a fixed variance q (for the cobweb plot)
-    function corrMap(act, sw2, sb2, q, c) {
-      const qn = sb2 + sw2 * gaussPair(act, q, q, q);
-      return (sb2 + sw2 * gaussPair(act, q, c * q, q)) / qn;
-    }
-
-    // Fixed point of the length map q -> sb2 + sw2 E[phi(sqrt(q) z)^2]
-    function lengthFixedPoint(act, sw2, sb2, q0) {
-      let q = q0;
-      for (let i = 0; i < 400; i++) {
-        const qn = sb2 + sw2 * gaussPair(act, q, q, q);
-        if (!isFinite(qn) || qn > 1e8) return { q: 1e8, converged: false };
-        if (Math.abs(qn - q) < 1e-12 * Math.max(1, q)) return { q: qn, converged: true };
-        q = qn;
-      }
-      return { q, converged: true };
-    }
-
-    // chi_1 = sw2 E[phi'(sqrt(q) z)^2]: > 1 chaotic (inputs decorrelate), < 1 ordered (inputs collapse)
-    function chi1(act, sw2, q) {
-      const d = act === 'relu' ? (x => (x > 0 ? 1 : 0))
-              : act === 'erf' ? (x => (2 / SQRT_PI) * Math.exp(-x * x))
-              : (x => { const t = Math.tanh(x); return 1 - t * t; });
-      let s = 0; const a = Math.sqrt(Math.max(q, 0));
-      for (let i = 0; i < GH.x.length; i++) { const v = d(a * Math.SQRT2 * GH.x[i]); s += GH.w[i] * v * v; }
-      return sw2 * s / SQRT_PI;
-    }
-
-    // ---- Finite-width simulation ----
-    let _spare = null;
-    function randn() {
-      if (_spare !== null) { const s = _spare; _spare = null; return s; }
-      let u = 0, v = 0; while (u === 0) u = Math.random(); v = Math.random();
-      const r = Math.sqrt(-2.0 * Math.log(u)), t = 2.0 * Math.PI * v;
-      _spare = r * Math.sin(t); return r * Math.cos(t);
-    }
-    function inputPair(d0, rho0) {
-      const u = Array.from({ length: d0 }, randn); let nu = Math.hypot(...u); for (let i = 0; i < d0; i++) u[i] /= nu;
-      const v = Array.from({ length: d0 }, randn); let dot = 0; for (let i = 0; i < d0; i++) dot += u[i] * v[i];
-      for (let i = 0; i < d0; i++) v[i] -= dot * u[i]; let nv = Math.hypot(...v); for (let i = 0; i < d0; i++) v[i] /= nv;
-      const s = Math.sqrt(d0), r2 = Math.sqrt(1 - rho0 * rho0);
-      return [u.map(x => s * x), u.map((x, i) => s * (rho0 * x + r2 * v[i]))];
-    }
-    // One random network; returns the empirical pre-activation correlation at every layer
-    function simulateNet(act, sw2, sb2, rho0, width, depth, d0) {
-      const f = ACT[act];
-      let [h1, h2] = inputPair(d0, rho0);
-      const out = [];
-      for (let l = 1; l <= depth; l++) {
-        const nIn = h1.length, sd = Math.sqrt(sw2 / nIn), sbd = Math.sqrt(sb2);
-        const z1 = new Float64Array(width), z2 = new Float64Array(width);
-        for (let i = 0; i < width; i++) {
-          let a = 0, b = 0;
-          for (let j = 0; j < nIn; j++) { const wij = sd * randn(); a += wij * h1[j]; b += wij * h2[j]; }
-          const bi = sbd * randn(); z1[i] = a + bi; z2[i] = b + bi;
-        }
-        let d12 = 0, d11 = 0, d22 = 0;
-        for (let i = 0; i < width; i++) { d12 += z1[i] * z2[i]; d11 += z1[i] * z1[i]; d22 += z2[i] * z2[i]; }
-        out.push(d11 > 0 && d22 > 0 ? d12 / Math.sqrt(d11 * d22) : 1);
-        h1 = z1.map(f); h2 = z2.map(f);
-      }
-      return out;
-    }
-    // ---- Springer fiber closure data: model + halving routes ----
-    function sfBuildModel(key, raw) {
-      const cells = raw.cells.map(([perm, dim, free], i) => ({ i, perm, dim, free }));
-      const out = cells.map(() => new Map());   // out[a].get(t) = witness for "closure of a meets t"
-      raw.edges.forEach(([s, t, limit, srcSubs, tgtSubs]) => { out[s].set(t, { limit, srcSubs, tgtSubs }); });
-      const maxDim = Math.max(...cells.map(c => c.dim));
-      return { key, cells, out, maxDim, nEdges: raw.edges.length, rows: key.length };
-    }
-    // closure set of a: a itself plus every cell its closure meets
-    function sfClosed(M, a) { const s = new Set([a]); M.out[a].forEach((_, t) => s.add(t)); return s; }
-
-    const SF_DIVS = [128, 64, 32, 16, 8, 4, 2];
-    // 'gradual' route: halve whenever possible, take a bigger divisor only when forced.
-    // Divisors never go back up; each step lands on floor(n/d) or ceil(n/d); ends on the last chosen cell.
-    function sfHalvingRoute(M, a) {
-      const memo = new Map();
-      function f(arr, i) {
-        const n = arr.length; if (n === 1) return [];
-        const key = i + ':' + arr.join(',');
-        if (memo.has(key)) return memo.get(key);
-        memo.set(key, null);
-        const tries = arr.slice().sort((x, y) => M.cells[y].dim - M.cells[x].dim || x - y);
-        let res = null;
-        outer: for (let j = SF_DIVS.length - 1; j >= i; j--) {
-          const d = SF_DIVS[j]; if (n < d) continue;
-          const lo = Math.floor(n / d), hi = Math.ceil(n / d);
-          for (const B of tries) {
-            const cB = sfClosed(M, B), next = arr.filter(x => cB.has(x)), m = next.length;
-            if (m >= n || m < 1 || (m !== lo && m !== hi)) continue;
-            const r = f(next, j);
-            if (r) { res = [{ B, d, from: n, to: m, set: next }, ...r]; break outer; }
-          }
-        }
-        memo.set(key, res); return res;
-      }
-      const start = [...sfClosed(M, a)].sort((x, y) => x - y);
-      return { start, steps: f(start, 0) };
-    }
-
-    // Labeled tableau: rows of the Young diagram top to bottom, boxes numbered down each column
-    function sfTableau(key) {
-      const rows = key.split('').map(Number);
-      const lab = rows.map(r => new Array(r));
-      let k = 1;
-      for (let c = 0; c < Math.max(...rows); c++) for (let r = 0; r < rows.length; r++) if (rows[r] > c) lab[r][c] = k++;
-      return lab;
-    }
-
-    // ---- Shared plotting helpers ----
-    const GOLD = 'rgba(200,169,110,', BLUE = 'rgba(74,144,200,';
-    function setupCanvas(c) {
-      const dpr = window.devicePixelRatio || 1, W = c.offsetWidth, H = c.offsetHeight;
-      c.width = Math.round(W * dpr); c.height = Math.round(H * dpr);
-      const cx = c.getContext('2d'); cx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      return { cx, W, H };
-    }
-    function axes(cx, P, plotW, plotH, xTicks, yTicks, xLab, yLab, W, H) {
-      cx.font = '10px Inter,sans-serif';
-      yTicks.forEach(([v, y]) => {
-        cx.strokeStyle = GOLD + '0.08)'; cx.lineWidth = 1;
-        cx.beginPath(); cx.moveTo(P.left, y); cx.lineTo(P.left + plotW, y); cx.stroke();
-        cx.fillStyle = GOLD + '0.5)'; cx.textAlign = 'right'; cx.fillText(v, P.left - 6, y + 3);
-      });
-      xTicks.forEach(([v, x]) => { cx.fillStyle = GOLD + '0.5)'; cx.textAlign = 'center'; cx.fillText(v, x, P.top + plotH + 14); });
-      cx.strokeStyle = GOLD + '0.3)';
-      cx.beginPath(); cx.moveTo(P.left, P.top); cx.lineTo(P.left, P.top + plotH); cx.lineTo(P.left + plotW, P.top + plotH); cx.stroke();
-      cx.fillStyle = GOLD + '0.6)'; cx.font = '11px Inter,sans-serif'; cx.textAlign = 'center';
-      cx.fillText(xLab, P.left + plotW / 2, H - 6);
-      cx.save(); cx.translate(12, P.top + plotH / 2); cx.rotate(-Math.PI / 2); cx.fillText(yLab, 0, 0); cx.restore();
-    }
-
-    // ---- DEMO 2: NNGP ----
-    let kernelTimer = null;
-    function scheduleKernel() { clearTimeout(kernelTimer); kernelTimer = setTimeout(runKernel, 160); }
-    function kernelParams() {
-      return {
-        act: document.getElementById('kernel-act').value,
-        sw2: parseFloat(document.getElementById('kernel-sw').value),
-        sb2: parseFloat(document.getElementById('kernel-sb').value),
-        rho0: parseFloat(document.getElementById('kernel-rho').value),
-        width: parseInt(document.getElementById('kernel-width').value),
-        depth: parseInt(document.getElementById('kernel-depth').value),
-      };
-    }
-    const D0 = 32;
-    function runKernel() {
-      if (!sweepRunning) document.getElementById('sweep-wrap').style.display = 'none';
-      const p = kernelParams();
-      const th = theoryKernel(p.act, p.sw2, p.sb2, p.rho0, p.depth).rhos;
-      // keep each recompute to roughly 12M weight draws so the page stays responsive
-      const runs = Math.max(4, Math.min(24, Math.floor(1.2e7 / (p.width * p.width * p.depth))));
-      const all = Array.from({ length: runs }, () => simulateNet(p.act, p.sw2, p.sb2, p.rho0, p.width, p.depth, D0));
-      const mean = th.map((_, l) => all.reduce((s, r) => s + r[l], 0) / runs);
-      const sd = th.map((_, l) => Math.sqrt(all.reduce((s, r) => s + (r[l] - mean[l]) ** 2, 0) / Math.max(1, runs - 1)));
-      drawDepthPlot(p, th, all, mean, sd, runs);
-      const fp = lengthFixedPoint(p.act, p.sw2, p.sb2, p.sw2 + p.sb2);
-      const qs = fp.converged ? fp.q : theoryKernel(p.act, p.sw2, p.sb2, p.rho0, p.depth).qs[p.depth - 1];
-      const chi = chi1(p.act, p.sw2, qs);
-      let c = 0.5; for (let i = 0; i < 400; i++) c = corrMap(p.act, p.sw2, p.sb2, qs, c);
-      drawMapPlot(p, qs, th[0], c);
-      const L = p.depth - 1;
-      document.getElementById('ro-theory').textContent = th[L].toFixed(3);
-      document.getElementById('ro-sim').textContent = mean[L].toFixed(3);
-      document.getElementById('ro-sim-s').textContent = `± ${sd[L].toFixed(3)} over ${runs} networks`;
-      document.getElementById('ro-chi').textContent = chi.toFixed(3);
-      document.getElementById('ro-phase').textContent =
-        Math.abs(chi - 1) < 0.005 ? 'critical: edge of chaos' : chi > 1 ? 'chaotic: inputs decorrelate' : 'ordered: inputs collapse';
-      document.getElementById('ro-cstar').textContent = c.toFixed(3);
-    }
-    function drawDepthPlot(p, th, all, mean, sd, runs) {
-      const c = document.getElementById('kernel-canvas');
-      const { cx, W, H } = setupCanvas(c);
-      const P = { top: 16, right: 16, bottom: 34, left: 46 };
-      const plotW = W - P.left - P.right, plotH = H - P.top - P.bottom;
-      let lo = Math.min(0, ...th, ...mean.map((m, i) => m - sd[i])) - 0.05, hi = 1.02;
-      lo = Math.max(-1.02, lo);
-      const X = l => P.left + (l / Math.max(1, p.depth - 1)) * plotW;
-      const Y = v => P.top + plotH - ((v - lo) / (hi - lo)) * plotH;
-      const yT = []; for (let i = 0; i <= 5; i++) { const v = lo + (hi - lo) * i / 5; yT.push([v.toFixed(2), Y(v)]); }
-      const xT = []; const step = Math.max(1, Math.ceil(p.depth / 8)); for (let l = 0; l < p.depth; l += step) xT.push([l + 1, X(l)]);
-      axes(cx, P, plotW, plotH, xT, yT, 'Layer', 'Correlation', W, H);
-      if (lo < 0) { cx.strokeStyle = GOLD + '0.2)'; cx.beginPath(); cx.moveTo(P.left, Y(0)); cx.lineTo(P.left + plotW, Y(0)); cx.stroke(); }
-      // individual networks
-      all.slice(0, 12).forEach(r => {
-        cx.beginPath(); r.forEach((v, l) => (l ? cx.lineTo(X(l), Y(v)) : cx.moveTo(X(l), Y(v))));
-        cx.strokeStyle = BLUE + '0.12)'; cx.lineWidth = 1; cx.stroke();
-      });
-      // +-1 sd band
-      cx.beginPath();
-      mean.forEach((m, l) => (l ? cx.lineTo(X(l), Y(Math.min(hi, m + sd[l]))) : cx.moveTo(X(l), Y(Math.min(hi, m + sd[l])))));
-      for (let l = mean.length - 1; l >= 0; l--) cx.lineTo(X(l), Y(Math.max(lo, mean[l] - sd[l])));
-      cx.closePath(); cx.fillStyle = BLUE + '0.16)'; cx.fill();
-      // mean of networks
-      cx.beginPath(); mean.forEach((v, l) => (l ? cx.lineTo(X(l), Y(v)) : cx.moveTo(X(l), Y(v))));
-      cx.strokeStyle = BLUE + '1)'; cx.lineWidth = 2; cx.stroke();
-      // theory
-      cx.beginPath(); th.forEach((v, l) => (l ? cx.lineTo(X(l), Y(v)) : cx.moveTo(X(l), Y(v))));
-      cx.strokeStyle = GOLD + '1)'; cx.lineWidth = 2; cx.setLineDash([]); cx.stroke();
-      // legend
-      cx.font = '10px Inter,sans-serif'; cx.textAlign = 'left';
-      const lx = P.left + 10, ly = P.top + 10;
-      const narrow = W < 420;
-      cx.fillStyle = GOLD + '1)'; cx.fillRect(lx, ly - 4, 14, 2); cx.fillText(narrow ? 'theory' : 'NNGP theory (infinite width)', lx + 20, ly);
-      cx.fillStyle = BLUE + '1)'; cx.fillRect(lx, ly + 10, 14, 2); cx.fillText(narrow ? `${runs} networks` : `${runs} networks, width ${p.width} (mean ± sd)`, lx + 20, ly + 14);
-    }
-    function drawMapPlot(p, q, c1, cstar) {
-      const c = document.getElementById('map-canvas');
-      const { cx, W, H } = setupCanvas(c);
-      const P = { top: 16, right: 14, bottom: 34, left: 40 };
-      const plotW = W - P.left - P.right, plotH = H - P.top - P.bottom;
-      const X = v => P.left + ((v + 1) / 2) * plotW, Y = v => P.top + plotH - ((v + 1) / 2) * plotH;
-      const ticks = [-1, -0.5, 0, 0.5, 1];
-      axes(cx, P, plotW, plotH, ticks.map(v => [v, X(v)]), ticks.map(v => [v, Y(v)]), 'c at layer l', 'c at layer l+1', W, H);
-      cx.strokeStyle = GOLD + '0.25)'; cx.setLineDash([4, 4]); cx.beginPath(); cx.moveTo(X(-1), Y(-1)); cx.lineTo(X(1), Y(1)); cx.stroke(); cx.setLineDash([]);
-      const N = 50, pts = [];
-      for (let i = 0; i <= N; i++) { const x = -1 + 2 * i / N; pts.push([x, corrMap(p.act, p.sw2, p.sb2, q, x)]); }
-      cx.beginPath(); pts.forEach(([x, y], i) => (i ? cx.lineTo(X(x), Y(y)) : cx.moveTo(X(x), Y(y))));
-      cx.strokeStyle = GOLD + '1)'; cx.lineWidth = 2; cx.stroke();
-      // cobweb from the first-layer correlation
-      let v = c1; cx.beginPath(); cx.moveTo(X(v), Y(-1));
-      for (let i = 0; i < Math.min(p.depth, 25); i++) {
-        const nv = corrMap(p.act, p.sw2, p.sb2, q, v);
-        cx.lineTo(X(v), Y(nv)); cx.lineTo(X(nv), Y(nv)); v = nv;
-      }
-      cx.strokeStyle = BLUE + '0.8)'; cx.lineWidth = 1.2; cx.stroke();
-      cx.beginPath(); cx.arc(X(cstar), Y(cstar), 4.5, 0, Math.PI * 2); cx.fillStyle = '#f6e29a'; cx.fill();
-      cx.fillStyle = GOLD + '0.8)'; cx.font = '10px Inter,sans-serif'; cx.textAlign = 'left';
-      cx.fillText(`q* = ${q < 1e6 ? q.toFixed(3) : '∞'}`, P.left + 8, P.top + 12);
-    }
-    let sweepRunning = false;
-    function runSweep() {
-      if (sweepRunning) return;
-      sweepRunning = true;
-      const btn = document.getElementById('sweep-btn'); btn.disabled = true; btn.textContent = 'Running…';
-      document.getElementById('sweep-wrap').style.display = 'block';
-      const p = kernelParams();
-      const th = theoryKernel(p.act, p.sw2, p.sb2, p.rho0, p.depth).rhos;
-      const widths = [8, 16, 32, 64, 128, 256, 512], res = [];
-      let k = 0;
-      function next() {
-        if (k === widths.length) { sweepRunning = false; btn.disabled = false; btn.textContent = 'Run width sweep'; return; }
-        const n = widths[k];
-        const runs = Math.max(4, Math.min(24, Math.floor(8e6 / (n * n * p.depth))));
-        let se = 0, cnt = 0;
-        for (let r = 0; r < runs; r++) simulateNet(p.act, p.sw2, p.sb2, p.rho0, n, p.depth, D0).forEach((v, l) => { se += (v - th[l]) ** 2; cnt++; });
-        res.push([n, Math.sqrt(se / cnt)]); k++;
-        drawSweep(p, res, widths);
-        setTimeout(next, 20);
-      }
-      setTimeout(next, 20);
-    }
-    function drawSweep(p, res, widths) {
-      const c = document.getElementById('sweep-canvas');
-      const { cx, W, H } = setupCanvas(c);
-      const P = { top: 16, right: 16, bottom: 34, left: 52 };
-      const plotW = W - P.left - P.right, plotH = H - P.top - P.bottom;
-      const lx0 = Math.log2(widths[0]), lx1 = Math.log2(widths[widths.length - 1]);
-      const errs = res.map(r => r[1]);
-      const e0 = errs[0];
-      const ylo = Math.log10(Math.min(...errs, e0 * Math.sqrt(widths[0] / widths[widths.length - 1])) * 0.7);
-      const yhi = Math.log10(Math.max(...errs) * 1.5);
-      const X = n => P.left + ((Math.log2(n) - lx0) / (lx1 - lx0)) * plotW;
-      const Y = e => P.top + plotH - ((Math.log10(e) - ylo) / (yhi - ylo)) * plotH;
-      const yT = []; for (let i = 0; i <= 4; i++) { const lv = ylo + (yhi - ylo) * i / 4; yT.push([Math.pow(10, lv).toPrecision(2), P.top + plotH - (i / 4) * plotH]); }
-      axes(cx, P, plotW, plotH, widths.map(n => [n, X(n)]), yT, 'Width (log scale)', 'RMS gap', W, H);
-      // 1/sqrt(width) reference through the first point
-      cx.strokeStyle = GOLD + '0.45)'; cx.setLineDash([5, 5]); cx.beginPath();
-      widths.forEach((n, i) => { const e = e0 * Math.sqrt(widths[0] / n); i ? cx.lineTo(X(n), Y(e)) : cx.moveTo(X(n), Y(e)); });
-      cx.stroke(); cx.setLineDash([]);
-      cx.beginPath(); res.forEach(([n, e], i) => (i ? cx.lineTo(X(n), Y(e)) : cx.moveTo(X(n), Y(e))));
-      cx.strokeStyle = BLUE + '1)'; cx.lineWidth = 2; cx.stroke();
-      res.forEach(([n, e]) => { cx.beginPath(); cx.arc(X(n), Y(e), 3, 0, Math.PI * 2); cx.fillStyle = BLUE + '1)'; cx.fill(); });
-      cx.fillStyle = GOLD + '0.8)'; cx.font = '10px Inter,sans-serif'; cx.textAlign = 'right';
-      cx.fillText(`${p.act}, depth ${p.depth}: dashed line = 1/√width`, P.left + plotW, P.top + 10);
-    }
-
-    // ---- DEMO 3: Springer fiber closure explorer ----
-    const SF_HUES = ['#3987e5', '#d95926', '#199e70', '#c98500', '#d55181', '#008300', '#9085e9', '#e66767', '#1fa3b8', '#b9802e', '#cf4fb0', '#8a9a10'];
-    const sf = { M: null, pos: [], chain: [], S: null, hover: -1, route: null, anim: null, r: 8 };
-    const sfCanvas = document.getElementById('sf-canvas');
-    function sfName(k) { return '(' + k.split('').join(',') + ')'; }
-    function sfLoad(key) {
-      sf.M = sfBuildModel(key, SF_DATA[key]);
-      sf.chain = []; sf.S = null; sf.hover = -1; sf.route = null; sf.anim = null;
-      sfLayout(); sfPanel();
-    }
-    function sfLayout() {
-      const W = sfCanvas.offsetWidth, H = sfCanvas.offsetHeight, M = sf.M;
-      const layers = Array.from({ length: M.maxDim + 1 }, () => []);
-      M.cells.forEach(c => layers[c.dim].push(c.i));
-      const maxCount = Math.max(...layers.map(l => l.length));
-      const left = 58, right = 16, top = 26, bottom = 26;
-      sf.r = Math.max(4, Math.min(11, ((W - left - right) / maxCount) * 0.32));
-      sf.pos = new Array(M.cells.length);
-      layers.forEach((ids, d) => {
-        ids.sort((a, b) => (M.cells[a].perm < M.cells[b].perm ? -1 : 1));
-        const y = M.maxDim === 0 ? H / 2 : top + (M.maxDim - d) / M.maxDim * (H - top - bottom);
-        ids.forEach((id, k) => { sf.pos[id] = { x: left + (k + 0.5) / ids.length * (W - left - right), y }; });
-      });
-    }
-    function sfFocus() { return sf.chain.length ? sf.chain[sf.chain.length - 1] : -1; }
-    function sfHit(x, y) {
-      let best = -1, bd = Infinity;
-      sf.pos.forEach((p, i) => { const d = Math.hypot(p.x - x, p.y - y); if (d < bd) { bd = d; best = i; } });
-      return bd <= Math.max(sf.r + 5, 10) ? best : -1;
-    }
-    sfCanvas.addEventListener('mousemove', e => {
-      const r = sfCanvas.getBoundingClientRect(); const h = sfHit(e.clientX - r.left, e.clientY - r.top);
-      if (h !== sf.hover) { sf.hover = h; sfPanel(); }
-    });
-    sfCanvas.addEventListener('mouseleave', () => { if (sf.hover !== -1) { sf.hover = -1; sfPanel(); } });
-    sfCanvas.addEventListener('click', e => {
-      if (sf.anim) return;
-      const r = sfCanvas.getBoundingClientRect(); const h = sfHit(e.clientX - r.left, e.clientY - r.top);
-      sf.route = null;
-      if (h < 0) { sfReset(); return; }
-      if (!sf.S || !sf.S.has(h)) { sf.chain = [h]; sf.S = sfClosed(sf.M, h); }
-      else if (h === sfFocus()) { /* already focused */ }
-      else { const cB = sfClosed(sf.M, h); sf.S = new Set([...sf.S].filter(x => cB.has(x))); sf.chain.push(h); }
-      sf.hover = h; sfPanel();
-    });
-    function sfReset() { sf.chain = []; sf.S = null; sf.route = null; sf.anim = null; sfPanel(); }
-    function sfStartRoute() {
-      if (sf.chain.length !== 1 || sf.anim) return;
-      const route = sfHalvingRoute(sf.M, sf.chain[0]);
-      if (!route.steps || !route.steps.length) return;
-      sf.route = route; sf.anim = { t0: performance.now(), step: -1 };
-      sfPanel();
-    }
-    const SF_STEP_MS = 1500;
-    function sfDraw(now) {
-      const M = sf.M; if (!M) { requestAnimationFrame(sfDraw); return; }
-      const { cx, W, H } = setupCanvas(sfCanvas);
-      if (sf.pos.length !== M.cells.length || sf._w !== W || sf._h !== H) { sf._w = W; sf._h = H; sfLayout(); }
-      // which cells are "alive" and how faded the dropping ones are
-      let alive = sf.S, fading = null, fadeT = 0, ringB = -1, done = false;
-      if (sf.anim) {
-        const steps = sf.route.steps, el = now - sf.anim.t0, k = Math.floor(el / SF_STEP_MS), frac = (el % SF_STEP_MS) / SF_STEP_MS;
-        if (k >= steps.length) { done = true; alive = new Set(steps[steps.length - 1].set); ringB = steps[steps.length - 1].B; }
-        else {
-          const before = new Set(k === 0 ? sf.route.start : steps[k - 1].set), after = new Set(steps[k].set);
-          alive = after; ringB = steps[k].B;
-          fading = [...before].filter(x => !after.has(x)); fadeT = Math.max(0, (frac - 0.35) / 0.5);
-        }
-        if (sf.anim.step !== Math.min(k, steps.length)) { sf.anim.step = Math.min(k, steps.length); sfPanel(); }
-        if (done && el > steps.length * SF_STEP_MS + 2500) { sf.anim = null; sfPanel(); }
-      }
-      // dimension guide
-      cx.font = '10px Inter,sans-serif'; cx.textAlign = 'left';
-      const seenY = new Set();
-      M.cells.forEach(c => { const y = sf.pos[c.i].y; if (seenY.has(c.dim)) return; seenY.add(c.dim);
-        cx.strokeStyle = GOLD + '0.06)'; cx.beginPath(); cx.moveTo(50, y); cx.lineTo(W - 10, y); cx.stroke();
-        cx.fillStyle = SF_HUES[c.dim % SF_HUES.length]; cx.beginPath(); cx.arc(12, y, 4, 0, 7); cx.fill();
-        cx.fillStyle = GOLD + '0.55)'; cx.fillText('dim ' + c.dim, 20, y + 3); });
-      // edges
-      const focus = sf.anim ? ringB : sfFocus();
-      if (focus < 0) {
-        cx.strokeStyle = GOLD + (M.nEdges > 150 ? '0.05)' : '0.12)'); cx.lineWidth = 1;
-        M.out.forEach((m, a) => m.forEach((_, t) => { cx.beginPath(); cx.moveTo(sf.pos[a].x, sf.pos[a].y); cx.lineTo(sf.pos[t].x, sf.pos[t].y); cx.stroke(); }));
-      } else {
-        M.out[focus].forEach((_, t) => {
-          if (alive && !alive.has(t) && !(fading && fading.includes(t))) return;
-          const hov = t === sf.hover;
-          cx.strokeStyle = GOLD + (hov ? '0.95)' : '0.45)'); cx.lineWidth = hov ? 2 : 1.2;
-          cx.beginPath(); cx.moveTo(sf.pos[focus].x, sf.pos[focus].y); cx.lineTo(sf.pos[t].x, sf.pos[t].y); cx.stroke();
-        });
-      }
-      // nodes
-      const showLabels = M.cells.length <= 20;
-      M.cells.forEach(c => {
-        const p = sf.pos[c.i];
-        let a = 1;
-        if (alive && !alive.has(c.i)) a = fading && fading.includes(c.i) ? 1 - 0.85 * Math.min(1, fadeT) : 0.15;
-        cx.globalAlpha = a;
-        cx.beginPath(); cx.arc(p.x, p.y, sf.r, 0, Math.PI * 2); cx.fillStyle = SF_HUES[c.dim % SF_HUES.length]; cx.fill();
-        if (sf.chain.includes(c.i) && !sf.anim) { cx.strokeStyle = '#f6e29a'; cx.lineWidth = 2; cx.beginPath(); cx.arc(p.x, p.y, sf.r + 3.5, 0, Math.PI * 2); cx.stroke(); }
-        if (c.i === sf.hover) { cx.strokeStyle = 'rgba(226,221,216,0.9)'; cx.lineWidth = 1.5; cx.beginPath(); cx.arc(p.x, p.y, sf.r + 2, 0, Math.PI * 2); cx.stroke(); }
-        if (showLabels) { cx.fillStyle = GOLD + '0.75)'; cx.font = '9px Inter,sans-serif'; cx.textAlign = 'center'; cx.fillText(c.perm, p.x, p.y + sf.r + 11); }
-        cx.globalAlpha = 1;
-      });
-      if (ringB >= 0) {
-        const p = sf.pos[ringB], pulse = 1 + 0.15 * Math.sin(now / 160);
-        cx.strokeStyle = '#f6e29a'; cx.lineWidth = 2.5; cx.beginPath(); cx.arc(p.x, p.y, (sf.r + 6) * pulse, 0, Math.PI * 2); cx.stroke();
-        if (done) { const g = cx.createRadialGradient(p.x, p.y, 0, p.x, p.y, sf.r * 4); g.addColorStop(0, 'rgba(246,226,154,0.45)'); g.addColorStop(1, 'rgba(246,226,154,0)'); cx.fillStyle = g; cx.beginPath(); cx.arc(p.x, p.y, sf.r * 4, 0, 7); cx.fill(); }
-      }
-      if (sf.anim) {
-        const steps = sf.route.steps, k = Math.min(sf.anim.step, steps.length);
-        const n = k === 0 ? sf.route.start.length : steps[Math.min(k, steps.length) - 1].to;
-        cx.fillStyle = GOLD + '0.9)'; cx.font = '12px Inter,sans-serif'; cx.textAlign = 'right';
-        cx.fillText(`${k < steps.length ? steps[k].from : n} cells${k < steps.length ? `  ÷${steps[k].d}  →  ${steps[k].to}` : '  →  done'}`, W - 14, 18);
-      }
-      requestAnimationFrame(sfDraw);
-    }
-    function sfPanel() {
-      const M = sf.M, el = document.getElementById('sf-panel');
-      const lab = sfTableau(M.key), cols = Math.max(...lab.map(r => r.length));
-      let tab = `<div class="sf-tableau" style="grid-template-columns:repeat(${cols},24px)">`;
-      lab.forEach(row => { for (let c = 0; c < cols; c++) tab += c < row.length ? `<div class="sf-box">${row[c]}</div>` : '<div></div>'; });
-      tab += '</div>';
-      const blocks = lab.map(r => '(' + r.join('') + ')').join('');
-      const arrows = []; lab.forEach(r => { for (let c = 1; c < r.length; c++) arrows.push(`e<sub>${r[c]}</sub>↦e<sub>${r[c - 1]}</sub>`); });
-      let html = `<div><div class="sf-h">Jordan type ${sfName(M.key)}</div>${tab}
-        <div class="sf-mono">blocks ${blocks}</div>
-        <div class="sf-mono sf-muted">X: ${arrows.join(', ') || '0'}</div>
-        <div class="sf-muted" style="font-size:0.72rem;margin-top:0.3rem">${M.cells.length} cells &middot; ${M.nEdges} relations &middot; top dim ${M.maxDim}</div></div>`;
-      const focus = sfFocus();
-      if (focus < 0) {
-        html += `<div class="sf-muted">Click any cell to see what its closure meets.</div>`;
-      } else {
-        const c0 = M.cells[sf.chain[0]], full = sfClosed(M, sf.chain[0]).size, cube = 1 << c0.dim;
-        html += `<div><div class="sf-h">${sf.chain.length > 1 ? 'Nested intersection' : 'Selected cell'}</div>
-          <div class="sf-chain">${sf.chain.map((i, k) => `${k ? '<span class="sf-muted">∩</span>' : ''}<span class="sf-chip">C<sub>${M.cells[i].perm}</sub></span>`).join('')}</div>
-          <div style="margin-top:0.4rem">${sf.chain.length > 1 ? `<strong>${sf.S.size}</strong> cells lie in all ${sf.chain.length} closures.` :
-            `dim ${c0.dim}, free parameters <span class="sf-mono">${c0.free.join(', ') || 'none'}</span>.<br>Its closure meets <strong>${full}</strong> cells (counting itself)${full === cube && c0.dim > 0 ? `, exactly 2<sup>${c0.dim}</sup>, so it can be drawn as a ${c0.dim}-cube.` : c0.dim > 0 ? ` vs. 2<sup>${c0.dim}</sup> = ${cube}.` : '.'}`}</div></div>`;
-      }
-      if (sf.route) {
-        const st = sf.route.steps, k = sf.anim ? sf.anim.step : st.length;
-        html += `<div><div class="sf-h">Halving route</div><div class="sf-log">` +
-          st.map((s, i) => `<div class="${i === k ? 'on' : ''}">${s.from} ÷ ${s.d} → ${s.to} &nbsp;<span class="sf-muted">pick C<sub>${M.cells[s.B].perm}</sub></span></div>`).join('') +
-          `<div class="${k >= st.length ? 'on' : ''}">ends at C<sub>${M.cells[st[st.length - 1].B].perm}</sub></div></div></div>`;
-      }
-      if (sf.hover >= 0 && !sf.anim) {
-        const hc = M.cells[sf.hover];
-        html += `<div><div class="sf-h">Hovering C<sub>${hc.perm}</sub> &middot; dim ${hc.dim}</div>`;
-        const w = focus >= 0 && focus !== sf.hover ? M.out[focus].get(sf.hover) : null;
-        if (w) {
-          html += `<div class="sf-mono">closure of C<sub>${M.cells[focus].perm}</sub> meets it<br>
-            source: ${w.srcSubs || '(no substitution)'}<br>target: ${w.tgtSubs || '(no substitution)'}<br>limit: ${w.limit} → ∞</div>`;
-        } else if (focus >= 0 && focus !== sf.hover) {
-          html += `<div class="sf-muted">No witness curve from the focused cell.</div>`;
-        } else {
-          html += `<div class="sf-muted">Its closure meets ${sfClosed(M, sf.hover).size} cells.</div>`;
-        }
-        html += '</div>';
-      }
-      el.innerHTML = html;
-      const btn = document.getElementById('sf-route-btn');
-      btn.disabled = !(sf.chain.length === 1 && sf.S && sf.S.size > 1) || !!sf.anim;
-    }
-
-    bgInit(); bgResize(); bgStart();
-
-    let resizeTimer = null;
-    window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { runBM(); runKernel(); }, 200); });
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        runBM();
-        runKernel();
-        sfLoad(document.getElementById('sf-type').value);
-        requestAnimationFrame(sfDraw);
-      }, 200);
-    });
-  </script>
-
-</body>
+    </body>
 </html>
