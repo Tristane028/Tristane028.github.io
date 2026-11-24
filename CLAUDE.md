@@ -16,6 +16,17 @@ python3 -m http.server 8000
 
 Then open `http://localhost:8000/`. Check changes at phone width as well as desktop.
 
+## How to work here
+
+The full rules are in the `tristan-projects` skill. These are the parts that always apply in this repo:
+
+- **Think first.** State assumptions, lay out readings of an unclear request instead of picking one, and ask when unsure.
+- **Keep it small.** Write the least code that solves the problem, and touch only what the request needs. Match the existing style, and mention unrelated problems instead of fixing them.
+- **Three designs first.** For any new section, layout change or visual, make three different designs. Compare them on readability, fit with the site, accuracy of the data and effort, recommend one, and wait for Tristan to pick before building. Bug fixes and small copy edits skip this step.
+- **Verify before reporting.** Serve the page, screenshot it headless at desktop and phone width, check the console for errors, and confirm Tristan's own text is unchanged.
+- **Git.** Pushing to `main` publishes the site, so work on a branch, commit and push it, and let Tristan merge.
+- **Copy.** Write casual but professional, first person and specific, in his voice from the `writeup` skill. No contractions, no em dashes and no semicolons. Some existing copy has contractions ("I'm", "haven't"). Leave it alone unless asked, but do not add new ones.
+
 ## Structure
 
 - `index.html` is the whole site. It's a single page with HTML, CSS and JS all inline and no external scripts.
