@@ -25,7 +25,7 @@ The full rules are in the `tristan-projects` skill. These are the parts that alw
 - **Three designs first.** For any new section, layout change or visual, make three different designs. Compare them on readability, fit with the site, accuracy of the data and effort, recommend one, and wait for Tristan to pick before building. Bug fixes and small copy edits skip this step.
 - **Verify before reporting.** Serve the page, screenshot it headless at desktop and phone width, check the console for errors, and confirm Tristan's own text is unchanged.
 - **Git.** Pushing to `main` publishes the site, so work on a branch, commit and push it, and let Tristan merge.
-- **Copy.** Write casual but professional, first person and specific, in his voice from the `writeup` skill. No contractions, no em dashes and no semicolons. Some existing copy has contractions ("I'm", "haven't"). Leave it alone unless asked, but do not add new ones.
+- **Copy.** Write casual but professional, first person and specific, in his voice from the `writeup` skill. No contractions, no em dashes and no semicolons.
 
 ## Structure
 
